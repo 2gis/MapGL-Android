@@ -1,2 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="ru.dublgis.dgismobile.mapsdk"/>
+          package="ru.dublgis.dgismobile.mapsdk"
+>
+    <uses-permission android:name="android.permission.INTERNET"/>
+</manifest>
+

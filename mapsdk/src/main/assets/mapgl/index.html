@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <style>
+		html,
+		body,
+		#map {
+			margin: 0;
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+	</style>
+</head>
+
+<body>
+<div id="map"></div>
+
+<script src="https://mapgl.2gis.com/api/js"></script>
+<script>
+
+window.initMapGL = (
+        center,
+        maxZoom, minZoom, zoom,
+        maxPitch, minPitch, pitch,
+        rotation,
+        apiKey, packageId,
+        controls) => {
+
+    const markers = new Map();
+
+    const map = new mapgl.Map('map', {
+        center: center,
+        maxZoom: maxZoom,
+        minZoom: minZoom,
+        zoom: zoom,
+        maxPitch: maxPitch,
+        minPitch: minPitch,
+        pitch: pitch,
+        rotation: rotation,
+        appId: packageId,
+        key: apiKey,
+        zoomControl: controls
+    });
+
+    const emit = (name, args) => {
+        if (bridge && bridge.onEvent) {
+            const payload = args 
+                ? args
+                : ""
+            bridge.onEvent(name, payload);
+
+        } else {
+            console.error('bridge unavailable or onEvent handler does not exist');
+        }
+    };
+
+    const subscribe = (name, handler) => {
+        map.on(name, (ev) => {
+            emit(name, handler(ev));
+        });
+    }
+
+    subscribe('click', (ev) => `${ev.lngLat[0]};${ev.lngLat[1]}`);
+	subscribe('centerend', (ev) => {
+		const center = map.getCenter();
+		return `${center[0]};${center[1]}`;
+	});
+    subscribe('zoomend', (ev) => map.getZoom());
+    subscribe('pitchend', (ev) => map.getPitch());
+    subscribe('rotationend', (ev) => map.getRotation());
+
+    window.addEventListener('resize', () => map.invalidateSize()); 
+
+    window.dgismap = {
+        map: map,
+
+		hideMarker: (id) => {
+			const marker = markers.get(id);
+			if (marker) {
+				marker.hide();
+			}
+		},
+
+		showMarker: (id) => {
+			const marker = markers.get(id);
+			if (marker) {
+				marker.show();
+			}
+		},
+
+		createMarker: (id, icon, coords, size, anchor) => {
+			const marker = new mapgl.Marker(map, {
+				coordinates: coords,
+				icon: icon,
+				size: size,
+				anchor: anchor
+			});
+			marker.on('click', (ev) => {
+				emit('markerClick', String(id));
+			});
+			markers.set(id, marker);
+		},
+
+		removeMarker: (id) => {
+			const marker = markers.get(id);
+			if (marker) {
+				marker.destroy();
+			}
+			markers.delete(id);
+		},
+
+        setMarkerCoordinates: (id, coordinates) => {
+			const marker = markers.get(id);
+			marker.setCoordinates(coordinates);
+		}
+    };
+
+    emit('initialized');
+};
+
+</script>
+
+</body>
+</html>

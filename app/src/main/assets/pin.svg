@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="48px" viewBox="0 0 30 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>Page 1 Copy</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="50%" x2="50%" y2="0%" id="linearGradient-1">
+            <stop stop-color="#1B89EE" offset="0%"></stop>
+            <stop stop-color="#3198EC" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Recovery-01" transform="translate(-839.000000, -425.000000)">
+            <g id="Page-1-Copy" transform="translate(839.000000, 425.000000)">
+                <ellipse id="Oval-3" fill="#000000" opacity="0.036380597" cx="15" cy="45.5" rx="3" ry="1.5"></ellipse>
+                <ellipse id="Oval-3-Copy" fill="#000000" opacity="0.036380597" cx="15" cy="45.5" rx="4.5" ry="2.5"></ellipse>
+                <path d="M15,45.8836353 L15.8823529,45.8836353 C15.8823529,29.2177529 20.7767647,23.7974588 27.9873529,23.7974588 L28.3297059,23.7974588 C29.0779412,21.5906941 30,17.9915765 30,15.0004 C30,7.14392941 23.7679412,0.0004 15,0.0004 C6.23205882,0.0004 0,7.14392941 0,15.0004 C0,17.9915765 0.922058824,21.5906941 1.67029412,23.7974588 L2.01264706,23.7974588 C9.22411765,23.7974588 14.1176471,29.2177529 14.1176471,45.8836353 L15,45.8836353 Z" id="Fill-1" fill="url(#linearGradient-1)"></path>
+            </g>
+        </g>
+    </g>
+</svg>
