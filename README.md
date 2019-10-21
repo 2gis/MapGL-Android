@@ -41,7 +41,7 @@ fun onDGisMapReady(map: Map?) {
 ```
 
 ### Showing the Marker
-The following example demonstrates how to add a marker to a map. The marker displays the string 'Hello world' in a pop-up notification when clicked. All MarkerOptions parameters except postion are optional
+The following example demonstrates how to add a marker to a map. The marker displays the string 'Hello world' in a pop-up notification when clicked. All MarkerOptions parameters except position are optional
 ```kotlin
 private fun onDGisMapReady(map: DGisMap?) {
     map?.let {
