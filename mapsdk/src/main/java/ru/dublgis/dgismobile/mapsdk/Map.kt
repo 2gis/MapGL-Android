@@ -39,5 +39,7 @@ interface Map {
 
     fun setOnRotationChangedListener(listener: PropertyChangeListener?)
 
-    fun setSelectedObjects(selectedId : String)
+    fun setSelectedObjects(selectedId: String)
+
+    fun loadClusterer()
 }

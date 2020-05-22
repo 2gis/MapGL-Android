@@ -178,6 +178,14 @@ internal class PlatformBridge(
         )
     }
 
+    override fun loadClusterer() {
+        jsExecutor(
+            """
+            window.dgismap.loadClusterer();
+        """
+        )
+    }
+
     override fun setOnZoomChangedListener(listener: PropertyChangeListener?) {
         onZoomChanged = listener
     }
