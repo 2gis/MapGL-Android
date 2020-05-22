@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
 
         mapFragment.mapReadyCallback = this::onDGisMapReady
         mapFragment.setup(
-            apiKey = "35ff93d6-9b1f-11ea-a1ef-4b9b46c45299",
+            apiKey = "",
             center = LonLat(55.291231, 25.227135),
             zoom = 16.0
         )
@@ -142,7 +142,7 @@ class MainActivity : AppCompatActivity() {
     private fun onMapClicked(pointer: MapPointerEvent) {
         map?.let {
             it.setSelectedObjects(pointer.target.id)
-
+            
             if (marker != null) {
                 marker?.position = pointer.lngLat
             } else {
