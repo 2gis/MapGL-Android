@@ -316,7 +316,7 @@ internal class PlatformBridge(
                 val it = payload.split(';')
                 var target: MapObject? = null;
                 if (it.size == 3 && it[2].isNotEmpty()) {
-                    target = MapObject(it[2])
+                    target = mapObjectById(it[2])
                 }
                 MapPointerEvent(
                     LonLat(it[0].toDouble(), it[1].toDouble()),
