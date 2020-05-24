@@ -6,8 +6,6 @@ import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import ru.dublgis.dgismobile.mapsdk.object_selection.EventTarget
-import ru.dublgis.dgismobile.mapsdk.object_selection.MapPointerEvent
 import java.lang.ref.WeakReference
 import kotlin.math.abs
 
@@ -157,20 +155,15 @@ internal class PlatformBridge(
         onRotationChanged = listener
     }
 
-    override fun setSelectedObjects(selectedId: String) {
-        if (selectedIds.contains(selectedId)) {
-            selectedIds.remove(selectedId)
-        } else {
-            selectedIds.add(selectedId)
-        }
-
-        var arg = "["
-        for ((index, id) in selectedIds.withIndex()) {
-            arg += "'$id'"
-            if (index < selectedIds.size - 1) arg += ","
-        }
-        arg += "]"
-
+    override fun setSelectedObjects(objects: Collection<MapObject>) {
+        val arg = objects.joinToString(
+            separator = ",",
+            prefix = "[",
+            postfix = "]",
+            transform = {
+                "'${it.id}'"
+            }
+        )
         jsExecutor(
             """
             window.dgismap.setSelectedObjects($arg);
@@ -321,9 +314,13 @@ internal class PlatformBridge(
 
             val parsePointer = { payload: String ->
                 val it = payload.split(';')
+                var target: MapObject? = null;
+                if (it.size == 3 && it[2].isNotEmpty()) {
+                    target = MapObject(it[2])
+                }
                 MapPointerEvent(
                     LonLat(it[0].toDouble(), it[1].toDouble()),
-                    EventTarget(it[2])
+                    target
                 )
             }
 

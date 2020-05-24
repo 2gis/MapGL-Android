@@ -1,7 +1,5 @@
 package ru.dublgis.dgismobile.mapsdk
 
-import ru.dublgis.dgismobile.mapsdk.object_selection.MapPointerEvent
-
 
 typealias PositionChangeListener = (LonLat) -> Unit
 typealias PropertyChangeListener = (Double) -> Unit
@@ -39,5 +37,5 @@ interface Map {
 
     fun setOnRotationChangedListener(listener: PropertyChangeListener?)
 
-    fun setSelectedObjects(selectedId : String)
+    fun setSelectedObjects(objects: Collection<MapObject>)
 }
