@@ -71,7 +71,9 @@ map?.setSelectedObjects(listOf())
 ```
 
 ## Example
-To explore the example project, clone the repo, build and run
+To make the example app work you need to have the access key (contact us mapgl@2gis.com if you need one).  
+At first, append your key to *local.properties* file in the root directory
+`apiKey=your_api_key_here`. Then build and run project as usual.
 
 ## Installation
 Setup Gradle repositories
