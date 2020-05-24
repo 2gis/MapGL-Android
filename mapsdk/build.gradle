@@ -69,7 +69,7 @@ ext {
     siteUrl = 'https://github.com/2gis/MapGL-Android'
     gitUrl = 'https://github.com/2gis/MapGL-Android.git'
 
-    libraryVersion = '1.0.0'
+    libraryVersion = '1.1.0'
 
     developerId = '2gis'
     developerName = '2gis'
