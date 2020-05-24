@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
 
         mapFragment.mapReadyCallback = this::onDGisMapReady
         mapFragment.setup(
-            apiKey = "35ff93d6-9b1f-11ea-a1ef-4b9b46c45299",
+            apiKey = getString(R.string.API_KEY),
             center = LonLat(55.291231, 25.227135),
             zoom = 16.0
         )
