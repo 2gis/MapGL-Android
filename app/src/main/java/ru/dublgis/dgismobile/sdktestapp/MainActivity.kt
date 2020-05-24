@@ -11,11 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
-import ru.dublgis.dgismobile.mapsdk.LonLat
-import ru.dublgis.dgismobile.mapsdk.Marker
-import ru.dublgis.dgismobile.mapsdk.MarkerOptions
-import ru.dublgis.dgismobile.mapsdk.iconFromSvgAsset
-import ru.dublgis.dgismobile.mapsdk.object_selection.MapPointerEvent
+import ru.dublgis.dgismobile.mapsdk.*
 import java.lang.ref.WeakReference
 import ru.dublgis.dgismobile.mapsdk.Map as DGisMap
 import ru.dublgis.dgismobile.mapsdk.MapFragment as DGisMapFragment
@@ -42,9 +38,11 @@ class MainActivity : AppCompatActivity() {
         val mapFragment = supportFragmentManager.findFragmentById(R.id.mapFragment)
                 as DGisMapFragment
 
+        val apiKey = resources.getString(R.string.dgis_map_key)
+
         mapFragment.mapReadyCallback = this::onDGisMapReady
         mapFragment.setup(
-            apiKey = getString(R.string.API_KEY),
+            apiKey = apiKey,
             center = LonLat(55.291231, 25.227135),
             zoom = 16.0
         )
@@ -140,14 +138,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onMapClicked(pointer: MapPointerEvent) {
-        map?.let {
-            it.setSelectedObjects(pointer.target.id)
+        map?.let { map ->
+            pointer.target?.let { mapObject ->
+                map.setSelectedObjects(listOf(mapObject))
+            }
 
             if (marker != null) {
                 marker?.position = pointer.lngLat
             } else {
                 val ctx = WeakReference(this)
-                marker = it.addMarker(
+                marker = map.addMarker(
                     MarkerOptions(
                         pointer.lngLat,
                         icon = iconFromSvgAsset(assets, "pin.svg"),
@@ -170,14 +170,12 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(activity, msg, Toast.LENGTH_LONG)
                             .show()
 
-                        it.removeMarker(marker!!)
+                        map.removeMarker(marker!!)
+                        map.setSelectedObjects(listOf());
                         marker = null
                     }
-
-                    it.loadClusterer()
                 }
             }
-
         }
     }
 }

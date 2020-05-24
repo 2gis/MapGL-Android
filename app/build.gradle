@@ -1,8 +1,11 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
+
+
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+
 
 android {
     compileSdkVersion 29
@@ -14,11 +17,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        Properties properties = new Properties()
-        properties.load(project.rootProject.file('local.properties').newDataInputStream())
-        def apiKey = properties.getProperty('api.key')
-        resValue "string", "API_KEY", apiKey
+        resValue("string", "dgis_map_key", localProperties.getProperty("apiKey"))
     }
     buildTypes {
         release {

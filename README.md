@@ -34,9 +34,10 @@ Once Map is ready mapReadyCallback will be called and Map object will be availab
 ### Receiving Map Click Events
 ```kotlin
 fun onDGisMapReady(map: Map?) {
-    map?.setOnClickListener({ coordinates: LonLat ->
-        // Do smth with map click coordinates
-    })
+    map?.setOnClickListener { event : MapPointerEvent ->
+        // event.lngLat - Geographical coordinates
+        // event.target - Target MapObject (geographical object)
+    }
 }
 ```
 
@@ -59,8 +60,20 @@ private fun onDGisMapReady(map: DGisMap?) {
 }
 ```
 
+### Select map objects
+You can highlight objects on the map. Select them by object ids for that.
+```kotlin
+map?.setSelectedObjects(mapObjectsByIds("13933647002594323"))
+```
+Use empty list to remove any selection.
+```kotlin
+map?.setSelectedObjects(listOf())
+```
+
 ## Example
-To explore the example project, clone the repo, build and run
+To make the example app work you need to have the access key (contact us mapgl@2gis.com if you need one).  
+At first, append your key to *local.properties* file in the root directory
+`apiKey=your_api_key_here`. Then build and run project as usual.
 
 ## Installation
 Setup Gradle repositories
@@ -74,7 +87,7 @@ repositories {
 add dependency
 ```groovy
 dependencies {
-    implementation 'ru.dublgis.dgismobile.mapsdk:mapsdk:1.0.0'
+    implementation 'ru.dublgis.dgismobile.mapsdk:mapsdk:1.1.0'
 }
 ```
 
