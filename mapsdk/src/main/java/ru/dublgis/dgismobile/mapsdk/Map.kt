@@ -3,6 +3,7 @@ package ru.dublgis.dgismobile.mapsdk
 
 typealias PositionChangeListener = (LonLat) -> Unit
 typealias PropertyChangeListener = (Double) -> Unit
+typealias PointerChangeListener = (MapPointerEvent) -> Unit
 
 
 interface Map {
@@ -16,7 +17,7 @@ interface Map {
 
     var maxPitch: Double
     var minPitch: Double
-    var pitch : Double
+    var pitch: Double
 
     fun addMarker(options: MarkerOptions): Marker
 
@@ -26,7 +27,7 @@ interface Map {
 
     fun showMarker(marker: Marker)
 
-    fun setOnClickListener(listener: PositionChangeListener?)
+    fun setOnClickListener(listener: PointerChangeListener?)
 
     fun setOnCenterChangedListener(listener: PositionChangeListener?)
 
@@ -35,4 +36,6 @@ interface Map {
     fun setOnZoomChangedListener(listener: PropertyChangeListener?)
 
     fun setOnRotationChangedListener(listener: PropertyChangeListener?)
+
+    fun setSelectedObjects(objects: Collection<MapObject>)
 }

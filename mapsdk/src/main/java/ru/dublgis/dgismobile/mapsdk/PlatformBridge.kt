@@ -6,7 +6,6 @@ import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import java.lang.NumberFormatException
 import java.lang.ref.WeakReference
 import kotlin.math.abs
 
@@ -16,17 +15,17 @@ typealias MapReadyCallback = (Map?) -> Unit
 
 
 internal class PlatformBridge(
-        packageName: String,
-        jsExecutor: JsExecutor,
-        mapReadyCallback: MapReadyCallback
-    ) : WebViewClient(), Map {
+    packageName: String,
+    jsExecutor: JsExecutor,
+    mapReadyCallback: MapReadyCallback
+) : WebViewClient(), Map {
 
     private val packageName = packageName
     private val handler = Handler(Looper.getMainLooper())
     private val jsExecutor = jsExecutor
     private val readyCallback = mapReadyCallback
 
-    private var onClickCallback : PositionChangeListener? = null
+    private var onClickCallback: PointerChangeListener? = null
     private var onCenterChanged: PositionChangeListener? = null
     private var onPitchChanged: PropertyChangeListener? = null
     private var onZoomChanged: PropertyChangeListener? = null
@@ -48,81 +47,99 @@ internal class PlatformBridge(
 
     private var _controls: Boolean = false
 
+    private var selectedIds = ArrayList<String>()
+
     override var center: LonLat
         get() = _center
         set(value) {
             _center = value
-            jsExecutor("""
+            jsExecutor(
+                """
                 window.dgismap.map.setCenter(
                     [${value.lon}, ${value.lat}]
                 );
-            """)
+            """
+            )
         }
 
     override var zoom: Double
         get() = _zoom
         set(value) {
             _zoom = value
-            jsExecutor("""
+            jsExecutor(
+                """
                 window.dgismap.map.setZoom(${value});
-            """)
+            """
+            )
         }
 
     override var maxZoom: Double
         get() = _maxZoom
         set(value) {
             _maxZoom = value
-            jsExecutor("""
+            jsExecutor(
+                """
                 window.dgismap.map.setMaxZoom($value);
-            """)
+            """
+            )
         }
 
     override var minZoom: Double
         get() = _minZoom
         set(value) {
             _minZoom = value
-            jsExecutor("""
+            jsExecutor(
+                """
                 window.dgismap.map.setMinZoom($value);
-            """)
+            """
+            )
         }
 
     override var maxPitch: Double
         get() = _maxPitch
         set(value) {
             _maxPitch = value
-            jsExecutor("""
+            jsExecutor(
+                """
                 window.dgismap.map.setMaxPitch($value);
-            """)
+            """
+            )
         }
 
     override var minPitch: Double
         get() = _minPitch
         set(value) {
             _minPitch = value
-            jsExecutor("""
+            jsExecutor(
+                """
                 window.dgismap.map.setMinPitch($value);
-            """)
+            """
+            )
         }
 
     override var pitch: Double
         get() = _pitch
         set(value) {
             _pitch = value
-            jsExecutor("""
+            jsExecutor(
+                """
                 window.dgismap.map.setPitch(${value});
-            """)
+            """
+            )
         }
 
     override var rotation: Double
         get() = _rotation
         set(value) {
             _rotation = value
-            jsExecutor("""
+            jsExecutor(
+                """
                 window.dgismap.map.setRotation(${value});
-            """)
+            """
+            )
         }
 
-    override fun setOnClickListener(listener: PositionChangeListener?) {
+    override fun setOnClickListener(listener: PointerChangeListener?) {
         onClickCallback = listener
     }
 
@@ -138,6 +155,22 @@ internal class PlatformBridge(
         onRotationChanged = listener
     }
 
+    override fun setSelectedObjects(objects: Collection<MapObject>) {
+        val arg = objects.joinToString(
+            separator = ",",
+            prefix = "[",
+            postfix = "]",
+            transform = {
+                "'${it.id}'"
+            }
+        )
+        jsExecutor(
+            """
+            window.dgismap.setSelectedObjects($arg);
+        """
+        )
+    }
+
     override fun setOnZoomChangedListener(listener: PropertyChangeListener?) {
         onZoomChanged = listener
     }
@@ -149,7 +182,7 @@ internal class PlatformBridge(
             "https://d-assets.2gis.ru/markers/pin-opened.svg"
         }
 
-        val fmtPair = { it : Pair<Double, Double> ->
+        val fmtPair = { it: Pair<Double, Double> ->
             "[${it.first}, ${it.second}]"
         }
 
@@ -165,7 +198,8 @@ internal class PlatformBridge(
 
         markers[marker.id] = marker
 
-        jsExecutor("""
+        jsExecutor(
+            """
             window.dgismap.createMarker(
                 "${marker.id}",
                 "$icon",
@@ -173,37 +207,44 @@ internal class PlatformBridge(
                 $size,
                 $anchor
             );
-        """)
+        """
+        )
         return marker
     }
 
     override fun removeMarker(marker: Marker) {
         val impl = marker as MarkerImpl
-        jsExecutor("""
+        jsExecutor(
+            """
             window.dgismap.removeMarker(
                 "${impl.id}"
             );
-        """)
+        """
+        )
         markers.remove(impl.id)
     }
 
     override fun hideMarker(marker: Marker) {
         val impl = marker as MarkerImpl
-        jsExecutor("""
+        jsExecutor(
+            """
             window.dgismap.hideMarker(
                 "${impl.id}"
             );
-        """)
+        """
+        )
         impl.hidden = true
     }
 
     override fun showMarker(marker: Marker) {
         val impl = marker as MarkerImpl
-        jsExecutor("""
+        jsExecutor(
+            """
             window.dgismap.showMarker(
                 "${impl.id}"
             );
-        """)
+        """
+        )
         impl.hidden = false
     }
 
@@ -211,17 +252,20 @@ internal class PlatformBridge(
 
     fun setMarkerCoordinates(marker: Marker, position: LonLat) {
         val impl = marker as MarkerImpl
-        jsExecutor("""
+        jsExecutor(
+            """
             window.dgismap.setMarkerCoordinates(
                 "${impl.id}", 
                 [${position.lon}, ${position.lat}] 
             );
-        """)
+        """
+        )
     }
 
     override fun onPageFinished(view: WebView?, url: String?) {
         super.onPageFinished(view, url)
-        jsExecutor("""
+        jsExecutor(
+            """
             window.initMapGL(
                 [${_center.lon}, ${_center.lat}],
                 ${_maxZoom}, ${_minZoom}, ${_zoom},
@@ -231,7 +275,8 @@ internal class PlatformBridge(
                 "$packageName",
                 $_controls
             );
-        """)
+        """
+        )
     }
 
     fun setup(
@@ -257,13 +302,26 @@ internal class PlatformBridge(
 
     // called from JS thread -----------------------------------------------------------------------
 
-    @JavascriptInterface fun onEvent(kind: String, payload: String) {
+    @JavascriptInterface
+    fun onEvent(kind: String, payload: String) {
         Log.i(TAG, "from js $kind, payload $payload")
         handler.post {
 
             val parseLonLat = { payload: String ->
                 val it = payload.split(';')
                 LonLat(it[0].toDouble(), it[1].toDouble())
+            }
+
+            val parsePointer = { payload: String ->
+                val it = payload.split(';')
+                var target: MapObject? = null;
+                if (it.size == 3 && it[2].isNotEmpty()) {
+                    target = mapObjectById(it[2])
+                }
+                MapPointerEvent(
+                    LonLat(it[0].toDouble(), it[1].toDouble()),
+                    target
+                )
             }
 
             val parseDouble = { payload: String, def: Double ->
@@ -281,7 +339,7 @@ internal class PlatformBridge(
 
             when (kind) {
                 "click" -> {
-                    onClickCallback?.invoke(parseLonLat(payload))
+                    onClickCallback?.invoke(parsePointer(payload))
                 }
                 "markerClick" -> {
                     val marker = markers.get(payload)

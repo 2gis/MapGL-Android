@@ -1,8 +1,8 @@
 package ru.dublgis.dgismobile.sdktestapp
 
+import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
-import android.Manifest
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
@@ -11,24 +11,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
+import ru.dublgis.dgismobile.mapsdk.*
 import java.lang.ref.WeakReference
-import ru.dublgis.dgismobile.mapsdk.LonLat
-import ru.dublgis.dgismobile.mapsdk.Marker
-import ru.dublgis.dgismobile.mapsdk.MarkerOptions
-import ru.dublgis.dgismobile.mapsdk.iconFromSvgAsset
 import ru.dublgis.dgismobile.mapsdk.Map as DGisMap
 import ru.dublgis.dgismobile.mapsdk.MapFragment as DGisMapFragment
 
 
-const val LOCATION_PERMISSION_REQUEST_ID : Int = 777
+const val LOCATION_PERMISSION_REQUEST_ID: Int = 777
 const val LOC_PERM = Manifest.permission.ACCESS_FINE_LOCATION
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var locationProvider: FusedLocationProviderClient
-    private var map : DGisMap? = null
-    private var location : Location? = null
+    private var map: DGisMap? = null
+    private var location: Location? = null
     private var marker: Marker? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,18 +38,22 @@ class MainActivity : AppCompatActivity() {
         val mapFragment = supportFragmentManager.findFragmentById(R.id.mapFragment)
                 as DGisMapFragment
 
+        val apiKey = resources.getString(R.string.dgis_map_key)
+
         mapFragment.mapReadyCallback = this::onDGisMapReady
         mapFragment.setup(
-            apiKey = "",
+            apiKey = apiKey,
             center = LonLat(55.291231, 25.227135),
             zoom = 16.0
         )
 
         val grant = ContextCompat.checkSelfPermission(this, LOC_PERM)
         if (grant != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
+            ActivityCompat.requestPermissions(
+                this,
                 arrayOf(LOC_PERM),
-                LOCATION_PERMISSION_REQUEST_ID)
+                LOCATION_PERMISSION_REQUEST_ID
+            )
         } else {
             requestLocation()
         }
@@ -71,11 +72,12 @@ class MainActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
-        grantResults: IntArray) {
+        grantResults: IntArray
+    ) {
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        when(requestCode) {
+        when (requestCode) {
             LOCATION_PERMISSION_REQUEST_ID -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     requestLocation()
@@ -100,7 +102,7 @@ class MainActivity : AppCompatActivity() {
         request.fastestInterval = 20000
         request.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
 
-        val listener = object: LocationCallback() {
+        val listener = object : LocationCallback() {
             override fun onLocationResult(res: LocationResult?) {
                 res?.lastLocation?.let {
                     this@MainActivity.location = it
@@ -135,15 +137,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun onMapClicked(point: LonLat) {
-        map?.let {
+    private fun onMapClicked(pointer: MapPointerEvent) {
+        map?.let { map ->
+            pointer.target?.let { mapObject ->
+                map.setSelectedObjects(listOf(mapObject))
+            }
+
             if (marker != null) {
-                 marker?.position = point
+                marker?.position = pointer.lngLat
             } else {
                 val ctx = WeakReference(this)
-                marker = it.addMarker(
+                marker = map.addMarker(
                     MarkerOptions(
-                        point,
+                        pointer.lngLat,
                         icon = iconFromSvgAsset(assets, "pin.svg"),
                         size = 30.0 to 48.0,
                         anchor = 15.0 to 48.0
@@ -164,7 +170,8 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(activity, msg, Toast.LENGTH_LONG)
                             .show()
 
-                        it.removeMarker(marker!!)
+                        map.removeMarker(marker!!)
+                        map.setSelectedObjects(listOf());
                         marker = null
                     }
                 }

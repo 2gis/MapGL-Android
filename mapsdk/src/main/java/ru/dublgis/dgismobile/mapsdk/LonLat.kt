@@ -24,5 +24,3 @@ data class LonLat(
         return closeEnough(lon, other.lon) && closeEnough(lat, other.lat)
     }
 }
-
-
