@@ -42,9 +42,11 @@ class MainActivity : AppCompatActivity() {
         val mapFragment = supportFragmentManager.findFragmentById(R.id.mapFragment)
                 as DGisMapFragment
 
+        val apiKey = resources.getString(R.string.dgis_map_key)
+
         mapFragment.mapReadyCallback = this::onDGisMapReady
         mapFragment.setup(
-            apiKey = "",
+            apiKey = apiKey,
             center = LonLat(55.291231, 25.227135),
             zoom = 16.0
         )
