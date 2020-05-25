@@ -143,39 +143,42 @@ class MainActivity : AppCompatActivity() {
                 map.setSelectedObjects(listOf(mapObject))
             }
 
-            if (marker != null) {
-                marker?.position = pointer.lngLat
-            } else {
-                val ctx = WeakReference(this)
-                marker = map.addMarker(
-                    MarkerOptions(
-                        pointer.lngLat,
-                        icon = iconFromSvgAsset(assets, "pin.svg"),
-                        size = 30.0 to 48.0,
-                        anchor = 15.0 to 48.0
-                    )
+            //if (marker != null) {
+            //    marker?.position = pointer.lngLat
+            //} else {
+            val ctx = WeakReference(this)
+            marker = map.addMarker(
+                MarkerOptions(
+                    pointer.lngLat,
+                    icon = iconFromSvgAsset(assets, "pin.svg"),
+                    size = 30.0 to 48.0,
+                    anchor = 15.0 to 48.0
                 )
+            )
 
-                marker?.setOnClickListener {
-                    ctx.get()?.let { activity ->
+            marker?.setOnClickListener {
+                ctx.get()?.let { activity ->
 
-                        val fmt = { it: LonLat ->
-                            val dp = { it: Double -> "${it.toString().take(10)}" }
+                    val fmt = { it: LonLat ->
+                        val dp = { it: Double -> "${it.toString().take(10)}" }
 
-                            "${dp(it.lat)}, ${dp(it.lon)}"
-                        }
-
-                        val msg = "remove marker\n${fmt(marker!!.position)}"
-
-                        Toast.makeText(activity, msg, Toast.LENGTH_LONG)
-                            .show()
-
-                        map.removeMarker(marker!!)
-                        map.setSelectedObjects(listOf());
-                        marker = null
+                        "${dp(it.lat)}, ${dp(it.lon)}"
                     }
+
+                    val msg = "remove marker\n${fmt(marker!!.position)}"
+
+                    Toast.makeText(activity, msg, Toast.LENGTH_LONG)
+                        .show()
+
+                    map.removeMarker(marker!!)
+                    map.setSelectedObjects(listOf());
+                    marker = null
                 }
             }
+
+            map.showClusters()
+
+            //}
         }
     }
 }

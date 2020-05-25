@@ -39,5 +39,5 @@ interface Map {
 
     fun setSelectedObjects(objects: Collection<MapObject>)
 
-    fun loadClusterer()
+    fun showClusters()
 }

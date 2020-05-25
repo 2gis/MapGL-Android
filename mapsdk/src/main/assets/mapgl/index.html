@@ -15,6 +15,8 @@
 			overflow: hidden;
 		}
 
+
+
     </style>
 </head>
 
@@ -50,31 +52,7 @@ window.initMapGL = (
         zoomControl: controls
     });
 
-    const clusterer = new mapgl.Clusterer(map, {
-        radius: 60,
-        clusterStyle,
-    });
-
-    function clusterStyle(pointsCount) {
-        if (pointsCount < 3) {
-            return {
-                icon: 'https://mapgl.2gis.com/api/examples/cluster.svg',
-                hoverIcon: 'https://mapgl.2gis.com/api/examples/cluster.svg',
-                size: [25, 25],
-                hoverSize: [35, 35],
-                labelColor: '#ffffff',
-                labelFontSize: 12,
-            };
-        }
-        return {
-            icon: 'https://mapgl.2gis.com/api/examples/clusterHover.svg',
-            hoverIcon: 'https://mapgl.2gis.com/api/examples/clusterHover.svg',
-            size: [35, 35],
-            hoverSize: [45, 45],
-            labelColor: '#ffffff',
-            labelFontSize: 16,
-        };
-    }
+    const clusterer = new mapgl.Clusterer(map);
 
     const emit = (name, args) => {
         if (bridge && bridge.onEvent) {
@@ -152,16 +130,15 @@ window.initMapGL = (
             map.setSelectedObjects(selectedIds);
 		},
 
-		loadClusterer: () => {
+		showClusters: () => {
 		    clusterer.load(markers);
-		    clusterer.on('click', (event) => {
-                alert(`${event.target.type} is clicked`);
-            });
 		}
     };
 
     emit('initialized');
 };
+
+
 
 
 

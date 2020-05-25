@@ -171,10 +171,10 @@ internal class PlatformBridge(
         )
     }
 
-    override fun loadClusterer() {
+    override fun showClusters() {
         jsExecutor(
             """
-            window.dgismap.loadClusterer();
+            window.dgismap.showClusters();
         """
         )
     }
