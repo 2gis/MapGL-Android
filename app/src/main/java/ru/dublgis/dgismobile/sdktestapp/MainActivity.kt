@@ -12,6 +12,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
 import ru.dublgis.dgismobile.mapsdk.*
+import ru.dublgis.dgismobile.mapsdk.clustering.ClusterStyle
+import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
+import ru.dublgis.dgismobile.mapsdk.clustering.InputMarker
 import java.lang.ref.WeakReference
 import ru.dublgis.dgismobile.mapsdk.Map as DGisMap
 import ru.dublgis.dgismobile.mapsdk.MapFragment as DGisMapFragment
@@ -27,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     private var map: DGisMap? = null
     private var location: Location? = null
     private var marker: Marker? = null
+    private var inputMarkersList = mutableListOf<InputMarker>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
@@ -43,8 +47,8 @@ class MainActivity : AppCompatActivity() {
         mapFragment.mapReadyCallback = this::onDGisMapReady
         mapFragment.setup(
             apiKey = apiKey,
-            center = LonLat(55.291231, 25.227135),
-            zoom = 16.0
+            center = LonLat(55.30771, 25.20314),
+            zoom = 12.0
         )
 
         val grant = ContextCompat.checkSelfPermission(this, LOC_PERM)
@@ -147,14 +151,27 @@ class MainActivity : AppCompatActivity() {
             //    marker?.position = pointer.lngLat
             //} else {
             val ctx = WeakReference(this)
-            marker = map.addMarker(
-                MarkerOptions(
-                    pointer.lngLat,
-                    icon = iconFromSvgAsset(assets, "pin.svg"),
-                    size = 30.0 to 48.0,
-                    anchor = 15.0 to 48.0
-                )
+            val markerOptions = MarkerOptions(
+                pointer.lngLat,
+                icon = iconFromSvgAsset(assets, "pin.svg"),
+                size = 30.0 to 48.0,
+                anchor = 15.0 to 48.0
             )
+            marker = map.addMarker(
+                markerOptions
+            )
+
+            val inputMarker = InputMarker(
+                pointer.lngLat,
+                icon = iconFromSvgAsset(assets, "pin.svg"),
+                size = 30.0 to 48.0,
+                anchor = 15.0 to 48.0
+            )
+            inputMarkersList.add(inputMarker)
+            if (inputMarkersList.size == 4) {
+                val clusterer = map.createCluster(ClustererOptions(ClusterStyle(), 60))
+                clusterer.show(inputMarkersList)
+            }
 
             marker?.setOnClickListener {
                 ctx.get()?.let { activity ->
@@ -165,7 +182,7 @@ class MainActivity : AppCompatActivity() {
                         "${dp(it.lat)}, ${dp(it.lon)}"
                     }
 
-                    val msg = "remove marker\n${fmt(marker!!.position)}"
+                    val msg = "remove marker\n${marker?.position?.let { fmt(it) }}"
 
                     Toast.makeText(activity, msg, Toast.LENGTH_LONG)
                         .show()
@@ -175,9 +192,6 @@ class MainActivity : AppCompatActivity() {
                     marker = null
                 }
             }
-
-            map.showClusters()
-
             //}
         }
     }

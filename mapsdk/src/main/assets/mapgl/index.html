@@ -37,6 +37,7 @@ window.initMapGL = (
         controls) => {
 
     const markers = new Map();
+    const clustererMap = new Map();
 
     const map = new mapgl.Map('map', {
         center: center,
@@ -51,8 +52,6 @@ window.initMapGL = (
         key: apiKey,
         zoomControl: controls
     });
-
-    const clusterer = new mapgl.Clusterer(map);
 
     const emit = (name, args) => {
         if (bridge && bridge.onEvent) {
@@ -130,8 +129,27 @@ window.initMapGL = (
             map.setSelectedObjects(selectedIds);
 		},
 
-		showClusters: () => {
-		    clusterer.load(markers);
+		createCluster: (id, radius) => {
+		    const clusterer = new mapgl.Clusterer(map, {
+                radius: radius,
+            });
+            clustererMap.set(id, clusterer);
+		},
+
+		addClusterMarkers: (id, clusterMarkers) => {
+  			const clusterer_ = clustererMap.get(id);
+  			const clusterer = new mapgl.Clusterer(map, {
+                radius: 60,
+            });
+		    clusterer.load(clusterMarkers);
+		},
+
+		destroyCluster: (id) => {
+		    const clusterer = clustererMap.get(id);
+			if (clusterer) {
+				clusterer.destroy();
+			}
+			clustererMap.delete(id);
 		}
     };
 

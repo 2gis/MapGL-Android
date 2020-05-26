@@ -1,5 +1,9 @@
 package ru.dublgis.dgismobile.mapsdk
 
+import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
+import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
+import ru.dublgis.dgismobile.mapsdk.clustering.InputMarker
+
 
 typealias PositionChangeListener = (LonLat) -> Unit
 typealias PropertyChangeListener = (Double) -> Unit
@@ -39,5 +43,9 @@ interface Map {
 
     fun setSelectedObjects(objects: Collection<MapObject>)
 
-    fun showClusters()
+    fun createCluster(clustererOptions: ClustererOptions): Clusterer
+
+    fun addClusterMarkers(id: String, objects: Collection<InputMarker>)
+
+    fun destroyCluster(id: String)
 }
