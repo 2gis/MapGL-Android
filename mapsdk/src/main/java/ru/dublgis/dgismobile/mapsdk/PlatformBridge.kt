@@ -175,19 +175,19 @@ internal class PlatformBridge(
         )
     }
 
-    override fun createCluster(clustererOptions: ClustererOptions): Clusterer {
-        val clusterer = ClustererImpl(WeakReference(this), clustererOptions)
+    override fun createClusterer(options: ClustererOptions): Clusterer {
+        val clusterer = ClustererImpl(WeakReference(this), options)
 
         jsExecutor(
             """
-            window.dgismap.createCluster(${clusterer.id}, {${clusterer.radius}});
+            window.dgismap.createClusterer(${clusterer.id}, {${clusterer.radius}});
         """
         )
 
         return clusterer
     }
 
-    override fun addClusterMarkers(id: String, inputMarkers: Collection<InputMarker>) {
+    override fun loadClustererMarkers(clustererId: String, inputMarkers: Collection<InputMarker>) {
         val arg = inputMarkers.joinToString(
             separator = ",",
             prefix = "[",
@@ -200,15 +200,15 @@ internal class PlatformBridge(
 
         jsExecutor(
             """
-            window.dgismap.addClusterMarkers($id, $arg);
+            window.dgismap.loadMarkers($clustererId, $arg);
         """
         )
     }
 
-    override fun destroyCluster(id: String) {
+    override fun destroyClusterer(id: String) {
         jsExecutor(
             """
-            window.dgismap.destroyCluster($id);
+            window.dgismap.destroyClusterer($id);
         """
         )
     }

@@ -43,9 +43,9 @@ interface Map {
 
     fun setSelectedObjects(objects: Collection<MapObject>)
 
-    fun createCluster(clustererOptions: ClustererOptions): Clusterer
+    fun createClusterer(options: ClustererOptions): Clusterer
 
-    fun addClusterMarkers(id: String, objects: Collection<InputMarker>)
+    fun loadClustererMarkers(clustererId: String, markers: Collection<InputMarker>)
 
-    fun destroyCluster(id: String)
+    fun destroyClusterer(id: String)
 }

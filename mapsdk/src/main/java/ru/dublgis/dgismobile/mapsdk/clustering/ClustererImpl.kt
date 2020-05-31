@@ -2,26 +2,24 @@ package ru.dublgis.dgismobile.mapsdk.clustering
 
 import ru.dublgis.dgismobile.mapsdk.PlatformBridge
 import java.lang.ref.WeakReference
-import kotlin.math.absoluteValue
-import kotlin.random.Random
+import java.util.*
 
 internal class ClustererImpl(
     private val controller: WeakReference<PlatformBridge>,
     private val clustererOptions: ClustererOptions
 ) : Clusterer {
 
-    //TODO:
-    val id = "${Random.nextInt().absoluteValue}"
+    val id = UUID.randomUUID().toString()
     val radius = clustererOptions.radius
 
     var onClick: ClustererClickCallback? = null
 
-    override fun hide() {
-        controller.get()?.destroyCluster(id)
+    override fun destroy() {
+        controller.get()?.destroyClusterer(id)
     }
 
-    override fun show(clusterMarkers: Collection<InputMarker>) {
-        controller.get()?.addClusterMarkers(id, clusterMarkers)
+    override fun load(clusterMarkers: Collection<InputMarker>) {
+        controller.get()?.loadClustererMarkers(id, clusterMarkers)
     }
 
     override fun setOnClickListener(listener: ClustererClickCallback?) {
