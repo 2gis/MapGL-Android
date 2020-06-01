@@ -10,6 +10,7 @@ internal class ClustererImpl(
 ) : Clusterer {
 
     val id = UUID.randomUUID().toString()
+
     val radius = clustererOptions.radius
 
     var onClick: ClustererClickCallback? = null

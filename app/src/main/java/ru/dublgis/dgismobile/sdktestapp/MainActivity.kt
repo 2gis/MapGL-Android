@@ -12,8 +12,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
 import ru.dublgis.dgismobile.mapsdk.*
-import ru.dublgis.dgismobile.mapsdk.clustering.ClustererStyle
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
+import ru.dublgis.dgismobile.mapsdk.clustering.ClustererStyle
 import ru.dublgis.dgismobile.mapsdk.clustering.InputMarker
 import java.lang.ref.WeakReference
 import ru.dublgis.dgismobile.mapsdk.Map as DGisMap

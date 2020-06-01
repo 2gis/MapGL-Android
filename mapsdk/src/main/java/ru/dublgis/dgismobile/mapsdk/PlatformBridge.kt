@@ -180,14 +180,14 @@ internal class PlatformBridge(
 
         jsExecutor(
             """
-            window.dgismap.createClusterer(${clusterer.id}, {${clusterer.radius}});
+            window.dgismap.createClusterer(${clusterer.id}, ${clusterer.radius});
         """
         )
 
         return clusterer
     }
 
-    override fun loadClustererMarkers(clustererId: String, inputMarkers: Collection<InputMarker>) {
+    fun loadClustererMarkers(id: String, inputMarkers: Collection<InputMarker>) {
         val arg = inputMarkers.joinToString(
             separator = ",",
             prefix = "[",
@@ -200,12 +200,12 @@ internal class PlatformBridge(
 
         jsExecutor(
             """
-            window.dgismap.loadMarkers($clustererId, $arg);
+            window.dgismap.loadMarkers($id, $arg);
         """
         )
     }
 
-    override fun destroyClusterer(id: String) {
+    fun destroyClusterer(id: String) {
         jsExecutor(
             """
             window.dgismap.destroyClusterer($id);

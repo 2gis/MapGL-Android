@@ -2,7 +2,6 @@ package ru.dublgis.dgismobile.mapsdk
 
 import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
-import ru.dublgis.dgismobile.mapsdk.clustering.InputMarker
 
 
 typealias PositionChangeListener = (LonLat) -> Unit
@@ -44,8 +43,4 @@ interface Map {
     fun setSelectedObjects(objects: Collection<MapObject>)
 
     fun createClusterer(options: ClustererOptions): Clusterer
-
-    fun loadClustererMarkers(clustererId: String, markers: Collection<InputMarker>)
-
-    fun destroyClusterer(id: String)
 }

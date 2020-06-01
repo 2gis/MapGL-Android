@@ -2,10 +2,10 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-    <style>
+	<meta charset="UTF-8"/>
+	<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+	<meta content="ie=edge" http-equiv="X-UA-Compatible"/>
+	<style>
 		html,
 		body,
 		#map {
@@ -17,7 +17,10 @@
 
 
 
-    </style>
+
+
+
+	</style>
 </head>
 
 <body>
@@ -120,29 +123,29 @@ window.initMapGL = (
 			markers.delete(id);
 		},
 
-        setMarkerCoordinates: (id, coordinates) => {
+		setMarkerCoordinates: (id, coordinates) => {
 			const marker = markers.get(id);
 			marker.setCoordinates(coordinates);
 		},
 
 		setSelectedObjects: (selectedIds) => {
-            map.setSelectedObjects(selectedIds);
+			map.setSelectedObjects(selectedIds);
 		},
 
 		createClusterer: (id, radius) => {
-		    const clusterer = new mapgl.Clusterer(map, {
-                radius: radius,
-            });
-            clusterers.set(id, clusterer);
+			const clusterer = new mapgl.Clusterer(map, {
+				radius: radius,
+			});
+			clusterers.set(id, clusterer);
 		},
 
 		loadMarkers: (id, clusterMarkers) => {
-  			const clusterer = clusterers.get(id);
-		    clusterer.load(clusterMarkers);
+			const clusterer = clusterers.get(id);
+			clusterer.load(clusterMarkers);
 		},
 
 		destroyClusterer: (id) => {
-		    const clusterer = clusterers.get(id);
+			const clusterer = clusterers.get(id);
 			if (clusterer) {
 				clusterer.destroy();
 			}
@@ -152,6 +155,9 @@ window.initMapGL = (
 
     emit('initialized');
 };
+
+
+
 
 
 

@@ -2,8 +2,6 @@ package ru.dublgis.dgismobile.mapsdk
 
 import android.content.res.AssetManager
 import android.util.Base64
-import android.util.Log
-import java.nio.charset.Charset
 
 
 internal abstract class MarkerIconDescriptorImpl : MarkerIconDescriptor() {
