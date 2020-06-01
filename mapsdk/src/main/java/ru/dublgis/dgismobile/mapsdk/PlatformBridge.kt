@@ -12,6 +12,8 @@ import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
 import ru.dublgis.dgismobile.mapsdk.clustering.InputMarker
 import java.lang.ref.WeakReference
 import kotlin.math.abs
+import kotlin.math.absoluteValue
+import kotlin.random.Random
 
 
 typealias JsExecutor = (String) -> Unit
@@ -51,7 +53,7 @@ internal class PlatformBridge(
 
     private var _controls: Boolean = false
 
-    private var selectedIds = ArrayList<String>()
+    private var clusterId = Random.nextInt().absoluteValue
 
     override var center: LonLat
         get() = _center
@@ -176,11 +178,14 @@ internal class PlatformBridge(
     }
 
     override fun createClusterer(options: ClustererOptions): Clusterer {
-        val clusterer = ClustererImpl(WeakReference(this), options)
+        val id = "$clusterId"
+        clusterId += 1
+
+        val clusterer = ClustererImpl(WeakReference(this), id, options)
 
         jsExecutor(
             """
-            window.dgismap.createClusterer(${clusterer.id}, ${clusterer.radius});
+            window.dgismap.createClusterer($id, ${clusterer.radius});
         """
         )
 

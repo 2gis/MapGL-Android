@@ -3,13 +3,14 @@ package ru.dublgis.dgismobile.mapsdk.clustering
 import ru.dublgis.dgismobile.mapsdk.PlatformBridge
 import java.lang.ref.WeakReference
 import java.util.*
+import kotlin.math.absoluteValue
+import kotlin.random.Random
 
 internal class ClustererImpl(
     private val controller: WeakReference<PlatformBridge>,
+    private val id: String,
     private val clustererOptions: ClustererOptions
 ) : Clusterer {
-
-    val id = UUID.randomUUID().toString()
 
     val radius = clustererOptions.radius
 
