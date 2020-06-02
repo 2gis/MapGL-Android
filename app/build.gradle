@@ -9,7 +9,7 @@ localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    buildToolsVersion "29.0.1"
     defaultConfig {
         applicationId "ru.dublgis.dgismobile.sdktestapp"
         minSdkVersion 21

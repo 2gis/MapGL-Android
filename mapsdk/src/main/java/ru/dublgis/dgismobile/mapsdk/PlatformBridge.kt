@@ -6,10 +6,6 @@ import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
-import ru.dublgis.dgismobile.mapsdk.clustering.ClustererImpl
-import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
-import ru.dublgis.dgismobile.mapsdk.clustering.InputMarker
 import java.lang.ref.WeakReference
 import kotlin.math.abs
 
@@ -171,44 +167,6 @@ internal class PlatformBridge(
         jsExecutor(
             """
             window.dgismap.setSelectedObjects($arg);
-        """
-        )
-    }
-
-    override fun createCluster(clustererOptions: ClustererOptions): Clusterer {
-        val clusterer = ClustererImpl(WeakReference(this), clustererOptions)
-
-        jsExecutor(
-            """
-            window.dgismap.createCluster(${clusterer.id}, {${clusterer.radius}});
-        """
-        )
-
-        return clusterer
-    }
-
-    override fun addClusterMarkers(id: String, inputMarkers: Collection<InputMarker>) {
-        val arg = inputMarkers.joinToString(
-            separator = ",",
-            prefix = "[",
-            postfix = "]",
-            transform = {
-                "{ coordinates: [${it.position.lon}, ${it.position.lat}] }"
-            }
-        )
-
-
-        jsExecutor(
-            """
-            window.dgismap.addClusterMarkers($id, $arg);
-        """
-        )
-    }
-
-    override fun destroyCluster(id: String) {
-        jsExecutor(
-            """
-            window.dgismap.destroyCluster($id);
         """
         )
     }
@@ -384,10 +342,6 @@ internal class PlatformBridge(
                     onClickCallback?.invoke(parsePointer(payload))
                 }
                 "markerClick" -> {
-                    val marker = markers.get(payload)
-                    marker?.onClick?.invoke()
-                }
-                "clustererClick" -> {
                     val marker = markers.get(payload)
                     marker?.onClick?.invoke()
                 }
