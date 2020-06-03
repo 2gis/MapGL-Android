@@ -10,11 +10,11 @@ import android.webkit.WebView
 import androidx.fragment.app.Fragment
 
 
-class MapFragment: Fragment() {
-    var mapReadyCallback : MapReadyCallback = { /* noop */ }
+class MapFragment : Fragment() {
+    var mapReadyCallback: MapReadyCallback = { /* noop */ }
 
     private lateinit var bridge: PlatformBridge
-    private var webView : WebView? = null
+    private var webView: WebView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +26,11 @@ class MapFragment: Fragment() {
         )
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         val view = inflater.inflate(R.layout.fragment_dgismap, null)
 
@@ -36,7 +40,7 @@ class MapFragment: Fragment() {
 
             setBackgroundColor(Color.parseColor("#f7f3df"))
             addJavascriptInterface(bridge, "bridge")
-            loadData(loadIndexHtml(), "text/html","base64")
+            loadData(loadIndexHtml(), "text/html", "base64")
         }
         return view
     }
@@ -59,15 +63,16 @@ class MapFragment: Fragment() {
         maxZoom, minZoom, zoom,
         maxPitch, minPitch, pitch,
         rotation,
-        controls)
+        controls
+    )
 
     // ------------------------------------------------------
 
-    private fun onMapReady(map : Map?) {
+    private fun onMapReady(map: Map?) {
         mapReadyCallback(map)
     }
 
-    private fun evaluateJavaScript(script : String) {
+    private fun evaluateJavaScript(script: String) {
         webView?.evaluateJavascript(script, null)
     }
 

@@ -12,14 +12,15 @@ internal abstract class MarkerIconDescriptorImpl : MarkerIconDescriptor() {
 
 internal class SvgMarkerIconDescriptor(
     private val am: AssetManager,
-    private val path: String)
+    private val path: String
+)
 
-    : MarkerIconDescriptorImpl()
-{
+    : MarkerIconDescriptorImpl() {
     override fun toJsFormat(): String {
         am.open(path).let {
             val buffer = Base64.encodeToString(
-                it.readBytes(), Base64.NO_PADDING or Base64.NO_WRAP)
+                it.readBytes(), Base64.NO_PADDING or Base64.NO_WRAP
+            )
 
             return "data:image/svg+xml;base64,$buffer"
         }

@@ -6,19 +6,19 @@ interface MapObject {
 }
 
 
-internal data class MapObjectImpl (
+internal data class MapObjectImpl(
     override val id: String
 ) : MapObject
 
 
-fun mapObjectById(id: String) : MapObject {
+fun mapObjectById(id: String): MapObject {
     if (id.isEmpty()) {
-        throw IllegalArgumentException("map object id could not be empty string");
+        throw IllegalArgumentException("map object id could not be empty string")
     }
-    return MapObjectImpl(id);
+    return MapObjectImpl(id)
 }
 
 
-fun mapObjectsByIds(vararg ids: String) : List<MapObject> {
+fun mapObjectsByIds(vararg ids: String): List<MapObject> {
     return ids.map(::mapObjectById)
 }

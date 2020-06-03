@@ -12,8 +12,6 @@ import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
 import ru.dublgis.dgismobile.mapsdk.clustering.InputMarker
 import java.lang.ref.WeakReference
 import kotlin.math.abs
-import kotlin.math.absoluteValue
-import kotlin.random.Random
 
 
 typealias JsExecutor = (String) -> Unit
@@ -38,6 +36,8 @@ internal class PlatformBridge(
     private var onRotationChanged: PropertyChangeListener? = null
 
     private val markers = mutableMapOf<String, MarkerImpl>()
+    private val clusterers = mutableMapOf<String, ClustererImpl>()
+
     private var _apiKey = ""
     private var _center = LonLat()
 
@@ -53,7 +53,7 @@ internal class PlatformBridge(
 
     private var _controls: Boolean = false
 
-    private var clusterId = Random.nextInt().absoluteValue
+    private var clusterId = 0
 
     override var center: LonLat
         get() = _center
@@ -178,10 +178,10 @@ internal class PlatformBridge(
     }
 
     override fun createClusterer(options: ClustererOptions): Clusterer {
-        val id = "$clusterId"
-        clusterId += 1
+        val id = "${clusterId++}"
 
         val clusterer = ClustererImpl(WeakReference(this), id, options)
+        clusterers[id] = clusterer
 
         jsExecutor(
             """
@@ -205,7 +205,7 @@ internal class PlatformBridge(
 
         jsExecutor(
             """
-            window.dgismap.loadMarkers($id, $arg);
+            window.dgismap.loadClustererMarkers($id, $arg);
         """
         )
     }
@@ -361,7 +361,7 @@ internal class PlatformBridge(
 
             val parsePointer = { payload: String ->
                 val it = payload.split(';')
-                var target: MapObject? = null;
+                var target: MapObject? = null
                 if (it.size == 3 && it[2].isNotEmpty()) {
                     target = mapObjectById(it[2])
                 }
@@ -393,8 +393,8 @@ internal class PlatformBridge(
                     marker?.onClick?.invoke()
                 }
                 "clustererClick" -> {
-                    val marker = markers.get(payload)
-                    marker?.onClick?.invoke()
+                    val clusterer = clusterers.get(payload)
+                    clusterer?.onClick?.invoke()
                 }
                 "centerend" -> {
                     val center = parseLonLat(payload)

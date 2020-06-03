@@ -133,10 +133,13 @@ window.initMapGL = (
 			const clusterer = new mapgl.Clusterer(map, {
 				radius: radius,
 			});
+			clusterer.on('click', (ev) => {
+				emit('clustererClick', String(id));
+			});
 			clusterers.set(id, clusterer);
 		},
 
-		loadMarkers: (id, clusterMarkers) => {
+		loadClustererMarkers: (id, clusterMarkers) => {
   			const clusterer = clusterers.get(id);
 		    clusterer.load(clusterMarkers);
 		},
