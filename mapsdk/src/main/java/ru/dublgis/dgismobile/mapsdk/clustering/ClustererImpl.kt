@@ -17,10 +17,6 @@ internal class ClustererImpl(
         controller.get()?.destroyClusterer(id)
     }
 
-    override fun getId(): String {
-        return id
-    }
-
     override fun load(clusterMarkers: Collection<InputMarker>) {
         controller.get()?.loadClustererMarkers(id, clusterMarkers)
     }

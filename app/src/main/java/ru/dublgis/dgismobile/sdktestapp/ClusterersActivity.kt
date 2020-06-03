@@ -22,7 +22,7 @@ class ClusterersActivity : MapActivity() {
 
                 clusterer.destroy()
 
-                val msg = "remove cluster (id = ${clusterer.getId()})"
+                val msg = "remove cluster"
 
                 Toast.makeText(activity, msg, Toast.LENGTH_LONG)
                     .show()
