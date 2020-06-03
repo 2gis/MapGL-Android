@@ -2,10 +2,10 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-    <style>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+	<style>
 		html,
 		body,
 		#map {
@@ -17,10 +17,6 @@
 
 
 
-
-
-
-
     </style>
 </head>
 
@@ -28,6 +24,8 @@
 <div id="map"></div>
 
 <script src="https://mapgl.2gis.com/api/js"></script>
+<script src="https://unpkg.com/@2gis/mapgl-clusterer@^1/dist/clustering.js"></script>
+
 <script>
 
 window.initMapGL = (
@@ -39,6 +37,7 @@ window.initMapGL = (
         controls) => {
 
     const markers = new Map();
+    const clusterers = new Map();
 
     const map = new mapgl.Map('map', {
         center: center,
@@ -121,18 +120,47 @@ window.initMapGL = (
 			markers.delete(id);
 		},
 
-        setMarkerCoordinates: (id, coordinates) => {
+		setMarkerCoordinates: (id, coordinates) => {
 			const marker = markers.get(id);
 			marker.setCoordinates(coordinates);
 		},
 
 		setSelectedObjects: (selectedIds) => {
-            map.setSelectedObjects(selectedIds);
+			map.setSelectedObjects(selectedIds);
+		},
+
+		createClusterer: (id, radius) => {
+			const clusterer = new mapgl.Clusterer(map, {
+				radius: radius,
+			});
+			clusterer.on('click', (ev) => {
+				emit('clustererClick', String(id));
+			});
+			clusterers.set(id, clusterer);
+		},
+
+		loadClustererMarkers: (id, clusterMarkers) => {
+  			const clusterer = clusterers.get(id);
+		    clusterer.load(clusterMarkers);
+		},
+
+		destroyClusterer: (id) => {
+			const clusterer = clusterers.get(id);
+			if (clusterer) {
+				clusterer.destroy();
+			}
+			clusterers.delete(id);
 		}
     };
 
     emit('initialized');
 };
+
+
+
+
+
+
 
 
 

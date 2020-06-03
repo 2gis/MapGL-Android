@@ -6,6 +6,10 @@ import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
+import ru.dublgis.dgismobile.mapsdk.clustering.ClustererImpl
+import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
+import ru.dublgis.dgismobile.mapsdk.clustering.InputMarker
 import java.lang.ref.WeakReference
 import kotlin.math.abs
 
@@ -32,6 +36,8 @@ internal class PlatformBridge(
     private var onRotationChanged: PropertyChangeListener? = null
 
     private val markers = mutableMapOf<String, MarkerImpl>()
+    private val clusterers = mutableMapOf<String, ClustererImpl>()
+
     private var _apiKey = ""
     private var _center = LonLat()
 
@@ -47,7 +53,7 @@ internal class PlatformBridge(
 
     private var _controls: Boolean = false
 
-    private var selectedIds = ArrayList<String>()
+    private var clusterId = 0
 
     override var center: LonLat
         get() = _center
@@ -167,6 +173,47 @@ internal class PlatformBridge(
         jsExecutor(
             """
             window.dgismap.setSelectedObjects($arg);
+        """
+        )
+    }
+
+    override fun createClusterer(options: ClustererOptions): Clusterer {
+        val id = "${clusterId++}"
+
+        val clusterer = ClustererImpl(WeakReference(this), id, options)
+        clusterers[id] = clusterer
+
+        jsExecutor(
+            """
+            window.dgismap.createClusterer($id, ${clusterer.radius});
+        """
+        )
+
+        return clusterer
+    }
+
+    fun loadClustererMarkers(id: String, inputMarkers: Collection<InputMarker>) {
+        val arg = inputMarkers.joinToString(
+            separator = ",",
+            prefix = "[",
+            postfix = "]",
+            transform = {
+                "{ coordinates: [${it.position.lon}, ${it.position.lat}] }"
+            }
+        )
+
+
+        jsExecutor(
+            """
+            window.dgismap.loadClustererMarkers($id, $arg);
+        """
+        )
+    }
+
+    fun destroyClusterer(id: String) {
+        jsExecutor(
+            """
+            window.dgismap.destroyClusterer($id);
         """
         )
     }
@@ -314,7 +361,7 @@ internal class PlatformBridge(
 
             val parsePointer = { payload: String ->
                 val it = payload.split(';')
-                var target: MapObject? = null;
+                var target: MapObject? = null
                 if (it.size == 3 && it[2].isNotEmpty()) {
                     target = mapObjectById(it[2])
                 }
@@ -344,6 +391,10 @@ internal class PlatformBridge(
                 "markerClick" -> {
                     val marker = markers.get(payload)
                     marker?.onClick?.invoke()
+                }
+                "clustererClick" -> {
+                    val clusterer = clusterers.get(payload)
+                    clusterer?.onClick?.invoke()
                 }
                 "centerend" -> {
                     val center = parseLonLat(payload)

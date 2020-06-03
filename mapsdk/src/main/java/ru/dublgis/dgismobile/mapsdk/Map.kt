@@ -1,5 +1,8 @@
 package ru.dublgis.dgismobile.mapsdk
 
+import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
+import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
+
 
 typealias PositionChangeListener = (LonLat) -> Unit
 typealias PropertyChangeListener = (Double) -> Unit
@@ -38,4 +41,6 @@ interface Map {
     fun setOnRotationChangedListener(listener: PropertyChangeListener?)
 
     fun setSelectedObjects(objects: Collection<MapObject>)
+
+    fun createClusterer(options: ClustererOptions): Clusterer
 }

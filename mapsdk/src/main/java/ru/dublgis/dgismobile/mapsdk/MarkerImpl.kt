@@ -6,13 +6,13 @@ import kotlin.random.Random
 
 
 internal class MarkerImpl(
-        private val controller: WeakReference<PlatformBridge>,
-        private val options: MarkerOptions
-    ) : Marker {
+    private val controller: WeakReference<PlatformBridge>,
+    private val options: MarkerOptions
+) : Marker {
 
     val id = "${position.lon},${position.lat}_${Random.nextInt().absoluteValue}"
     var hidden = false
-    var onClick : MarkerClickCallback? = null
+    var onClick: MarkerClickCallback? = null
 
     override var position: LonLat
         get() = options.position
