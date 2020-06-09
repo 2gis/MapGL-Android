@@ -3,11 +3,25 @@ package ru.dublgis.dgismobile.mapsdk
 import kotlin.math.abs
 
 
+/**
+ * Geographical coordinates
+ */
 data class LonLat(
+    /**
+     * Longitude
+     */
     val lon: Double = 0.0,
+    /**
+     * Latitude
+     */
     val lat: Double = 0.0
 
 ) {
+    /**
+     *  Used to compare equality of two LonLat objects
+     *
+     *  @param other object to compare
+     */
     override fun equals(other: Any?): Boolean {
         if (this === other)
             return true
