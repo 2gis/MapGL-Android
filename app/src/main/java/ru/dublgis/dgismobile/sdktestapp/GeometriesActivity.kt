@@ -1,8 +1,10 @@
 package ru.dublgis.dgismobile.sdktestapp
 
+import android.widget.Toast
 import org.jetbrains.annotations.TestOnly
 import ru.dublgis.dgismobile.mapsdk.LonLat
 import ru.dublgis.dgismobile.mapsdk.geometries.PolylineOptions
+import java.lang.ref.WeakReference
 
 class GeometriesActivity : MapActivity() {
     override fun onDGisMapReady() {
@@ -11,6 +13,18 @@ class GeometriesActivity : MapActivity() {
 
     private fun showPolyline() {
         val polyline = map?.createPolyline(PolylineOptions(generateCoordinates()))
+        polyline?.setOnClickListener {
+            val ctx = WeakReference(this)
+            ctx.get()?.let { activity ->
+
+                polyline.destroy()
+
+                val msg = "remove polyline"
+
+                Toast.makeText(activity, msg, Toast.LENGTH_LONG)
+                    .show()
+            }
+        }
     }
 
     @TestOnly
