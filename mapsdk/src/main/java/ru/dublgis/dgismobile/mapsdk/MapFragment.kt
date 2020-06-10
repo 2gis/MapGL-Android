@@ -10,7 +10,7 @@ import android.webkit.WebView
 import androidx.fragment.app.Fragment
 
 /**
- * Class used for drawing a 2gis map
+ * Class used for drawing a 2gis map.
  */
 class MapFragment : Fragment() {
     /**
@@ -26,6 +26,7 @@ class MapFragment : Fragment() {
      *
      * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
      */
+    /** @suppress */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -36,19 +37,7 @@ class MapFragment : Fragment() {
         )
     }
 
-    /**
-     * Called to have the fragment instantiate its user interface view.
-     *
-     * @param inflater The LayoutInflater object that can be used to inflate
-     * any views in the fragment,
-     * @param container If non-null, this is the parent view that the fragment's
-     * UI should be attached to.  The fragment should not add the view itself,
-     * but this can be used to generate the LayoutParams of the view.
-     * @param savedInstanceState If non-null, this fragment is being re-constructed
-     * from a previous saved state as given here.
-     *
-     * @return Return the View for the fragment's UI, or null.
-     */
+    /** @suppress */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -69,9 +58,9 @@ class MapFragment : Fragment() {
     }
 
     /**
-     * Called to set initial values of the map
+     * Called to set initial values of the map.
      *
-     * @param apiKey The private key map
+     * @param apiKey The private key map.
      * @param center Map center in geographical coordinates ([longitude, latitude]).
      * @param maxZoom Maximum map zoom.
      * @param minZoom Minimum map zoom.

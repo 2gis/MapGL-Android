@@ -9,6 +9,7 @@ abstract class MarkerIconDescriptor
 
 /**
  * Get icon from assets
+ *
  * @param assetManager Provides access to an application's raw asset files
  * @param path The name of the asset to open.
  */

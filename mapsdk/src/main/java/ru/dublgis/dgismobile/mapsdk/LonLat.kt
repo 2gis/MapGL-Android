@@ -4,7 +4,7 @@ import kotlin.math.abs
 
 
 /**
- * Geographical coordinates
+ * Geographical coordinates.
  */
 data class LonLat(
     /**
@@ -18,9 +18,9 @@ data class LonLat(
 
 ) {
     /**
-     *  Used to compare equality of two LonLat objects
+     *  Used to compare equality of two LonLat objects.
      *
-     *  @param other object to compare
+     *  @param other object to compare.
      */
     override fun equals(other: Any?): Boolean {
         if (this === other)

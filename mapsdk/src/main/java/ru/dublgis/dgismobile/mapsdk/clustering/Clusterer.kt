@@ -9,17 +9,18 @@ interface Clusterer {
 
     /**
      * Loads markers to clusterer.
+     *
      * @param clusterMarkers - An array of markers.
      */
     fun load(clusterMarkers: Collection<InputMarker>)
 
     /**
-     * If the clusterer is no longer needed you can destroy it by using the destroy method:
+     * If the clusterer is no longer needed you can destroy it by using the destroy method.
      */
     fun destroy()
 
     /**
-     * On click event
+     * On click event.
      */
     fun setOnClickListener(listener: ClustererClickCallback?)
 }

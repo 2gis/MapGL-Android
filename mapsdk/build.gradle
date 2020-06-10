@@ -46,6 +46,14 @@ android {
     dokka {
         outputFormat = "auto-restdocs-json"
         dokkaFatJar = "capital.scalable:spring-auto-restdocs-dokka-json:$springAutoRestDocsVersion"
+
+        // Do not create index pages for empty packages
+        skipEmptyPackages = true
+
+        //Do not output deprecated members. Applies globally, can be overridden by packageOptions
+        skipDeprecated = true
+
+        includeNonPublic = false
     }
 }
 
