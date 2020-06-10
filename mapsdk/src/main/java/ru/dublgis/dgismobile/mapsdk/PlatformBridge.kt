@@ -10,6 +10,9 @@ import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererImpl
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
 import ru.dublgis.dgismobile.mapsdk.clustering.InputMarker
+import ru.dublgis.dgismobile.mapsdk.geometries.Polyline
+import ru.dublgis.dgismobile.mapsdk.geometries.PolylineImpl
+import ru.dublgis.dgismobile.mapsdk.geometries.PolylineOptions
 import java.lang.ref.WeakReference
 import kotlin.math.abs
 
@@ -37,6 +40,7 @@ internal class PlatformBridge(
 
     private val markers = mutableMapOf<String, MarkerImpl>()
     private val clusterers = mutableMapOf<String, ClustererImpl>()
+    private val polylines = mutableMapOf<String, PolylineImpl>()
 
     private var _apiKey = ""
     private var _center = LonLat()
@@ -54,6 +58,7 @@ internal class PlatformBridge(
     private var _controls: Boolean = false
 
     private var clusterId = 0
+    private var polylineId = 0
 
     override var center: LonLat
         get() = _center
@@ -216,6 +221,42 @@ internal class PlatformBridge(
             window.dgismap.destroyClusterer($id);
         """
         )
+
+        clusterers.remove(id)
+    }
+
+    override fun createPolyline(options: PolylineOptions): Polyline {
+        val id = "${polylineId++}"
+
+        val polyline = PolylineImpl(WeakReference(this), id)
+        polylines[id] = polyline
+
+        val arg = options.coordinates.joinToString(
+            separator = ",",
+            prefix = "[",
+            postfix = ",]",
+            transform = {
+                "[${it.lon}, ${it.lat}]"
+            }
+        )
+
+        jsExecutor(
+            """
+            window.dgismap.createPolyline($id, $arg);
+        """
+        )
+
+        return polyline
+    }
+
+    fun destroyPolyline(id: String) {
+        jsExecutor(
+            """
+            window.dgismap.destroyPolyline($id);
+        """
+        )
+
+        polylines.remove(id)
     }
 
     override fun setOnZoomChangedListener(listener: PropertyChangeListener?) {

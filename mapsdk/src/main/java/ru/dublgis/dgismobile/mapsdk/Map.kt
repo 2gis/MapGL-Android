@@ -2,6 +2,8 @@ package ru.dublgis.dgismobile.mapsdk
 
 import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
+import ru.dublgis.dgismobile.mapsdk.geometries.Polyline
+import ru.dublgis.dgismobile.mapsdk.geometries.PolylineOptions
 
 
 typealias PositionChangeListener = (LonLat) -> Unit
@@ -43,4 +45,6 @@ interface Map {
     fun setSelectedObjects(objects: Collection<MapObject>)
 
     fun createClusterer(options: ClustererOptions): Clusterer
+
+    fun createPolyline(options: PolylineOptions): Polyline
 }

@@ -30,6 +30,10 @@
                 android:name=".ClusterersActivity"
                 android:configChanges="orientation|keyboardHidden"
                 android:theme="@style/SplashTheme" />
+        <activity
+                android:name=".GeometriesActivity"
+                android:configChanges="orientation|keyboardHidden"
+                android:theme="@style/SplashTheme" />
 
     </application>
 
