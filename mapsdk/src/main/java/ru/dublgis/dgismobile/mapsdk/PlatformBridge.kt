@@ -437,6 +437,10 @@ internal class PlatformBridge(
                     val clusterer = clusterers.get(payload)
                     clusterer?.onClick?.invoke()
                 }
+                "polylineClick" -> {
+                    val polyline = polylines.get(payload)
+                    polyline?.onClick?.invoke()
+                }
                 "centerend" -> {
                     val center = parseLonLat(payload)
                     if (_center != center) {
