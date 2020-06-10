@@ -9,13 +9,24 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.fragment.app.Fragment
 
-
+/**
+ * Class used for drawing a 2gis map.
+ */
 class MapFragment : Fragment() {
+    /**
+     * Callback for the result when map is ready.
+     */
     var mapReadyCallback: MapReadyCallback = { /* noop */ }
 
     private lateinit var bridge: PlatformBridge
     private var webView: WebView? = null
 
+    /**
+     * Called to do initial creation of a MapFragment.
+     *
+     * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
+     */
+    /** @suppress */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -26,6 +37,7 @@ class MapFragment : Fragment() {
         )
     }
 
+    /** @suppress */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,6 +57,20 @@ class MapFragment : Fragment() {
         return view
     }
 
+    /**
+     * Called to set initial values of the map.
+     *
+     * @param apiKey The private key map.
+     * @param center Map center in geographical coordinates ([longitude, latitude]).
+     * @param maxZoom Maximum map zoom.
+     * @param minZoom Minimum map zoom.
+     * @param zoom Map zoom.
+     * @param maxPitch Maximum map pitch in degrees.
+     * @param minPitch Minimum map pitch in degrees.
+     * @param pitch Map pitch in degrees.
+     * @param rotation Map rotation in degrees.
+     * @param controls Whether a zoom control should be added during the map initialization.
+     */
     fun setup(
         apiKey: String,
         center: LonLat = LonLat(37.618317, 55.750574),

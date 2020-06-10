@@ -1,20 +1,26 @@
 buildscript {
     ext.kotlin_version = '1.3.72'
+    ext {
+        springAutoRestDocsVersion = "2.0.2"
+        dokkaVersion = "0.9.16"
+    }
     repositories {
         jcenter()
-
+        mavenCentral()
     }
     dependencies {
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokkaVersion"
     }
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
+apply plugin: "org.jetbrains.dokka"
 
 android {
     compileSdkVersion 29
@@ -37,6 +43,18 @@ android {
         }
     }
 
+    dokka {
+        outputFormat = "auto-restdocs-json"
+        dokkaFatJar = "capital.scalable:spring-auto-restdocs-dokka-json:$springAutoRestDocsVersion"
+
+        // Do not create index pages for empty packages
+        skipEmptyPackages = true
+
+        //Do not output deprecated members. Applies globally, can be overridden by packageOptions
+        skipDeprecated = true
+
+        includeNonPublic = false
+    }
 }
 
 dependencies {
