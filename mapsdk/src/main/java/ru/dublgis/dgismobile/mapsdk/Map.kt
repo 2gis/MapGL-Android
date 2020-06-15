@@ -2,6 +2,8 @@ package ru.dublgis.dgismobile.mapsdk
 
 import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
+import ru.dublgis.dgismobile.mapsdk.geometries.carroute.CarRoute
+import ru.dublgis.dgismobile.mapsdk.geometries.carroute.Segment
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.Circle
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.CircleOptions
 import ru.dublgis.dgismobile.mapsdk.geometries.polygon.Polygon
@@ -55,4 +57,6 @@ interface Map {
     fun createPolygon(options: PolygonOptions): Polygon
 
     fun createCircle(options: CircleOptions): Circle
+
+    fun createCarRoute(segments: Collection<Segment>): CarRoute
 }

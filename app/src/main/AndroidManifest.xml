@@ -46,6 +46,10 @@
                 android:name=".CircleActivity"
                 android:configChanges="orientation|keyboardHidden"
                 android:theme="@style/SplashTheme" />
+        <activity
+                android:name=".CarRouteActivity"
+                android:configChanges="orientation|keyboardHidden"
+                android:theme="@style/SplashTheme" />
 
     </application>
 
