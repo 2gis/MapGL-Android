@@ -39,6 +39,7 @@ window.initMapGL = (
     const markers = new Map();
     const clusterers = new Map();
 	const polylines = new Map();
+	const polygons = new Map();
 
     const map = new mapgl.Map('map', {
         center: center,
@@ -171,6 +172,27 @@ window.initMapGL = (
 				polyline.destroy();
 			}
 			polylines.delete(id);
+		},
+
+		createPolygon: (id, coordinates) => {
+			const polygon = new mapgl.Polygon(map, {
+				coordinates: coordinates,
+				color: '#990000',
+				strokeWidth: 3,
+				strokeColor: '#bb0000',
+			});
+			polygon.on('click', (ev) => {
+				emit('polygonClick', String(id));
+			});
+			polygons.set(id, polygon);
+		},
+
+		destroyPolygon: (id) => {
+			const polygon = polygons.get(id);
+			if (polygon) {
+				polygon.destroy();
+			}
+			polygons.delete(id);
 		}
     };
 

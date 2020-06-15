@@ -1,4 +1,4 @@
-package ru.dublgis.dgismobile.mapsdk.geometries
+package ru.dublgis.dgismobile.mapsdk.geometries.polyline
 
 import ru.dublgis.dgismobile.mapsdk.LonLat
 

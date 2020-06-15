@@ -1,41 +1,30 @@
 package ru.dublgis.dgismobile.sdktestapp
 
-import android.widget.Toast
-import org.jetbrains.annotations.TestOnly
-import ru.dublgis.dgismobile.mapsdk.LonLat
-import ru.dublgis.dgismobile.mapsdk.geometries.PolylineOptions
-import java.lang.ref.WeakReference
+import android.content.Intent
+import android.os.Bundle
+import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
 
-class GeometriesActivity : MapActivity() {
-    override fun onDGisMapReady() {
-        showPolyline()
-    }
+class GeometriesActivity : AppCompatActivity() {
 
-    private fun showPolyline() {
-        val polyline = map?.createPolyline(PolylineOptions(generateCoordinates()))
-        polyline?.setOnClickListener {
-            val ctx = WeakReference(this)
-            ctx.get()?.let { activity ->
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_geometries)
 
-                polyline.destroy()
-
-                val msg = "remove polyline"
-
-                Toast.makeText(activity, msg, Toast.LENGTH_LONG)
-                    .show()
-            }
+        findViewById<Button>(R.id.polyline).setOnClickListener {
+            startActivity(Intent(this, PolylineActivity::class.java))
         }
-    }
 
-    @TestOnly
-    private fun generateCoordinates(): Collection<LonLat> {
-        val coordinates = mutableListOf<LonLat>()
-        coordinates.add(LonLat(55.28770929, 25.22069944))
-        coordinates.add(LonLat(55.28976922, 25.25656786))
-        coordinates.add(LonLat(55.33096795, 25.22007825))
-        coordinates.add(LonLat(55.33302789, 25.25687836))
-        coordinates.add(LonLat(55.30730, 25.20113))
+        findViewById<Button>(R.id.polygon).setOnClickListener {
+            startActivity(Intent(this, PolygonActivity::class.java))
+        }
 
-        return coordinates
+        findViewById<Button>(R.id.circle).setOnClickListener {
+            //TODO:
+        }
+
+        findViewById<Button>(R.id.carRoute).setOnClickListener {
+            //TODO:
+        }
     }
 }

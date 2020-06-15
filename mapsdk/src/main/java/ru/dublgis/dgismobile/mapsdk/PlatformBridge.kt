@@ -10,9 +10,12 @@ import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererImpl
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
 import ru.dublgis.dgismobile.mapsdk.clustering.InputMarker
-import ru.dublgis.dgismobile.mapsdk.geometries.Polyline
-import ru.dublgis.dgismobile.mapsdk.geometries.PolylineImpl
-import ru.dublgis.dgismobile.mapsdk.geometries.PolylineOptions
+import ru.dublgis.dgismobile.mapsdk.geometries.polygon.Polygon
+import ru.dublgis.dgismobile.mapsdk.geometries.polygon.PolygonImpl
+import ru.dublgis.dgismobile.mapsdk.geometries.polygon.PolygonOptions
+import ru.dublgis.dgismobile.mapsdk.geometries.polyline.Polyline
+import ru.dublgis.dgismobile.mapsdk.geometries.polyline.PolylineImpl
+import ru.dublgis.dgismobile.mapsdk.geometries.polyline.PolylineOptions
 import java.lang.ref.WeakReference
 import kotlin.math.abs
 
@@ -41,6 +44,7 @@ internal class PlatformBridge(
     private val markers = mutableMapOf<String, MarkerImpl>()
     private val clusterers = mutableMapOf<String, ClustererImpl>()
     private val polylines = mutableMapOf<String, PolylineImpl>()
+    private val polygons = mutableMapOf<String, PolygonImpl>()
 
     private var _apiKey = ""
     private var _center = LonLat()
@@ -59,6 +63,7 @@ internal class PlatformBridge(
 
     private var clusterId = 0
     private var polylineId = 0
+    private var polygonId = 0
 
     override var center: LonLat
         get() = _center
@@ -228,7 +233,11 @@ internal class PlatformBridge(
     override fun createPolyline(options: PolylineOptions): Polyline {
         val id = "${polylineId++}"
 
-        val polyline = PolylineImpl(WeakReference(this), id)
+        val polyline =
+            PolylineImpl(
+                WeakReference(this),
+                id
+            )
         polylines[id] = polyline
 
         val arg = options.coordinates.joinToString(
@@ -249,6 +258,41 @@ internal class PlatformBridge(
         return polyline
     }
 
+    override fun createPolygon(options: PolygonOptions): Polygon {
+        val id = "${polygonId++}"
+
+        val polygon =
+            PolygonImpl(
+                WeakReference(this),
+                id
+            )
+        polygons[id] = polygon
+
+        val arg = options.coordinates.joinToString(
+            separator = ",",
+            prefix = "[",
+            postfix = ",]",
+            transform = { it ->
+                it.joinToString(
+                    separator = ",",
+                    prefix = "[",
+                    postfix = ",]",
+                    transform = {
+                        "[${it.lon}, ${it.lat}]"
+                    }
+                )
+            }
+        )
+
+        jsExecutor(
+            """
+            window.dgismap.createPolygon($id, $arg);
+        """
+        )
+
+        return polygon
+    }
+
     fun destroyPolyline(id: String) {
         jsExecutor(
             """
@@ -257,6 +301,16 @@ internal class PlatformBridge(
         )
 
         polylines.remove(id)
+    }
+
+    fun destroyPolygon(id: String) {
+        jsExecutor(
+            """
+            window.dgismap.destroyPolygon($id);
+        """
+        )
+
+        polygons.remove(id)
     }
 
     override fun setOnZoomChangedListener(listener: PropertyChangeListener?) {
@@ -440,6 +494,10 @@ internal class PlatformBridge(
                 "polylineClick" -> {
                     val polyline = polylines.get(payload)
                     polyline?.onClick?.invoke()
+                }
+                "polygonClick" -> {
+                    val polygon = polygons.get(payload)
+                    polygon?.onClick?.invoke()
                 }
                 "centerend" -> {
                     val center = parseLonLat(payload)
