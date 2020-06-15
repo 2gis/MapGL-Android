@@ -40,6 +40,7 @@ window.initMapGL = (
     const clusterers = new Map();
 	const polylines = new Map();
 	const polygons = new Map();
+	const circles = new Map();
 
     const map = new mapgl.Map('map', {
         center: center,
@@ -193,6 +194,25 @@ window.initMapGL = (
 				polygon.destroy();
 			}
 			polygons.delete(id);
+		},
+
+		createCircle: (id, coordinates, radius) => {
+			const circle = new mapgl.Circle(map, {
+				coordinates: coordinates,
+				radius: radius,
+			});
+			circle.on('click', (ev) => {
+				emit('circleClick', String(id));
+			});
+			circles.set(id, circle);
+		},
+
+		destroyCircle: (id) => {
+			const circle = circles.get(id);
+			if (circle) {
+				circle.destroy();
+			}
+			circles.delete(id);
 		}
     };
 

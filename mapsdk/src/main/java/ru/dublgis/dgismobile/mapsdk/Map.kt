@@ -2,6 +2,8 @@ package ru.dublgis.dgismobile.mapsdk
 
 import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
+import ru.dublgis.dgismobile.mapsdk.geometries.circle.Circle
+import ru.dublgis.dgismobile.mapsdk.geometries.circle.CircleOptions
 import ru.dublgis.dgismobile.mapsdk.geometries.polygon.Polygon
 import ru.dublgis.dgismobile.mapsdk.geometries.polygon.PolygonOptions
 import ru.dublgis.dgismobile.mapsdk.geometries.polyline.Polyline
@@ -51,4 +53,6 @@ interface Map {
     fun createPolyline(options: PolylineOptions): Polyline
 
     fun createPolygon(options: PolygonOptions): Polygon
+
+    fun createCircle(options: CircleOptions): Circle
 }

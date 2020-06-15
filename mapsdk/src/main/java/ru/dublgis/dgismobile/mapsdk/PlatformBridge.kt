@@ -10,6 +10,9 @@ import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererImpl
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
 import ru.dublgis.dgismobile.mapsdk.clustering.InputMarker
+import ru.dublgis.dgismobile.mapsdk.geometries.circle.Circle
+import ru.dublgis.dgismobile.mapsdk.geometries.circle.CircleImpl
+import ru.dublgis.dgismobile.mapsdk.geometries.circle.CircleOptions
 import ru.dublgis.dgismobile.mapsdk.geometries.polygon.Polygon
 import ru.dublgis.dgismobile.mapsdk.geometries.polygon.PolygonImpl
 import ru.dublgis.dgismobile.mapsdk.geometries.polygon.PolygonOptions
@@ -45,6 +48,7 @@ internal class PlatformBridge(
     private val clusterers = mutableMapOf<String, ClustererImpl>()
     private val polylines = mutableMapOf<String, PolylineImpl>()
     private val polygons = mutableMapOf<String, PolygonImpl>()
+    private val circles = mutableMapOf<String, CircleImpl>()
 
     private var _apiKey = ""
     private var _center = LonLat()
@@ -64,6 +68,7 @@ internal class PlatformBridge(
     private var clusterId = 0
     private var polylineId = 0
     private var polygonId = 0
+    private var circleId = 0
 
     override var center: LonLat
         get() = _center
@@ -293,6 +298,29 @@ internal class PlatformBridge(
         return polygon
     }
 
+    override fun createCircle(options: CircleOptions): Circle {
+        val id = "${circleId++}"
+
+        val circle =
+            CircleImpl(
+                WeakReference(this),
+                id
+            )
+        circles[id] = circle
+
+        jsExecutor(
+            """
+            window.dgismap.createCircle(
+                $id, 
+                [${options.coordinates.lon}, ${options.coordinates.lat}],
+                ${options.radius}
+            );
+        """
+        )
+
+        return circle
+    }
+
     fun destroyPolyline(id: String) {
         jsExecutor(
             """
@@ -311,6 +339,16 @@ internal class PlatformBridge(
         )
 
         polygons.remove(id)
+    }
+
+    fun destroyCircle(id: String) {
+        jsExecutor(
+            """
+            window.dgismap.destroyCircle($id);
+        """
+        )
+
+        circles.remove(id)
     }
 
     override fun setOnZoomChangedListener(listener: PropertyChangeListener?) {
@@ -488,16 +526,21 @@ internal class PlatformBridge(
                     marker?.onClick?.invoke()
                 }
                 "clustererClick" -> {
-                    val clusterer = clusterers.get(payload)
+                    val clusterer = clusterers[payload]
                     clusterer?.onClick?.invoke()
                 }
                 "polylineClick" -> {
-                    val polyline = polylines.get(payload)
+                    val polyline = polylines[payload]
                     polyline?.onClick?.invoke()
                 }
                 "polygonClick" -> {
-                    val polygon = polygons.get(payload)
+                    val polygon = polygons[payload]
                     polygon?.onClick?.invoke()
+                }
+
+                "circleClick" -> {
+                    val circle = circles[payload]
+                    circle?.onClick?.invoke()
                 }
                 "centerend" -> {
                     val center = parseLonLat(payload)

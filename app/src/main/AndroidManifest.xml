@@ -42,6 +42,10 @@
                 android:name=".PolygonActivity"
                 android:configChanges="orientation|keyboardHidden"
                 android:theme="@style/SplashTheme" />
+        <activity
+                android:name=".CircleActivity"
+                android:configChanges="orientation|keyboardHidden"
+                android:theme="@style/SplashTheme" />
 
     </application>
 
