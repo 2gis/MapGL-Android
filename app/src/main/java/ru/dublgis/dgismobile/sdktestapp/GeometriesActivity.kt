@@ -22,9 +22,5 @@ class GeometriesActivity : AppCompatActivity() {
         findViewById<Button>(R.id.circle).setOnClickListener {
             startActivity(Intent(this, CircleActivity::class.java))
         }
-
-        findViewById<Button>(R.id.carRoute).setOnClickListener {
-            //TODO:
-        }
     }
 }
