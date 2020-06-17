@@ -38,9 +38,9 @@ window.initMapGL = (
 
     const markers = new Map();
     const clusterers = new Map();
-	const polylines = new Map();
-	const polygons = new Map();
-	const circles = new Map();
+    const polylines = new Map();
+    const polygons = new Map();
+    const circles = new Map();
 
     const map = new mapgl.Map('map', {
         center: center,
@@ -175,12 +175,12 @@ window.initMapGL = (
 			polylines.delete(id);
 		},
 
-		createPolygon: (id, coordinates) => {
+		createPolygon: (id, coordinates, color, strokeWidth, strokeColor) => {
 			const polygon = new mapgl.Polygon(map, {
 				coordinates: coordinates,
-				color: '#990000',
-				strokeWidth: 3,
-				strokeColor: '#bb0000',
+				color: color,
+				strokeWidth: strokeWidth,
+				strokeColor: strokeColor,
 			});
 			polygon.on('click', (ev) => {
 				emit('polygonClick', String(id));

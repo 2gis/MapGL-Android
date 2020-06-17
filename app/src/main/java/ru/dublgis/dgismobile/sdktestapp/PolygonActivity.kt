@@ -4,7 +4,6 @@ import android.widget.Toast
 import org.jetbrains.annotations.TestOnly
 import ru.dublgis.dgismobile.mapsdk.LonLat
 import ru.dublgis.dgismobile.mapsdk.geometries.polygon.PolygonOptions
-import ru.dublgis.dgismobile.mapsdk.geometries.polyline.PolylineOptions
 import java.lang.ref.WeakReference
 
 class PolygonActivity : MapActivity() {
@@ -13,16 +12,19 @@ class PolygonActivity : MapActivity() {
     }
 
     private fun showPolygon() {
-        val polyline = map?.createPolygon(
+        val polygon = map?.createPolygon(
             PolygonOptions(
-                generateCoordinates()
+                generateCoordinates(),
+                "'#99fafa'",
+                4f,
+                "'#fafafa'"
             )
         )
-        polyline?.setOnClickListener {
+        polygon?.setOnClickListener {
             val ctx = WeakReference(this)
             ctx.get()?.let { activity ->
 
-                polyline.destroy()
+                polygon.destroy()
 
                 val msg = "remove polygon"
 

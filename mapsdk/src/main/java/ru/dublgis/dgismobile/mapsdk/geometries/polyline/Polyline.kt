@@ -5,7 +5,7 @@ typealias PolylineClickCallback = () -> Unit
 interface Polyline {
 
     /**
-     * Destroys the polyline
+     * Destroys the polyline.
      */
     fun destroy()
     /**

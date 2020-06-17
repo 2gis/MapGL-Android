@@ -12,5 +12,19 @@ class PolygonOptions(
      * secondPoint, ..., firstPoint]. Each point is a geographical point: [longitude, latitude].
      * The last point should be the same as the first.
      */
-    var coordinates: Collection<Collection<LonLat>>
+    var coordinates: Collection<Collection<LonLat>>,
+
+    /**
+     * Fill color in hexadecimal RGB (#ff0000) or RGBA (#ff0000ff) format.
+     */
+    var color: String,
+
+    /**
+     * Stroke width in pixels.
+     */
+    var strokeWidth: Float,
+    /**
+     * Stroke color in hexadecimal RGB (#ff0000) or RGBA (#ff0000ff) format.
+     */
+    var strokeColor: String
 )

@@ -291,7 +291,13 @@ internal class PlatformBridge(
 
         jsExecutor(
             """
-            window.dgismap.createPolygon($id, $arg);
+            window.dgismap.createPolygon(
+                $id, 
+                $arg, 
+                ${options.color}, 
+                ${options.strokeWidth}, 
+                ${options.strokeColor}
+            );
         """
         )
 

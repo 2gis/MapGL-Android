@@ -5,7 +5,7 @@ typealias PolygonClickCallback = () -> Unit
 interface Polygon {
 
     /**
-     * Destroys the polygon
+     * Destroys the polygon.
      */
     fun destroy()
     /**

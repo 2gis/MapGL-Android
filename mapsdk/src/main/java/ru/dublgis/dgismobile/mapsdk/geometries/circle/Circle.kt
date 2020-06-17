@@ -5,7 +5,7 @@ typealias CircleClickCallback = () -> Unit
 interface Circle {
 
     /**
-     * Destroys the circle
+     * Destroys the circle.
      */
     fun destroy()
     /**
