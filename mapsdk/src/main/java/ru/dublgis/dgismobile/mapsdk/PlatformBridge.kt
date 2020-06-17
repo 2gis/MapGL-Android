@@ -10,9 +10,6 @@ import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererImpl
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
 import ru.dublgis.dgismobile.mapsdk.clustering.InputMarker
-import ru.dublgis.dgismobile.mapsdk.geometries.carroute.CarRoute
-import ru.dublgis.dgismobile.mapsdk.geometries.carroute.CarRouteImpl
-import ru.dublgis.dgismobile.mapsdk.geometries.carroute.Segment
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.Circle
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.CircleImpl
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.CircleOptions
@@ -324,29 +321,6 @@ internal class PlatformBridge(
         return circle
     }
 
-    override fun createCarRoute(segments: Collection<Segment>): CarRoute {
-        val carRoute = CarRouteImpl(
-            WeakReference(this)
-        )
-
-        val arg = segments.joinToString(
-            separator = ",",
-            prefix = "[",
-            postfix = ",]",
-            transform = {
-                it.toString()
-            }
-        )
-
-        jsExecutor(
-            """
-            window.dgismap.createCarRoute($arg);
-        """
-        )
-
-        return carRoute
-    }
-
     fun destroyPolyline(id: String) {
         jsExecutor(
             """
@@ -375,14 +349,6 @@ internal class PlatformBridge(
         )
 
         circles.remove(id)
-    }
-
-    fun destroyCarRoute() {
-        jsExecutor(
-            """
-            window.dgismap.destroyCarRoute();
-        """
-        )
     }
 
     override fun setOnZoomChangedListener(listener: PropertyChangeListener?) {

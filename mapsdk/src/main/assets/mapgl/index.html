@@ -14,8 +14,13 @@
 			height: 100%;
 			overflow: hidden;
 		}
+
+
+
     </style>
 </head>
+
+<body>
 <div id="map"></div>
 
 <script src="https://mapgl.2gis.com/api/js"></script>
@@ -208,47 +213,26 @@ window.initMapGL = (
 				circle.destroy();
 			}
 			circles.delete(id);
-		},
-
-		createCarRoute: (segments) => {
-			segments.forEach((segment, i) => {
-				const zIndex = segments.length - 1 - i;
-				new mapgl.Polyline(map, {
-					coordinates: segment.coords,
-					width: 10,
-					color: segment.color,
-					width2: 14,
-					color2: '#ffffff',
-					zIndex,
-				});
-				if (segment.label) {
-					const isFirstPoint = i === 0;
-					const lastPointIndex = segment.coords.length - 1;
-					const coords = isFirstPoint
-						? segment.coords[0]
-						: segment.coords[lastPointIndex];
-					new mapgl.CircleMarker(map, {
-						coordinates: coords,
-						radius: 16,
-						color: '#0088ff',
-						strokeWidth: 2,
-						strokeColor: '#ffffff',
-						zIndex: isFirstPoint ? 5 : 3,
-					});
-					new mapgl.Label(map, {
-						coordinates: coords,
-						text: segment.label,
-						fontSize: 14,
-						color: '#ffffff',
-						zIndex: isFirstPoint ? 6 : 4,
-					});
-				}
-			});
 		}
     };
 
     emit('initialized');
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </script>
+
 </body>
 </html>
