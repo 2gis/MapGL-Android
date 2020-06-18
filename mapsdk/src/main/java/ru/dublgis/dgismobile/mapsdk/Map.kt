@@ -2,6 +2,12 @@ package ru.dublgis.dgismobile.mapsdk
 
 import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
+import ru.dublgis.dgismobile.mapsdk.geometries.circle.Circle
+import ru.dublgis.dgismobile.mapsdk.geometries.circle.CircleOptions
+import ru.dublgis.dgismobile.mapsdk.geometries.polygon.Polygon
+import ru.dublgis.dgismobile.mapsdk.geometries.polygon.PolygonOptions
+import ru.dublgis.dgismobile.mapsdk.geometries.polyline.Polyline
+import ru.dublgis.dgismobile.mapsdk.geometries.polyline.PolylineOptions
 
 
 typealias PositionChangeListener = (LonLat) -> Unit
@@ -43,4 +49,10 @@ interface Map {
     fun setSelectedObjects(objects: Collection<MapObject>)
 
     fun createClusterer(options: ClustererOptions): Clusterer
+
+    fun createPolyline(options: PolylineOptions): Polyline
+
+    fun createPolygon(options: PolygonOptions): Polygon
+
+    fun createCircle(options: CircleOptions): Circle
 }

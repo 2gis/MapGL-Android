@@ -10,6 +10,15 @@ import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererImpl
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
 import ru.dublgis.dgismobile.mapsdk.clustering.InputMarker
+import ru.dublgis.dgismobile.mapsdk.geometries.circle.Circle
+import ru.dublgis.dgismobile.mapsdk.geometries.circle.CircleImpl
+import ru.dublgis.dgismobile.mapsdk.geometries.circle.CircleOptions
+import ru.dublgis.dgismobile.mapsdk.geometries.polygon.Polygon
+import ru.dublgis.dgismobile.mapsdk.geometries.polygon.PolygonImpl
+import ru.dublgis.dgismobile.mapsdk.geometries.polygon.PolygonOptions
+import ru.dublgis.dgismobile.mapsdk.geometries.polyline.Polyline
+import ru.dublgis.dgismobile.mapsdk.geometries.polyline.PolylineImpl
+import ru.dublgis.dgismobile.mapsdk.geometries.polyline.PolylineOptions
 import java.lang.ref.WeakReference
 import kotlin.math.abs
 
@@ -37,6 +46,9 @@ internal class PlatformBridge(
 
     private val markers = mutableMapOf<String, MarkerImpl>()
     private val clusterers = mutableMapOf<String, ClustererImpl>()
+    private val polylines = mutableMapOf<String, PolylineImpl>()
+    private val polygons = mutableMapOf<String, PolygonImpl>()
+    private val circles = mutableMapOf<String, CircleImpl>()
 
     private var _apiKey = ""
     private var _center = LonLat()
@@ -54,6 +66,9 @@ internal class PlatformBridge(
     private var _controls: Boolean = false
 
     private var clusterId = 0
+    private var polylineId = 0
+    private var polygonId = 0
+    private var circleId = 0
 
     override var center: LonLat
         get() = _center
@@ -216,6 +231,133 @@ internal class PlatformBridge(
             window.dgismap.destroyClusterer($id);
         """
         )
+
+        clusterers.remove(id)
+    }
+
+    override fun createPolyline(options: PolylineOptions): Polyline {
+        val id = "${polylineId++}"
+
+        val polyline =
+            PolylineImpl(
+                WeakReference(this),
+                id
+            )
+        polylines[id] = polyline
+
+        val arg = options.coordinates.joinToString(
+            separator = ",",
+            prefix = "[",
+            postfix = ",]",
+            transform = {
+                "[${it.lon}, ${it.lat}]"
+            }
+        )
+
+        jsExecutor(
+            """
+            window.dgismap.createPolyline($id, $arg);
+        """
+        )
+
+        return polyline
+    }
+
+    override fun createPolygon(options: PolygonOptions): Polygon {
+        val id = "${polygonId++}"
+
+        val polygon =
+            PolygonImpl(
+                WeakReference(this),
+                id
+            )
+        polygons[id] = polygon
+
+        val arg = options.coordinates.joinToString(
+            separator = ",",
+            prefix = "[",
+            postfix = ",]",
+            transform = { it ->
+                it.joinToString(
+                    separator = ",",
+                    prefix = "[",
+                    postfix = ",]",
+                    transform = {
+                        "[${it.lon}, ${it.lat}]"
+                    }
+                )
+            }
+        )
+
+        val color = String.format("#%06X", 0xFFFFFF and options.color)
+        val strokeColor = String.format("#%06X", 0xFFFFFF and options.strokeColor)
+
+        jsExecutor(
+            """
+            window.dgismap.createPolygon(
+                $id, 
+                $arg, 
+                '$color', 
+                ${options.strokeWidth}, 
+                '$strokeColor'
+            );
+        """
+        )
+
+        return polygon
+    }
+
+    override fun createCircle(options: CircleOptions): Circle {
+        val id = "${circleId++}"
+
+        val circle =
+            CircleImpl(
+                WeakReference(this),
+                id
+            )
+        circles[id] = circle
+
+        jsExecutor(
+            """
+            window.dgismap.createCircle(
+                $id, 
+                [${options.coordinates.lon}, ${options.coordinates.lat}],
+                ${options.radius}
+            );
+        """
+        )
+
+        return circle
+    }
+
+    fun destroyPolyline(id: String) {
+        jsExecutor(
+            """
+            window.dgismap.destroyPolyline($id);
+        """
+        )
+
+        polylines.remove(id)
+    }
+
+    fun destroyPolygon(id: String) {
+        jsExecutor(
+            """
+            window.dgismap.destroyPolygon($id);
+        """
+        )
+
+        polygons.remove(id)
+    }
+
+    fun destroyCircle(id: String) {
+        jsExecutor(
+            """
+            window.dgismap.destroyCircle($id);
+        """
+        )
+
+        circles.remove(id)
     }
 
     override fun setOnZoomChangedListener(listener: PropertyChangeListener?) {
@@ -393,8 +535,21 @@ internal class PlatformBridge(
                     marker?.onClick?.invoke()
                 }
                 "clustererClick" -> {
-                    val clusterer = clusterers.get(payload)
+                    val clusterer = clusterers[payload]
                     clusterer?.onClick?.invoke()
+                }
+                "polylineClick" -> {
+                    val polyline = polylines[payload]
+                    polyline?.onClick?.invoke()
+                }
+                "polygonClick" -> {
+                    val polygon = polygons[payload]
+                    polygon?.onClick?.invoke()
+                }
+
+                "circleClick" -> {
+                    val circle = circles[payload]
+                    circle?.onClick?.invoke()
                 }
                 "centerend" -> {
                     val center = parseLonLat(payload)

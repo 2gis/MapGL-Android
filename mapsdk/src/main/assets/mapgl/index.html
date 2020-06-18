@@ -38,6 +38,9 @@ window.initMapGL = (
 
     const markers = new Map();
     const clusterers = new Map();
+    const polylines = new Map();
+    const polygons = new Map();
+    const circles = new Map();
 
     const map = new mapgl.Map('map', {
         center: center,
@@ -150,6 +153,66 @@ window.initMapGL = (
 				clusterer.destroy();
 			}
 			clusterers.delete(id);
+		},
+
+		createPolyline: (id, coordinates) => {
+			const polyline = new mapgl.Polyline(map, {
+				coordinates: coordinates,
+				width: 10,
+				color: '#00b7ff',
+			});
+			polyline.on('click', (ev) => {
+				emit('polylineClick', String(id));
+			});
+			polylines.set(id, polyline);
+		},
+
+		destroyPolyline: (id) => {
+			const polyline = polylines.get(id);
+			if (polyline) {
+				polyline.destroy();
+			}
+			polylines.delete(id);
+		},
+
+		createPolygon: (id, coordinates, color, strokeWidth, strokeColor) => {
+			const polygon = new mapgl.Polygon(map, {
+				coordinates: coordinates,
+				color: color,
+				strokeWidth: strokeWidth,
+				strokeColor: strokeColor,
+			});
+			polygon.on('click', (ev) => {
+				emit('polygonClick', String(id));
+			});
+			polygons.set(id, polygon);
+		},
+
+		destroyPolygon: (id) => {
+			const polygon = polygons.get(id);
+			if (polygon) {
+				polygon.destroy();
+			}
+			polygons.delete(id);
+		},
+
+		createCircle: (id, coordinates, radius) => {
+			const circle = new mapgl.Circle(map, {
+				coordinates: coordinates,
+				radius: radius,
+			});
+			circle.on('click', (ev) => {
+				emit('circleClick', String(id));
+			});
+			circles.set(id, circle);
+		},
+
+		destroyCircle: (id) => {
+			const circle = circles.get(id);
+			if (circle) {
+				circle.destroy();
+			}
+			circles.delete(id);
 		}
     };
 

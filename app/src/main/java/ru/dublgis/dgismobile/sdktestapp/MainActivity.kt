@@ -18,5 +18,9 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.clusterers).setOnClickListener {
             startActivity(Intent(this, ClusterersActivity::class.java))
         }
+
+        findViewById<Button>(R.id.geometries).setOnClickListener {
+            startActivity(Intent(this, GeometriesActivity::class.java))
+        }
     }
 }

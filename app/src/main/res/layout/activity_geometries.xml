@@ -6,33 +6,33 @@
         android:padding="8dp">
 
     <Button
-            android:id="@+id/markers"
+            android:id="@+id/polyline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="Markers"
+            android:text="Polyline"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-            android:id="@+id/clusterers"
+            android:id="@+id/polygon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Clustering"
+            android:text="Polygon"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/markers" />
+            app:layout_constraintTop_toBottomOf="@id/polyline" />
 
     <Button
-            android:id="@+id/geometries"
+            android:id="@+id/circle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Geometries"
+            android:text="Circle"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/clusterers" />
+            app:layout_constraintTop_toBottomOf="@id/polygon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
