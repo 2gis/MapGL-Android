@@ -289,14 +289,17 @@ internal class PlatformBridge(
             }
         )
 
+        val color = String.format("#%06X", 0xFFFFFF and options.color)
+        val strokeColor = String.format("#%06X", 0xFFFFFF and options.strokeColor)
+
         jsExecutor(
             """
             window.dgismap.createPolygon(
                 $id, 
                 $arg, 
-                ${options.color}, 
+                '$color', 
                 ${options.strokeWidth}, 
-                ${options.strokeColor}
+                '$strokeColor'
             );
         """
         )

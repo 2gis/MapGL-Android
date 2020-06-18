@@ -1,5 +1,6 @@
 package ru.dublgis.dgismobile.mapsdk.geometries.polygon
 
+import android.graphics.Color
 import ru.dublgis.dgismobile.mapsdk.LonLat
 
 /**
@@ -17,7 +18,7 @@ class PolygonOptions(
     /**
      * Fill color in hexadecimal RGB (#ff0000) or RGBA (#ff0000ff) format.
      */
-    var color: String,
+    var color: Int,
 
     /**
      * Stroke width in pixels.
@@ -26,5 +27,5 @@ class PolygonOptions(
     /**
      * Stroke color in hexadecimal RGB (#ff0000) or RGBA (#ff0000ff) format.
      */
-    var strokeColor: String
+    var strokeColor: Int
 )

@@ -1,5 +1,6 @@
 package ru.dublgis.dgismobile.sdktestapp
 
+import android.graphics.Color
 import android.widget.Toast
 import org.jetbrains.annotations.TestOnly
 import ru.dublgis.dgismobile.mapsdk.LonLat
@@ -15,9 +16,9 @@ class PolygonActivity : MapActivity() {
         val polygon = map?.createPolygon(
             PolygonOptions(
                 generateCoordinates(),
-                "'#99fafa'",
+                Color.RED,
                 4f,
-                "'#fafafa'"
+                Color.GREEN
             )
         )
         polygon?.setOnClickListener {
