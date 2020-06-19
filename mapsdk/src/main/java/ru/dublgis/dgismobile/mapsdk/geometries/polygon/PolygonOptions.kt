@@ -1,6 +1,5 @@
 package ru.dublgis.dgismobile.mapsdk.geometries.polygon
 
-import android.graphics.Color
 import ru.dublgis.dgismobile.mapsdk.LonLat
 
 /**

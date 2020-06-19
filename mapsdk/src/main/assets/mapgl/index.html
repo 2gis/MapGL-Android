@@ -41,6 +41,7 @@ window.initMapGL = (
     const polylines = new Map();
     const polygons = new Map();
     const circles = new Map();
+    const circleMarkers = new Map();
 
     const map = new mapgl.Map('map', {
         center: center,
@@ -213,6 +214,25 @@ window.initMapGL = (
 				circle.destroy();
 			}
 			circles.delete(id);
+		},
+
+		createCircleMarker: (id, coordinates, radius) => {
+			const circleMarker = new mapgl.CircleMarker(map, {
+				coordinates: coordinates,
+				radius: radius,
+			});
+			circleMarker.on('click', (ev) => {
+				emit('circleMarkerClick', String(id));
+			});
+			circleMarkers.set(id, circleMarker);
+		},
+
+		destroyCircleMarker: (id) => {
+			const circleMarker = circleMarkers.get(id);
+			if (circleMarker) {
+				circleMarker.destroy();
+			}
+			circleMarkers.delete(id);
 		}
     };
 
