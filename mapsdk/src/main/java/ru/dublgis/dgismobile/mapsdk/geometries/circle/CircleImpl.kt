@@ -3,7 +3,7 @@ package ru.dublgis.dgismobile.mapsdk.geometries.circle
 import ru.dublgis.dgismobile.mapsdk.PlatformBridge
 import java.lang.ref.WeakReference
 
-internal class CircleImpl(
+internal open class CircleImpl(
     private val controller: WeakReference<PlatformBridge>,
     private val id: String
 ) : Circle {

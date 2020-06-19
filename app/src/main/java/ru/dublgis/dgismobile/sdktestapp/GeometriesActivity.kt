@@ -2,8 +2,8 @@ package ru.dublgis.dgismobile.sdktestapp
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_geometries.*
 
 class GeometriesActivity : AppCompatActivity() {
 
@@ -11,16 +11,20 @@ class GeometriesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_geometries)
 
-        findViewById<Button>(R.id.polyline).setOnClickListener {
+        polyline.setOnClickListener {
             startActivity(Intent(this, PolylineActivity::class.java))
         }
 
-        findViewById<Button>(R.id.polygon).setOnClickListener {
+        polygon.setOnClickListener {
             startActivity(Intent(this, PolygonActivity::class.java))
         }
 
-        findViewById<Button>(R.id.circle).setOnClickListener {
+        circle.setOnClickListener {
             startActivity(Intent(this, CircleActivity::class.java))
+        }
+
+        circleMarker.setOnClickListener {
+            startActivity(Intent(this, CircleMarkerActivity::class.java))
         }
     }
 }

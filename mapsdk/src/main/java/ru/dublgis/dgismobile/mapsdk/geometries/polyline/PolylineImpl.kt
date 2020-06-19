@@ -1,8 +1,6 @@
 package ru.dublgis.dgismobile.mapsdk.geometries.polyline
 
 import ru.dublgis.dgismobile.mapsdk.PlatformBridge
-import ru.dublgis.dgismobile.mapsdk.geometries.polyline.Polyline
-import ru.dublgis.dgismobile.mapsdk.geometries.polyline.PolylineClickCallback
 import java.lang.ref.WeakReference
 
 internal class PolylineImpl(

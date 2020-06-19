@@ -4,6 +4,8 @@ import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.Circle
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.CircleOptions
+import ru.dublgis.dgismobile.mapsdk.geometries.circle.circlemarker.CircleMarker
+import ru.dublgis.dgismobile.mapsdk.geometries.circle.circlemarker.CircleMarkerOptions
 import ru.dublgis.dgismobile.mapsdk.geometries.polygon.Polygon
 import ru.dublgis.dgismobile.mapsdk.geometries.polygon.PolygonOptions
 import ru.dublgis.dgismobile.mapsdk.geometries.polyline.Polyline
@@ -55,4 +57,7 @@ interface Map {
     fun createPolygon(options: PolygonOptions): Polygon
 
     fun createCircle(options: CircleOptions): Circle
+
+    fun createCircleMarker(options: CircleMarkerOptions): CircleMarker
+
 }
