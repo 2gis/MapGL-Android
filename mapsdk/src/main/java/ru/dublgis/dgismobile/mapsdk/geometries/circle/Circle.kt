@@ -2,6 +2,9 @@ package ru.dublgis.dgismobile.mapsdk.geometries.circle
 
 typealias CircleClickCallback = () -> Unit
 
+/**
+ * Class for creating a circle on the map.
+ */
 interface Circle {
 
     /**
