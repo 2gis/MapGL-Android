@@ -104,12 +104,13 @@ window.initMapGL = (
 			}
 		},
 
-		createMarker: (id, icon, coords, size, anchor) => {
+		createMarker: (id, icon, coords, size, anchor, label) => {
 			const marker = new mapgl.Marker(map, {
 				coordinates: coords,
 				icon: icon,
 				size: size,
-				anchor: anchor
+				anchor: anchor,
+				label: label
 			});
 			marker.on('click', (ev) => {
 				emit('markerClick', String(id));

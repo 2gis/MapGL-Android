@@ -473,6 +473,8 @@ internal class PlatformBridge(
             fmtPair(options.anchor)
         } else "null"
 
+        val label = options.label.toString()
+
         val marker = MarkerImpl(WeakReference(this), options)
 
         markers[marker.id] = marker
@@ -484,7 +486,8 @@ internal class PlatformBridge(
                 "$icon",
                 [${marker.position.lon}, ${marker.position.lat}],
                 $size,
-                $anchor
+                $anchor,
+                $label
             );
         """
         )

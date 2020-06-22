@@ -17,7 +17,7 @@ class LabelOptions(
     /**
      * Geographical coordinates of label center [longitude, latitude].
      */
-    var coordinates: LonLat,
+    var coordinates: LonLat? = null,
     /**
      * Text size.
      */
@@ -62,13 +62,13 @@ class LabelOptions(
      */
     var zIndex: Float? = null
 ) {
-    //[${marker.position.lon}, ${marker.position.lat}],
+
     override fun toString(): String {
         val builder = StringBuilder()
         builder.append("{")
 
-        builder.append("coordinates: [${coordinates.lon}, ${coordinates.lat}],")
         builder.append("text: '$text',")
+        if (coordinates != null) builder.append("coordinates: [${coordinates?.lon}, ${coordinates?.lat}],")
         if (color != null) builder.append("color: '${hexColorFormat(color!!)}',")
         if (fontSize != null) builder.append("fontSize: '$fontSize',")
         if (anchor != null) builder.append("anchor: '$anchor',")
@@ -78,6 +78,7 @@ class LabelOptions(
         if (lineHeight != null) builder.append("lineHeight: '$lineHeight',")
         if (maxZoom != null) builder.append("maxZoom: '$maxZoom',")
         if (minZoom != null) builder.append("minZoom: '$minZoom',")
+        if (zIndex != null) builder.append("zIndex: '$zIndex',")
 
         builder.append("}")
 
