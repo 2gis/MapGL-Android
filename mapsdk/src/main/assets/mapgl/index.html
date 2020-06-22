@@ -42,6 +42,7 @@ window.initMapGL = (
     const polygons = new Map();
     const circles = new Map();
     const circleMarkers = new Map();
+    const labels = new Map();
 
     const map = new mapgl.Map('map', {
         center: center,
@@ -233,6 +234,33 @@ window.initMapGL = (
 				circleMarker.destroy();
 			}
 			circleMarkers.delete(id);
+		},
+
+		createLabel: (id, arg) => {
+			const label = new mapgl.Label(map, arg);
+			labels.set(id, label);
+		},
+
+		destroyLabel: (id) => {
+			const label = labels.get(id);
+			if (label) {
+				label.destroy();
+			}
+			labels.delete(id);
+		},
+
+		hideLabel: (id) => {
+			const label = labels.get(id);
+			if (label) {
+				label.hide();
+			}
+		},
+
+		showLabel: (id) => {
+			const label = labels.get(id);
+			if (label) {
+				label.show();
+			}
 		}
     };
 

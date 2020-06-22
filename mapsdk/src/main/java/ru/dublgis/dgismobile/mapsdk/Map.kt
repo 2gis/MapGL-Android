@@ -10,6 +10,8 @@ import ru.dublgis.dgismobile.mapsdk.geometries.polygon.Polygon
 import ru.dublgis.dgismobile.mapsdk.geometries.polygon.PolygonOptions
 import ru.dublgis.dgismobile.mapsdk.geometries.polyline.Polyline
 import ru.dublgis.dgismobile.mapsdk.geometries.polyline.PolylineOptions
+import ru.dublgis.dgismobile.mapsdk.labels.Label
+import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
 
 
 typealias PositionChangeListener = (LonLat) -> Unit
@@ -60,4 +62,5 @@ interface Map {
 
     fun createCircleMarker(options: CircleMarkerOptions): CircleMarker
 
+    fun createLabel(options: LabelOptions): Label
 }
