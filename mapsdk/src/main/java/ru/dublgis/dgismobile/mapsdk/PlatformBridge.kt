@@ -79,6 +79,7 @@ internal class PlatformBridge(
     private var circleId = 0
     private var circleMarkerId = 0
     private var labelId = 0
+    private var markerId = 0
 
     override var center: LonLat
         get() = _center
@@ -455,40 +456,15 @@ internal class PlatformBridge(
     }
 
     override fun addMarker(options: MarkerOptions): Marker {
-        val icon = if (options.icon != null) {
-            (options.icon as MarkerIconDescriptorImpl).toJsFormat()
-        } else {
-            "https://d-assets.2gis.ru/markers/pin-opened.svg"
-        }
-
-        val fmtPair = { it: Pair<Double, Double> ->
-            "[${it.first}, ${it.second}]"
-        }
-
-        val size = if (options.size != null) {
-            fmtPair(options.size)
-        } else "null"
-
-        val anchor = if (options.size != null && options.anchor != null) {
-            fmtPair(options.anchor)
-        } else "null"
-
-        val label = options.label.toString()
-
-        val marker = MarkerImpl(WeakReference(this), options)
+        val marker = MarkerImpl(WeakReference(this), options, "${markerId++}")
 
         markers[marker.id] = marker
 
+        val arg = options.toString()
+
         jsExecutor(
             """
-            window.dgismap.createMarker(
-                "${marker.id}",
-                "$icon",
-                [${marker.position.lon}, ${marker.position.lat}],
-                $size,
-                $anchor,
-                $label
-            );
+            window.dgismap.createMarker("${marker.id}", $arg);
         """
         )
         return marker

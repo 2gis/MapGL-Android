@@ -30,4 +30,22 @@ class MarkerOptions(
      * Initialization options of the marker's label.
      */
     val label: LabelOptions? = null
-)
+) {
+
+    override fun toString(): String {
+        val builder = StringBuilder()
+        builder.append("{")
+
+        builder.append("coordinates: [${position.lon}, ${position.lat}],")
+        if (icon != null) builder.append(" icon: '${(this.icon as MarkerIconDescriptorImpl).toJsFormat()}',")
+        if (size != null) builder.append(" size: [${size.first.toInt()}, ${size.second.toInt()}],")
+        if (anchor != null) builder.append(" anchor: [${anchor.first.toInt()}, ${anchor.second.toInt()}],")
+        if (label != null) builder.append(" label: $label,")
+
+        builder.append("}")
+
+        return builder.toString()
+    }
+}
+
+

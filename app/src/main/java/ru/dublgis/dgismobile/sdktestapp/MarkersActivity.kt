@@ -12,16 +12,24 @@ class MarkersActivity : MapActivity() {
     override fun onDGisMapReady() {
         map?.setOnClickListener(this::onMapClicked)
         showMarkerLabel()
+        showMarker()
+    }
+
+    private fun showMarker() {
+        map?.addMarker(
+            MarkerOptions(
+                map!!.center,
+                size = 30.0 to 48.0,
+                anchor = 15.0 to 48.0
+            )
+        )
     }
 
     private fun showMarkerLabel() {
         map?.addMarker(
             MarkerOptions(
-                map?.center!!,
-                icon = iconFromSvgAsset(assets, "pin.svg"),
-                size = 30.0 to 48.0,
-                anchor = 15.0 to 48.0,
-                label = LabelOptions(text = "Marker label")
+                LonLat(55.31878, 25.23584),
+                label = LabelOptions(text = "The marker's label")
             )
         )
     }
