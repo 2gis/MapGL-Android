@@ -1,11 +1,23 @@
 package ru.dublgis.dgismobile.mapsdk.labels
 
+/**
+ * Interface for creating labels on the map.
+ */
 interface Label {
 
-    fun isHidden(): Boolean
+    /**
+     * True if label is hidden
+     */
+    val isHidden: Boolean
 
+    /**
+     * Hides the label.
+     */
     fun hide()
 
+    /**
+     * Displays hidden label.
+     */
     fun show()
 
     /**

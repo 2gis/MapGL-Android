@@ -8,20 +8,18 @@ internal class LabelImpl(
     private val id: String
 ) : Label {
 
-    private var isHidden: Boolean = false
-
-    override fun isHidden(): Boolean {
-        return isHidden
-    }
+    private var hidden = false
+    override val isHidden: Boolean
+        get() = hidden
 
     override fun hide() {
         controller.get()?.hideLabel(id)
-        isHidden = true
+        hidden = true
     }
 
     override fun show() {
         controller.get()?.showLabel(id)
-        isHidden = false
+        hidden = false
     }
 
     override fun destroy() {

@@ -21,12 +21,13 @@ class LabelsActivity : MapActivity() {
                     color = Color.BLUE,
                     fontSize = 24f,
                     maxZoom = 14f,
-                    minZoom = 10f
+                    minZoom = 10f,
+                    anchor = 15.0 to 48.0
                 )
             )
 
         map?.setOnClickListener {
-            if (label?.isHidden()!!)
+            if (label?.isHidden!!)
                 label?.show()
             else
                 label?.hide()
