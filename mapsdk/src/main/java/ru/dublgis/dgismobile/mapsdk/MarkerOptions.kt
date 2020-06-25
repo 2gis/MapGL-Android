@@ -38,8 +38,8 @@ class MarkerOptions(
 
         builder.append("coordinates: [${position.lon}, ${position.lat}],")
         if (icon != null) builder.append(" icon: '${(this.icon as MarkerIconDescriptorImpl).toJsFormat()}',")
-        if (size != null) builder.append(" size: [${size.first.toInt()}, ${size.second.toInt()}],")
-        if (anchor != null) builder.append(" anchor: [${anchor.first.toInt()}, ${anchor.second.toInt()}],")
+        if (size != null) builder.append(" size: [${size.first}, ${size.second}],")
+        if (anchor != null) builder.append(" anchor: [${anchor.first}, ${anchor.second}],")
         if (label != null) builder.append(" label: $label,")
 
         builder.append("}")

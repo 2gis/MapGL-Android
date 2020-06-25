@@ -73,7 +73,7 @@ class LabelOptions(
         if (coordinates != null) builder.append("coordinates: [${coordinates.lon}, ${coordinates.lat}],")
         if (color != null) builder.append("color: '${hexColorFormat(color)}',")
         if (fontSize != null) builder.append("fontSize: $fontSize,")
-        if (anchor != null) builder.append(" anchor: [${anchor.first.toInt()}, ${anchor.second.toInt()}],")
+        if (anchor != null) builder.append(" anchor: [${anchor.first}, ${anchor.second}],")
         if (haloRadius != null) builder.append("haloRadius: $haloRadius,")
         if (haloColor != null) builder.append("haloColor: '${hexColorFormat(haloColor)}',")
         if (letterSpacing != null) builder.append("letterSpacing: $letterSpacing,")
