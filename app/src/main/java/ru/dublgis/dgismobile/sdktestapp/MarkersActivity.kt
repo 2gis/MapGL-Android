@@ -2,6 +2,7 @@ package ru.dublgis.dgismobile.sdktestapp
 
 import android.widget.Toast
 import ru.dublgis.dgismobile.mapsdk.*
+import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
 import java.lang.ref.WeakReference
 
 class MarkersActivity : MapActivity() {
@@ -10,6 +11,27 @@ class MarkersActivity : MapActivity() {
 
     override fun onDGisMapReady() {
         map?.setOnClickListener(this::onMapClicked)
+        showMarkerLabel()
+        showMarker()
+    }
+
+    private fun showMarker() {
+        map?.addMarker(
+            MarkerOptions(
+                map!!.center,
+                size = 30.0 to 48.0,
+                anchor = 15.0 to 48.0
+            )
+        )
+    }
+
+    private fun showMarkerLabel() {
+        map?.addMarker(
+            MarkerOptions(
+                LonLat(55.31878, 25.23584),
+                label = LabelOptions(text = "The marker's label")
+            )
+        )
     }
 
     private fun onMapClicked(pointer: MapPointerEvent) {

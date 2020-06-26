@@ -1,16 +1,14 @@
 package ru.dublgis.dgismobile.mapsdk
 
 import java.lang.ref.WeakReference
-import kotlin.math.absoluteValue
-import kotlin.random.Random
 
 
 internal class MarkerImpl(
     private val controller: WeakReference<PlatformBridge>,
-    private val options: MarkerOptions
+    private val options: MarkerOptions,
+    val id: String
 ) : Marker {
 
-    val id = "${position.lon},${position.lat}_${Random.nextInt().absoluteValue}"
     var hidden = false
     var onClick: MarkerClickCallback? = null
 

@@ -22,6 +22,9 @@ import ru.dublgis.dgismobile.mapsdk.geometries.polygon.PolygonOptions
 import ru.dublgis.dgismobile.mapsdk.geometries.polyline.Polyline
 import ru.dublgis.dgismobile.mapsdk.geometries.polyline.PolylineImpl
 import ru.dublgis.dgismobile.mapsdk.geometries.polyline.PolylineOptions
+import ru.dublgis.dgismobile.mapsdk.labels.Label
+import ru.dublgis.dgismobile.mapsdk.labels.LabelImpl
+import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
 import java.lang.ref.WeakReference
 import kotlin.math.abs
 
@@ -53,6 +56,7 @@ internal class PlatformBridge(
     private val polygons = mutableMapOf<String, PolygonImpl>()
     private val circles = mutableMapOf<String, CircleImpl>()
     private val circleMarkers = mutableMapOf<String, CircleMarkerImpl>()
+    private val labels = mutableMapOf<String, LabelImpl>()
 
     private var _apiKey = ""
     private var _center = LonLat()
@@ -74,6 +78,8 @@ internal class PlatformBridge(
     private var polygonId = 0
     private var circleId = 0
     private var circleMarkerId = 0
+    private var labelId = 0
+    private var markerId = 0
 
     override var center: LonLat
         get() = _center
@@ -358,6 +364,23 @@ internal class PlatformBridge(
         return circleMarker
     }
 
+    override fun createLabel(options: LabelOptions): Label {
+        val id = "${labelId++}"
+
+        val label = LabelImpl(WeakReference(this), id)
+        labels[id] = label
+
+        val arg = options.toString()
+
+        jsExecutor(
+            """
+            window.dgismap.createLabel($id, $arg);
+        """
+        )
+
+        return label
+    }
+
     fun destroyPolyline(id: String) {
         jsExecutor(
             """
@@ -398,42 +421,50 @@ internal class PlatformBridge(
         circleMarkers.remove(id)
     }
 
+    fun destroyLabel(id: String) {
+        jsExecutor(
+            """
+            window.dgismap.destroyLabel($id);
+        """
+        )
+
+        labels.remove(id)
+    }
+
+    fun showLabel(id: String) {
+        jsExecutor(
+            """
+            window.dgismap.showLabel(
+                $id
+            );
+        """
+        )
+    }
+
+    fun hideLabel(id: String) {
+        jsExecutor(
+            """
+            window.dgismap.hideLabel(
+                $id
+            );
+        """
+        )
+    }
+
     override fun setOnZoomChangedListener(listener: PropertyChangeListener?) {
         onZoomChanged = listener
     }
 
     override fun addMarker(options: MarkerOptions): Marker {
-        val icon = if (options.icon != null) {
-            (options.icon as MarkerIconDescriptorImpl).toJsFormat()
-        } else {
-            "https://d-assets.2gis.ru/markers/pin-opened.svg"
-        }
-
-        val fmtPair = { it: Pair<Double, Double> ->
-            "[${it.first}, ${it.second}]"
-        }
-
-        val size = if (options.size != null) {
-            fmtPair(options.size)
-        } else "null"
-
-        val anchor = if (options.size != null && options.anchor != null) {
-            fmtPair(options.anchor)
-        } else "null"
-
-        val marker = MarkerImpl(WeakReference(this), options)
+        val marker = MarkerImpl(WeakReference(this), options, "${markerId++}")
 
         markers[marker.id] = marker
 
+        val arg = options.toString()
+
         jsExecutor(
             """
-            window.dgismap.createMarker(
-                "${marker.id}",
-                "$icon",
-                [${marker.position.lon}, ${marker.position.lat}],
-                $size,
-                $anchor
-            );
+            window.dgismap.createMarker("${marker.id}", $arg);
         """
         )
         return marker

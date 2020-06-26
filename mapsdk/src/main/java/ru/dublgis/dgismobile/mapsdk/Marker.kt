@@ -5,7 +5,6 @@ typealias MarkerClickCallback = () -> Unit
 
 
 interface Marker {
-
     var position: LonLat
     val isHidden: Boolean
 
