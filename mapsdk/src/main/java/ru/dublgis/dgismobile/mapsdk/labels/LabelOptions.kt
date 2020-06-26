@@ -1,5 +1,6 @@
 package ru.dublgis.dgismobile.mapsdk.labels
 
+import ru.dublgis.dgismobile.mapsdk.BaseOptions
 import ru.dublgis.dgismobile.mapsdk.LonLat
 
 typealias LabelAnchor = Pair<Double, Double>
@@ -63,7 +64,7 @@ class LabelOptions(
      * Draw order.
      */
     val zIndex: Float? = null
-) {
+) : BaseOptions() {
 
     override fun toString(): String {
         val builder = StringBuilder()
@@ -86,9 +87,4 @@ class LabelOptions(
 
         return builder.toString()
     }
-
-    private fun hexColorFormat(color: Int): String = String.format(
-        "#%06X",
-        0xFFFFFF and color
-    )
 }

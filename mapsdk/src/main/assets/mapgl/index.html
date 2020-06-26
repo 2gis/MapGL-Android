@@ -172,13 +172,8 @@ window.initMapGL = (
 			polylines.delete(id);
 		},
 
-		createPolygon: (id, coordinates, color, strokeWidth, strokeColor) => {
-			const polygon = new mapgl.Polygon(map, {
-				coordinates: coordinates,
-				color: color,
-				strokeWidth: strokeWidth,
-				strokeColor: strokeColor,
-			});
+		createPolygon: (id, options) => {
+			const polygon = new mapgl.Polygon(map, options);
 			polygon.on('click', (ev) => {
 				emit('polygonClick', String(id));
 			});

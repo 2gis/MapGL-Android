@@ -1,5 +1,6 @@
 package ru.dublgis.dgismobile.mapsdk.geometries.polygon
 
+import ru.dublgis.dgismobile.mapsdk.BaseOptions
 import ru.dublgis.dgismobile.mapsdk.LonLat
 
 /**
@@ -27,4 +28,33 @@ class PolygonOptions(
      * Stroke color in hexadecimal RGB (#ff0000) or RGBA (#ff0000ff) format.
      */
     var strokeColor: Int
-)
+) : BaseOptions() {
+    override fun toString(): String {
+        val builder = StringBuilder()
+        builder.append("{")
+
+        val coords = coordinates.joinToString(
+            separator = ",",
+            prefix = "[",
+            postfix = ",]",
+            transform = { it ->
+                it.joinToString(
+                    separator = ",",
+                    prefix = "[",
+                    postfix = ",]",
+                    transform = {
+                        "[${it.lon}, ${it.lat}]"
+                    }
+                )
+            }
+        )
+        builder.append("coordinates: $coords, ")
+        builder.append("color: '${hexColorFormat(color)}', ")
+        builder.append("strokeWidth: $strokeWidth, ")
+        builder.append("strokeColor: '${hexColorFormat(strokeColor)}',")
+
+        builder.append("}")
+
+        return builder.toString()
+    }
+}
