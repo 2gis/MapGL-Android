@@ -16,7 +16,7 @@ class PolygonActivity : MapActivity() {
         val polygon = map?.createPolygon(
             PolygonOptions(
                 generateCoordinates(),
-                Color.RED,
+                Color.TRANSPARENT,
                 10f,
                 Color.BLACK
             )

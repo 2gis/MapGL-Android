@@ -1,7 +1,8 @@
 package ru.dublgis.dgismobile.mapsdk.geometries.polygon
 
-import ru.dublgis.dgismobile.mapsdk.BaseOptions
 import ru.dublgis.dgismobile.mapsdk.LonLat
+import ru.dublgis.dgismobile.mapsdk.utils.ColorUtils
+import ru.dublgis.dgismobile.mapsdk.utils.ColorUtils.jsColorFormat
 
 /**
  * Polygon initialization options.
@@ -28,7 +29,7 @@ class PolygonOptions(
      * Stroke color in hexadecimal RGB (#ff0000) or RGBA (#ff0000ff) format.
      */
     var strokeColor: Int
-) : BaseOptions() {
+) {
     override fun toString(): String {
         val builder = StringBuilder()
         builder.append("{")

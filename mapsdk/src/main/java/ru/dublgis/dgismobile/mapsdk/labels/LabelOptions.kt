@@ -1,7 +1,7 @@
 package ru.dublgis.dgismobile.mapsdk.labels
 
-import ru.dublgis.dgismobile.mapsdk.BaseOptions
 import ru.dublgis.dgismobile.mapsdk.LonLat
+import ru.dublgis.dgismobile.mapsdk.utils.ColorUtils.jsColorFormat
 
 typealias LabelAnchor = Pair<Double, Double>
 
@@ -64,7 +64,7 @@ class LabelOptions(
      * Draw order.
      */
     val zIndex: Float? = null
-) : BaseOptions() {
+) {
 
     override fun toString(): String {
         val builder = StringBuilder()
