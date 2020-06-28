@@ -72,11 +72,11 @@ class LabelOptions(
 
         builder.append("text: \"$text\",")
         if (coordinates != null) builder.append("coordinates: [${coordinates.lon}, ${coordinates.lat}],")
-        if (color != null) builder.append("color: '${hexColorFormat(color)}',")
+        if (color != null) builder.append("color: '${jsColorFormat(color)}',")
         if (fontSize != null) builder.append("fontSize: $fontSize,")
         if (anchor != null) builder.append(" anchor: [${anchor.first}, ${anchor.second}],")
         if (haloRadius != null) builder.append("haloRadius: $haloRadius,")
-        if (haloColor != null) builder.append("haloColor: '${hexColorFormat(haloColor)}',")
+        if (haloColor != null) builder.append("haloColor: '${jsColorFormat(haloColor)}',")
         if (letterSpacing != null) builder.append("letterSpacing: $letterSpacing,")
         if (lineHeight != null) builder.append("lineHeight: '$lineHeight',")
         if (maxZoom != null) builder.append("maxZoom: $maxZoom,")

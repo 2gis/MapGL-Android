@@ -49,9 +49,9 @@ class PolygonOptions(
             }
         )
         builder.append("coordinates: $coords, ")
-        builder.append("color: '${hexColorFormat(color)}', ")
+        builder.append("color: '${jsColorFormat(color)}', ")
         builder.append("strokeWidth: $strokeWidth, ")
-        builder.append("strokeColor: '${hexColorFormat(strokeColor)}',")
+        builder.append("strokeColor: '${jsColorFormat(strokeColor)}',")
 
         builder.append("}")
 
