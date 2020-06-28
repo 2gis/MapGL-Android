@@ -16,9 +16,9 @@ class PolygonActivity : MapActivity() {
         val polygon = map?.createPolygon(
             PolygonOptions(
                 generateCoordinates(),
-                Color.RED,
-                4f,
-                Color.GREEN
+                Color.TRANSPARENT,
+                10f,
+                Color.BLACK
             )
         )
         polygon?.setOnClickListener {

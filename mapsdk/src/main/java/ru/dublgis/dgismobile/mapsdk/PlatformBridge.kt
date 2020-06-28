@@ -284,34 +284,11 @@ internal class PlatformBridge(
             )
         polygons[id] = polygon
 
-        val arg = options.coordinates.joinToString(
-            separator = ",",
-            prefix = "[",
-            postfix = ",]",
-            transform = { it ->
-                it.joinToString(
-                    separator = ",",
-                    prefix = "[",
-                    postfix = ",]",
-                    transform = {
-                        "[${it.lon}, ${it.lat}]"
-                    }
-                )
-            }
-        )
-
-        val color = String.format("#%06X", 0xFFFFFF and options.color)
-        val strokeColor = String.format("#%06X", 0xFFFFFF and options.strokeColor)
+        val arg = options.toString()
 
         jsExecutor(
             """
-            window.dgismap.createPolygon(
-                $id, 
-                $arg, 
-                '$color', 
-                ${options.strokeWidth}, 
-                '$strokeColor'
-            );
+            window.dgismap.createPolygon($id, $arg);
         """
         )
 
