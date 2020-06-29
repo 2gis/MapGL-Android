@@ -15,8 +15,7 @@
 
         <activity
                 android:name=".MainActivity"
-                android:configChanges="orientation|keyboardHidden"
-                android:theme="@style/SplashTheme">
+                android:configChanges="orientation|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -24,36 +23,28 @@
         </activity>
         <activity
                 android:name=".MarkersActivity"
-                android:configChanges="orientation|keyboardHidden"
-                android:theme="@style/SplashTheme" />
+                android:configChanges="orientation|keyboardHidden" />
         <activity
                 android:name=".ClusterersActivity"
-                android:configChanges="orientation|keyboardHidden"
-                android:theme="@style/SplashTheme" />
+                android:configChanges="orientation|keyboardHidden"/>
         <activity
                 android:name=".GeometriesActivity"
-                android:configChanges="orientation|keyboardHidden"
-                android:theme="@style/SplashTheme" />
+                android:configChanges="orientation|keyboardHidden" />
         <activity
                 android:name=".PolylineActivity"
-                android:configChanges="orientation|keyboardHidden"
-                android:theme="@style/SplashTheme" />
+                android:configChanges="orientation|keyboardHidden" />
         <activity
                 android:name=".PolygonActivity"
-                android:configChanges="orientation|keyboardHidden"
-                android:theme="@style/SplashTheme" />
+                android:configChanges="orientation|keyboardHidden" />
         <activity
                 android:name=".CircleActivity"
-                android:configChanges="orientation|keyboardHidden"
-                android:theme="@style/SplashTheme" />
+                android:configChanges="orientation|keyboardHidden" />
         <activity
                 android:name=".CircleMarkerActivity"
-                android:configChanges="orientation|keyboardHidden"
-                android:theme="@style/SplashTheme" />
+                android:configChanges="orientation|keyboardHidden" />
         <activity
                 android:name=".LabelsActivity"
-                android:configChanges="orientation|keyboardHidden"
-                android:theme="@style/SplashTheme" />
+                android:configChanges="orientation|keyboardHidden" />
 
     </application>
 
