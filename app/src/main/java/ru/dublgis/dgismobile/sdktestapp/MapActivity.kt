@@ -1,9 +1,12 @@
 package ru.dublgis.dgismobile.sdktestapp
 
 import android.Manifest
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +15,7 @@ import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
 import ru.dublgis.dgismobile.mapsdk.LonLat
 import ru.dublgis.dgismobile.mapsdk.Map
+import kotlin.reflect.KClass
 import ru.dublgis.dgismobile.mapsdk.MapFragment as DGisMapFragment
 
 const val LOCATION_PERMISSION_REQUEST_ID: Int = 777
@@ -27,6 +31,12 @@ abstract class MapActivity : AppCompatActivity() {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
+
+        with(supportActionBar) {
+            this?.setDisplayHomeAsUpEnabled(true)
+            this?.setDisplayShowHomeEnabled(true)
+            this?.title = intent.getStringExtra(TEXT_EXTRA)
+        }
 
         locationProvider = LocationServices.getFusedLocationProviderClient(this)
 
@@ -131,6 +141,23 @@ abstract class MapActivity : AppCompatActivity() {
     private fun zoomOutMap(@Suppress("UNUSED_PARAMETER") view: View?) {
         map?.run {
             zoom = zoom.dec()
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // handle arrow click here
+        if (item.itemId === android.R.id.home) {
+            finish() // close this activity and return to preview activity (if there is any)
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    companion object {
+        const val TEXT_EXTRA = "TEXT_EXTRA"
+        fun startActivity(context: Context, text: String, kClasss: KClass<out MapActivity>) {
+            val intent = Intent(context, kClasss.java)
+            intent.putExtra(TEXT_EXTRA, text)
+            context.startActivity(intent)
         }
     }
 }
