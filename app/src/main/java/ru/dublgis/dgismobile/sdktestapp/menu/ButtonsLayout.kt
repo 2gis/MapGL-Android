@@ -17,7 +17,7 @@ class ButtonsLayout(context: Context, attrs: AttributeSet) : LinearLayout(contex
             return@OnClickListener
         }
 
-        if (newButton.isSelect) {
+        if (newButton is ExpandableGroupButton && newButton.isSelect) {
             newButton.unselect()
         } else {
             newButton.select()
