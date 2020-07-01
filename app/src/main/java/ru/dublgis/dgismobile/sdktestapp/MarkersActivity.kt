@@ -36,10 +36,6 @@ class MarkersActivity : MapActivity() {
 
     private fun onMapClicked(pointer: MapPointerEvent) {
         map?.let { map ->
-            pointer.target?.let { mapObject ->
-                map.setSelectedObjects(listOf(mapObject))
-            }
-
             if (marker != null) {
                 marker?.position = pointer.lngLat
             } else {

@@ -31,7 +31,14 @@ class ButtonsLayout(context: Context, attrs: AttributeSet) : LinearLayout(contex
     private fun addButtons() {
         addView(GroupButton(context, "Markers", MarkersActivity::class, onClickListener))
         addView(GroupButton(context, "Clustering", ClusterersActivity::class, onClickListener))
-        addView(GroupButton(context, "Object selection", MarkersActivity::class, onClickListener))
+        addView(
+            GroupButton(
+                context,
+                "Object selection",
+                ObjectSelectionActivity::class,
+                onClickListener
+            )
+        )
         addView(
             ExpandableGroupButton(
                 context,

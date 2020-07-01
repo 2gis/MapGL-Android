@@ -28,7 +28,7 @@ abstract class MapActivity : AppCompatActivity() {
     private var location: Location? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.AppTheme)
+        setTheme(R.style.ActionBarAppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
 
@@ -154,8 +154,8 @@ abstract class MapActivity : AppCompatActivity() {
 
     companion object {
         const val TEXT_EXTRA = "TEXT_EXTRA"
-        fun startActivity(context: Context, text: String, kClasss: KClass<out MapActivity>) {
-            val intent = Intent(context, kClasss.java)
+        fun startActivity(context: Context, text: String, kClass: KClass<out MapActivity>) {
+            val intent = Intent(context, kClass.java)
             intent.putExtra(TEXT_EXTRA, text)
             context.startActivity(intent)
         }

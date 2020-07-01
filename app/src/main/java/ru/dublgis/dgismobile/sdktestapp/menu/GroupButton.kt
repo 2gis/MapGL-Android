@@ -39,12 +39,10 @@ class GroupButton(context: Context, attrs: AttributeSet?) : RelativeLayout(conte
 
     override fun select() {
         MapActivity.startActivity(context, text, nextActivityClass)
-        chevron.setImageDrawable(resources.getDrawable(R.drawable.ic_chevron_active))
         isSel = true
     }
 
     override fun unselect() {
-        chevron.setImageDrawable(resources.getDrawable(R.drawable.ic_chevron))
         isSel = false
     }
 }
