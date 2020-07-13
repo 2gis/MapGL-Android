@@ -16,8 +16,10 @@ class CircleActivity : MapActivity() {
                 2000f
             )
         )
+
+        val ctx = WeakReference(this)
+
         circle?.setOnClickListener {
-            val ctx = WeakReference(this)
             ctx.get()?.let { activity ->
 
                 circle.destroy()

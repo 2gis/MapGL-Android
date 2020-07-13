@@ -16,8 +16,10 @@ class CircleMarkerActivity : MapActivity() {
                 20f
             )
         )
+
+        val ctx = WeakReference(this)
+
         circleMarker?.setOnClickListener {
-            val ctx = WeakReference(this)
             ctx.get()?.let { activity ->
 
                 circleMarker.destroy()

@@ -16,8 +16,10 @@ class ClusterersActivity : MapActivity() {
     private fun showNewClusterer(clusterMarkers: Collection<InputMarker>) {
         val clusterer = map?.createClusterer(ClustererOptions(60f))
         clusterer?.load(clusterMarkers)
+
+        val ctx = WeakReference(this)
+
         clusterer?.setOnClickListener {
-            val ctx = WeakReference(this)
             ctx.get()?.let { activity ->
 
                 clusterer.destroy()

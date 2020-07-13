@@ -21,8 +21,10 @@ class PolygonActivity : MapActivity() {
                 Color.BLACK
             )
         )
+
+        val ctx = WeakReference(this)
+
         polygon?.setOnClickListener {
-            val ctx = WeakReference(this)
             ctx.get()?.let { activity ->
 
                 polygon.destroy()

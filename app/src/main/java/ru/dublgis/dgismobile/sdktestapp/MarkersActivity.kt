@@ -39,7 +39,6 @@ class MarkersActivity : MapActivity() {
             if (marker != null) {
                 marker?.position = pointer.lngLat
             } else {
-                val ctx = WeakReference(this)
                 val markerOptions = MarkerOptions(
                     pointer.lngLat,
                     icon = iconFromSvgAsset(assets, "pin.svg"),
@@ -50,6 +49,7 @@ class MarkersActivity : MapActivity() {
                     markerOptions
                 )
 
+                val ctx = WeakReference(this)
                 marker?.setOnClickListener {
                     ctx.get()?.let { activity ->
 

@@ -17,8 +17,10 @@ class PolylineActivity : MapActivity() {
                 generateCoordinates()
             )
         )
+
+        val ctx = WeakReference(this)
+
         polyline?.setOnClickListener {
-            val ctx = WeakReference(this)
             ctx.get()?.let { activity ->
 
                 polyline.destroy()
