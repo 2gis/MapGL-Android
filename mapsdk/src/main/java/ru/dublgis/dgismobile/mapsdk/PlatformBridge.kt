@@ -10,6 +10,10 @@ import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererImpl
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
 import ru.dublgis.dgismobile.mapsdk.clustering.InputMarker
+import ru.dublgis.dgismobile.mapsdk.directions.CarRouteOptions
+import ru.dublgis.dgismobile.mapsdk.directions.Directions
+import ru.dublgis.dgismobile.mapsdk.directions.DirectionsImpl
+import ru.dublgis.dgismobile.mapsdk.directions.DirectionsOptions
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.Circle
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.CircleImpl
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.CircleOptions
@@ -358,6 +362,27 @@ internal class PlatformBridge(
         return label
     }
 
+    override fun createDirections(options: DirectionsOptions): Directions {
+        val directions = DirectionsImpl(WeakReference(this))
+
+        jsExecutor(
+            """
+            window.dgismap.createDirections($options);
+        """
+        )
+
+        return directions
+    }
+
+
+    fun carRoute(carRouteOptions: CarRouteOptions) {
+        jsExecutor(
+            """
+            window.dgismap.carRoute($carRouteOptions);
+        """
+        )
+    }
+
     fun destroyPolyline(id: String) {
         jsExecutor(
             """
@@ -406,6 +431,14 @@ internal class PlatformBridge(
         )
 
         labels.remove(id)
+    }
+
+    fun clearRoutes() {
+        jsExecutor(
+            """
+            window.dgismap.destroyDirections();
+        """
+        )
     }
 
     fun showLabel(id: String) {

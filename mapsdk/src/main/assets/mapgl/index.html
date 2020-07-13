@@ -25,6 +25,7 @@
 
 <script src="https://mapgl.2gis.com/api/js"></script>
 <script src="https://unpkg.com/@2gis/mapgl-clusterer@^1/dist/clustering.js"></script>
+<script src="https://unpkg.com/@2gis/mapgl-directions@^1/dist/directions.js"></script>
 
 <script>
 
@@ -43,6 +44,7 @@ window.initMapGL = (
     const circles = new Map();
     const circleMarkers = new Map();
     const labels = new Map();
+    var directions;
 
     const map = new mapgl.Map('map', {
         center: center,
@@ -251,6 +253,14 @@ window.initMapGL = (
 			if (label) {
 				label.show();
 			}
+		},
+
+		createDirections: (options) => {
+			directions = new mapgl.Directions(map, options);
+		},
+
+		carRoute: (options) => {
+			directions.carRoute(options);
 		}
     };
 

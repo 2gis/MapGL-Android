@@ -32,10 +32,10 @@ abstract class MapActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
 
-        with(supportActionBar) {
-            this?.setDisplayHomeAsUpEnabled(true)
-            this?.setDisplayShowHomeEnabled(true)
-            this?.title = intent.getStringExtra(TEXT_EXTRA)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+            title = intent.getStringExtra(TEXT_EXTRA)
         }
 
         locationProvider = LocationServices.getFusedLocationProviderClient(this)
