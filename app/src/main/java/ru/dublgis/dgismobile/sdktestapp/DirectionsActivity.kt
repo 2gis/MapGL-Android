@@ -11,7 +11,7 @@ class DirectionsActivity : MapActivity() {
     }
 
     private fun carRoute() {
-        val apiKey = resources.getString(R.string.dgis_map_key)
+        val apiKey = resources.getString(R.string.directions_api_key)
 
         val directions = map?.createDirections(DirectionsOptions(apiKey))
         directions?.carRoute(CarRouteOptions(generateCoordinates()))
