@@ -37,7 +37,6 @@ class PolygonActivity : MapActivity() {
         }
     }
 
-    @TestOnly
     private fun generateCoordinates(): Collection<Collection<LonLat>> {
         val coordinates1 = mutableListOf<LonLat>()
         coordinates1.add(LonLat(55.28770929, 25.22069944))

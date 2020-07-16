@@ -1,7 +1,7 @@
 package ru.dublgis.dgismobile.mapsdk.directions
 
 /**
- * Interface for creating labels on the map.
+ * Interface for creating directions on the map.
  */
 interface Directions {
 

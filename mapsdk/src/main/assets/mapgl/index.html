@@ -44,7 +44,7 @@ window.initMapGL = (
     const circles = new Map();
     const circleMarkers = new Map();
     const labels = new Map();
-    var directions;
+    const directionsMap = new Map();
 
     const map = new mapgl.Map('map', {
         center: center,
@@ -255,12 +255,23 @@ window.initMapGL = (
 			}
 		},
 
-		createDirections: (options) => {
+		createDirections: (id, options) => {
 			directions = new mapgl.Directions(map, options);
+			directionsMap.set(id, directions)
 		},
 
-		carRoute: (options) => {
-			directions.carRoute(options);
+		carRoute: (id, options) => {
+			const directions = directionsMap.get(id);
+			if (directions) {
+				directions.carRoute(options);
+			}
+		},
+
+		clearRoutes: (id) => {
+			const directions = directionsMap.get(id);
+			if (directions) {
+				directions.clear();
+			}
 		}
     };
 

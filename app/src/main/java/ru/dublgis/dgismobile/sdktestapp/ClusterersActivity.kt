@@ -32,7 +32,6 @@ class ClusterersActivity : MapActivity() {
         }
     }
 
-    @TestOnly
     private fun generate1Markers(): Collection<InputMarker> {
         val markersList = mutableListOf<InputMarker>()
         markersList.add(InputMarker(LonLat(55.30771, 25.20314)))
@@ -44,7 +43,6 @@ class ClusterersActivity : MapActivity() {
         return markersList
     }
 
-    @TestOnly
     private fun generate2Markers(): Collection<InputMarker> {
         val markersList = mutableListOf<InputMarker>()
         markersList.add(InputMarker(LonLat(55.31671, 25.20214)))

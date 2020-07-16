@@ -33,7 +33,6 @@ class PolylineActivity : MapActivity() {
         }
     }
 
-    @TestOnly
     private fun generateCoordinates(): Collection<LonLat> {
         val coordinates = mutableListOf<LonLat>()
         coordinates.add(LonLat(55.28770929, 25.22069944))

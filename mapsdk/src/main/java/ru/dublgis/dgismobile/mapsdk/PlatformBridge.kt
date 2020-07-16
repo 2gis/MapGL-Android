@@ -61,6 +61,7 @@ internal class PlatformBridge(
     private val circles = mutableMapOf<String, CircleImpl>()
     private val circleMarkers = mutableMapOf<String, CircleMarkerImpl>()
     private val labels = mutableMapOf<String, LabelImpl>()
+    private val directionsMap = mutableMapOf<String, DirectionsImpl>()
 
     private var _apiKey = ""
     private var _center = LonLat()
@@ -84,6 +85,7 @@ internal class PlatformBridge(
     private var circleMarkerId = 0
     private var labelId = 0
     private var markerId = 0
+    private var directionsId = 0
 
     override var center: LonLat
         get() = _center
@@ -363,11 +365,15 @@ internal class PlatformBridge(
     }
 
     override fun createDirections(options: DirectionsOptions): Directions {
-        val directions = DirectionsImpl(WeakReference(this))
+        val id = "${directionsId++}"
+
+        val directions = DirectionsImpl(WeakReference(this), id)
+
+        directionsMap[id] = directions
 
         jsExecutor(
             """
-            window.dgismap.createDirections($options);
+            window.dgismap.createDirections($id, $options);
         """
         )
 
@@ -375,10 +381,11 @@ internal class PlatformBridge(
     }
 
 
-    fun carRoute(carRouteOptions: CarRouteOptions) {
+    fun carRoute(id: String, carRouteOptions: CarRouteOptions) {
+
         jsExecutor(
             """
-            window.dgismap.carRoute($carRouteOptions);
+            window.dgismap.carRoute($id, $carRouteOptions);
         """
         )
     }
@@ -433,12 +440,14 @@ internal class PlatformBridge(
         labels.remove(id)
     }
 
-    fun clearRoutes() {
+    fun clearRoutes(id: String) {
         jsExecutor(
             """
-            window.dgismap.destroyDirections();
+            window.dgismap.clearRoutes($id);
         """
         )
+
+        directionsMap.remove(id)
     }
 
     fun showLabel(id: String) {
