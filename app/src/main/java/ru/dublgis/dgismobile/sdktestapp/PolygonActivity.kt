@@ -21,8 +21,10 @@ class PolygonActivity : MapActivity() {
                 Color.BLACK
             )
         )
+
+        val ctx = WeakReference(this)
+
         polygon?.setOnClickListener {
-            val ctx = WeakReference(this)
             ctx.get()?.let { activity ->
 
                 polygon.destroy()
@@ -35,7 +37,6 @@ class PolygonActivity : MapActivity() {
         }
     }
 
-    @TestOnly
     private fun generateCoordinates(): Collection<Collection<LonLat>> {
         val coordinates1 = mutableListOf<LonLat>()
         coordinates1.add(LonLat(55.28770929, 25.22069944))

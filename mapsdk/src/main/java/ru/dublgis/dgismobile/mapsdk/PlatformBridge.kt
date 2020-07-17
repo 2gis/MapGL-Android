@@ -10,6 +10,10 @@ import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererImpl
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
 import ru.dublgis.dgismobile.mapsdk.clustering.InputMarker
+import ru.dublgis.dgismobile.mapsdk.directions.CarRouteOptions
+import ru.dublgis.dgismobile.mapsdk.directions.Directions
+import ru.dublgis.dgismobile.mapsdk.directions.DirectionsImpl
+import ru.dublgis.dgismobile.mapsdk.directions.DirectionsOptions
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.Circle
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.CircleImpl
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.CircleOptions
@@ -57,6 +61,7 @@ internal class PlatformBridge(
     private val circles = mutableMapOf<String, CircleImpl>()
     private val circleMarkers = mutableMapOf<String, CircleMarkerImpl>()
     private val labels = mutableMapOf<String, LabelImpl>()
+    private val directionsMap = mutableMapOf<String, DirectionsImpl>()
 
     private var _apiKey = ""
     private var _center = LonLat()
@@ -80,6 +85,7 @@ internal class PlatformBridge(
     private var circleMarkerId = 0
     private var labelId = 0
     private var markerId = 0
+    private var directionsId = 0
 
     override var center: LonLat
         get() = _center
@@ -358,6 +364,32 @@ internal class PlatformBridge(
         return label
     }
 
+    override fun createDirections(options: DirectionsOptions): Directions {
+        val id = "${directionsId++}"
+
+        val directions = DirectionsImpl(WeakReference(this), id)
+
+        directionsMap[id] = directions
+
+        jsExecutor(
+            """
+            window.dgismap.createDirections($id, $options);
+        """
+        )
+
+        return directions
+    }
+
+
+    fun carRoute(id: String, carRouteOptions: CarRouteOptions) {
+
+        jsExecutor(
+            """
+            window.dgismap.carRoute($id, $carRouteOptions);
+        """
+        )
+    }
+
     fun destroyPolyline(id: String) {
         jsExecutor(
             """
@@ -406,6 +438,24 @@ internal class PlatformBridge(
         )
 
         labels.remove(id)
+    }
+
+    fun clearRoutes(id: String) {
+        jsExecutor(
+            """
+            window.dgismap.clearRoutes($id);
+        """
+        )
+    }
+
+    fun destroyDirections(id: String) {
+        jsExecutor(
+            """
+            window.dgismap.destroyDirections($id);
+        """
+        )
+
+        directionsMap.remove(id)
     }
 
     fun showLabel(id: String) {

@@ -47,6 +47,9 @@
         <activity
             android:name=".ObjectSelectionActivity"
             android:configChanges="orientation|keyboardHidden" />
+        <activity
+            android:name=".DirectionsActivity"
+            android:configChanges="orientation|keyboardHidden" />
 
     </application>
 

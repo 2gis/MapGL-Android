@@ -47,6 +47,15 @@ class ButtonsLayout(context: Context, attrs: AttributeSet) : LinearLayout(contex
                 onClickListener
             )
         )
+
+        addView(
+            GroupButton(
+                context,
+                "Directions",
+                DirectionsActivity::class,
+                onClickListener
+            )
+        )
     }
 
     private fun getGeometriesButtons(): Collection<ItemButton> {

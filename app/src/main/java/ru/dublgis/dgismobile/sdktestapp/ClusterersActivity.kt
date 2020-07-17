@@ -16,8 +16,10 @@ class ClusterersActivity : MapActivity() {
     private fun showNewClusterer(clusterMarkers: Collection<InputMarker>) {
         val clusterer = map?.createClusterer(ClustererOptions(60f))
         clusterer?.load(clusterMarkers)
+
+        val ctx = WeakReference(this)
+
         clusterer?.setOnClickListener {
-            val ctx = WeakReference(this)
             ctx.get()?.let { activity ->
 
                 clusterer.destroy()
@@ -30,7 +32,6 @@ class ClusterersActivity : MapActivity() {
         }
     }
 
-    @TestOnly
     private fun generate1Markers(): Collection<InputMarker> {
         val markersList = mutableListOf<InputMarker>()
         markersList.add(InputMarker(LonLat(55.30771, 25.20314)))
@@ -42,7 +43,6 @@ class ClusterersActivity : MapActivity() {
         return markersList
     }
 
-    @TestOnly
     private fun generate2Markers(): Collection<InputMarker> {
         val markersList = mutableListOf<InputMarker>()
         markersList.add(InputMarker(LonLat(55.31671, 25.20214)))

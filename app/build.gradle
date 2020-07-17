@@ -18,6 +18,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         resValue("string", "dgis_map_key", localProperties.getProperty("apiKey"))
+        resValue("string", "directions_api_key", localProperties.getProperty("directionsApiKey"))
     }
     buildTypes {
         release {
