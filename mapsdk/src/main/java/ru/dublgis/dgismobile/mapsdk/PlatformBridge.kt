@@ -446,6 +446,14 @@ internal class PlatformBridge(
             window.dgismap.clearRoutes($id);
         """
         )
+    }
+
+    fun destroyDirections(id: String) {
+        jsExecutor(
+            """
+            window.dgismap.destroyDirections($id);
+        """
+        )
 
         directionsMap.remove(id)
     }

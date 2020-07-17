@@ -14,4 +14,9 @@ interface Directions {
      * Clears the map from any previously drawn routes.
      */
     fun clear()
+
+    /**
+     * Destroys the directions
+     */
+    fun destroy()
 }

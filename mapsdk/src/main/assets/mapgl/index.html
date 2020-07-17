@@ -272,6 +272,13 @@ window.initMapGL = (
 			if (directions) {
 				directions.clear();
 			}
+		},
+
+		destroyDirections: (id) => {
+			const directions = directionsMap.get(id);
+			if (directions) {
+				directions.clear();
+			}
 			directionsMap.delete(id);
 		}
     };

@@ -10,18 +10,11 @@ import ru.dublgis.dgismobile.mapsdk.directions.DirectionsOptions
 class DirectionsActivity : MapActivity() {
 
     private var directions1: Directions? = null
+    private var directions2: Directions? = null
 
     override fun onDGisMapReady() {
         carRoute()
         map?.setOnClickListener(this::onMapClicked)
-    }
-
-    private fun onMapClicked(pointer: MapPointerEvent) {
-        directions1?.clear()
-        val msg = "remove route 1"
-
-        Toast.makeText(this, msg, Toast.LENGTH_LONG)
-            .show()
     }
 
     private fun carRoute() {
@@ -31,8 +24,13 @@ class DirectionsActivity : MapActivity() {
         directions1 = map?.createDirections(DirectionsOptions(apiKey))
         directions1?.carRoute(CarRouteOptions(generate1Coordinates()))
 
-        val directions2 = map?.createDirections(DirectionsOptions(apiKey))
+        directions2 = map?.createDirections(DirectionsOptions(apiKey))
         directions2?.carRoute(CarRouteOptions(generate2Coordinates()))
+    }
+
+    private fun onMapClicked(pointer: MapPointerEvent) {
+        directions1?.clear()
+        directions2?.destroy()
     }
 
     private fun generate1Coordinates(): Collection<LonLat> {

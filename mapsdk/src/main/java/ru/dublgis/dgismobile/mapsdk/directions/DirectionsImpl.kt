@@ -14,4 +14,8 @@ internal class DirectionsImpl(
     override fun clear() {
         controller.get()?.clearRoutes(id)
     }
+
+    override fun destroy() {
+        controller.get()?.destroyDirections(id)
+    }
 }
