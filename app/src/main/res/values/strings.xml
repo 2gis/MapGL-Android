@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">SDK TestApp</string>
-    <string name="title">2GIS map features\nand examples</string>
+    <string name="title">2GIS WebGL map features\nand examples</string>
 </resources>
