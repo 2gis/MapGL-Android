@@ -1,6 +1,7 @@
 package ru.dublgis.dgismobile.sdktestapp.menu
 
 import android.content.Context
+import android.graphics.Typeface
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.layout_group_button.view.*
@@ -38,11 +39,19 @@ class GroupButton(context: Context, attrs: AttributeSet?) : RelativeLayout(conte
         get() = isSel
 
     override fun select() {
+        groupName.typeface = Typeface.create(
+            resources.getString(R.string.roboto_medium),
+            Typeface.NORMAL
+        )
         MapActivity.startActivity(context, text, nextActivityClass)
         isSel = true
     }
 
     override fun unselect() {
+        groupName.typeface = Typeface.create(
+            resources.getString(R.string.roboto_regular),
+            Typeface.NORMAL
+        )
         isSel = false
     }
 }
