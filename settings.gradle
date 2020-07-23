@@ -1,1 +1,3 @@
+rootProject.name='android-webgl-sdk'
+
 include ':app', ':mapsdk'
