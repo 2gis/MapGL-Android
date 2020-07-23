@@ -1,5 +1,6 @@
 package ru.dublgis.dgismobile.mapsdk
 
+import android.app.Activity
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -29,6 +30,8 @@ import ru.dublgis.dgismobile.mapsdk.geometries.polyline.PolylineOptions
 import ru.dublgis.dgismobile.mapsdk.labels.Label
 import ru.dublgis.dgismobile.mapsdk.labels.LabelImpl
 import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
+import ru.dublgis.dgismobile.mapsdk.utils.location.LocationProvider
+import ru.dublgis.dgismobile.mapsdk.utils.location.LocationProviderImpl
 import java.lang.ref.WeakReference
 import kotlin.math.abs
 
@@ -380,6 +383,9 @@ internal class PlatformBridge(
         return directions
     }
 
+    override fun initLocationProvider(activity: Activity): LocationProvider {
+        return LocationProviderImpl(activity)
+    }
 
     fun carRoute(id: String, carRouteOptions: CarRouteOptions) {
 

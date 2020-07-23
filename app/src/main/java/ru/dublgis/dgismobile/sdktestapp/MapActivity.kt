@@ -1,31 +1,28 @@
 package ru.dublgis.dgismobile.sdktestapp
 
-import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.google.android.gms.location.*
 import ru.dublgis.dgismobile.mapsdk.LonLat
 import ru.dublgis.dgismobile.mapsdk.Map
+import ru.dublgis.dgismobile.mapsdk.utils.location.LocationProvider
 import kotlin.reflect.KClass
 import ru.dublgis.dgismobile.mapsdk.MapFragment as DGisMapFragment
 
-const val LOCATION_PERMISSION_REQUEST_ID: Int = 777
-const val LOC_PERM = Manifest.permission.ACCESS_FINE_LOCATION
+//const val LOCATION_PERMISSION_REQUEST_ID: Int = 777
+//const val LOC_PERM = Manifest.permission.ACCESS_FINE_LOCATION
 
 abstract class MapActivity : AppCompatActivity() {
 
-    private lateinit var locationProvider: FusedLocationProviderClient
+    //private lateinit var locationProvider: FusedLocationProviderClient
     protected var map: Map? = null
-    private var location: Location? = null
+
+    //private var location: Location? = null
+    private lateinit var locationProvider: LocationProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.ActionBarAppTheme)
@@ -38,7 +35,7 @@ abstract class MapActivity : AppCompatActivity() {
             title = intent.getStringExtra(TEXT_EXTRA)
         }
 
-        locationProvider = LocationServices.getFusedLocationProviderClient(this)
+        //locationProvider = LocationServices.getFusedLocationProviderClient(this)
 
         val mapFragment = supportFragmentManager.findFragmentById(R.id.mapFragment)
                 as DGisMapFragment
@@ -52,7 +49,7 @@ abstract class MapActivity : AppCompatActivity() {
             zoom = 12.0
         )
 
-        val grant = ContextCompat.checkSelfPermission(this, LOC_PERM)
+        /*val grant = ContextCompat.checkSelfPermission(this, LOC_PERM)
         if (grant != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
                 this,
@@ -61,7 +58,7 @@ abstract class MapActivity : AppCompatActivity() {
             )
         } else {
             requestLocation()
-        }
+        }*/
 
         mapOf(
             R.id.zoom_in to this::zoomInMap,
@@ -76,7 +73,15 @@ abstract class MapActivity : AppCompatActivity() {
 
     private fun onDGisMapReady(controller: Map?) {
         map = controller
+        initLocationProvider()
         onDGisMapReady()
+    }
+
+    private fun initLocationProvider() {
+        map?.let {
+            locationProvider = it.initLocationProvider(this)
+            locationProvider.checkPermissionAndRequestLocation()
+        }
     }
 
     protected abstract fun onDGisMapReady()
@@ -89,43 +94,16 @@ abstract class MapActivity : AppCompatActivity() {
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        when (requestCode) {
-            LOCATION_PERMISSION_REQUEST_ID -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    requestLocation()
-                }
-            }
-        }
-    }
-
-    private fun requestLocation() {
-        val grant = ContextCompat.checkSelfPermission(this, LOC_PERM)
-        if (grant != PackageManager.PERMISSION_GRANTED) {
-            return
-        }
-
-        val request = LocationRequest.create()
-        request.interval = 60000
-        request.fastestInterval = 20000
-        request.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-
-        val listener = object : LocationCallback() {
-            override fun onLocationResult(res: LocationResult?) {
-                res?.lastLocation?.let {
-                    this@MapActivity.location = it
-                }
-            }
-        }
-        locationProvider.requestLocationUpdates(request, listener, null)
+        locationProvider.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun centerMap(@Suppress("UNUSED_PARAMETER") view: View?) {
-        if (map == null || location == null) {
+        if (map == null) {
             return
         }
 
         map?.run {
-            location?.let {
+            locationProvider.location?.let {
                 center = LonLat(it.longitude, it.latitude)
                 zoom = 16.0
             }
