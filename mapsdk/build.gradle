@@ -21,6 +21,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: "org.jetbrains.dokka"
+apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion 30
@@ -97,10 +98,10 @@ ext {
 
     libraryDescription = '2GIS Maps SDK for Android'
 
-    siteUrl = 'https://github.com/2gis/MapGL-Android'
+    siteUrl = 'https://docs-canary.2gis.com/en/android/webgl/maps/overview'
     gitUrl = 'https://github.com/2gis/MapGL-Android.git'
 
-    libraryVersion = '1.1.0'
+    libraryVersion = '1.2.0'
 
     developerId = '2gis'
     developerName = '2gis'
@@ -177,5 +178,48 @@ bintray {
         version {
             desc = libraryDescription
         }
+    }
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            aarSnapshot(MavenPublication) {
+                from components.release
+
+                groupId publishedGroupId
+                artifactId artifact
+                version "$libraryVersion-SNAPSHOT"
+
+                pom {
+                    name = bintrayName
+                    description = libraryDescription
+                    url = siteUrl
+
+                    licenses {
+                        license {
+                            name = licenseName
+                            url = licenseUrl
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = developerId
+                            name = developerName
+                            email = developerEmail
+                        }
+                    }
+                    scm {
+                        connection = gitUrl
+                        developerConnection = gitUrl
+                        url = siteUrl
+                    }
+                }
+            }
+        }
+    }
+
+    artifactoryPublish {
+        publications(publishing.publications.aarSnapshot)
     }
 }
