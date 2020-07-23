@@ -1,6 +1,11 @@
 pipeline {
     agent {label 'ubuntu-18.04 && x64 && hw'}
 
+    environment {
+        GRADLE_OPTS = '-Dorg.gradle.daemon=false'
+        ARTIFACTORY_HOST='http://maven.v4core.os-n3.hw:8081/artifactory'
+    }
+
     stages {
         stage("prepare") {
             steps {
@@ -25,7 +30,15 @@ pipeline {
 
         stage("deploy") {
             steps {
-                echo "Deploy SNAPSHOT"
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'buildserver-v4core', 
+                        usernameVariable: 'ARTIFACTORY_USERNAME', 
+                        passwordVariable: 'ARTIFACTORY_PASSWORD')
+                ]) { 
+
+                    sh './gradlew mapsdk:artifactoryPublish'
+                }
             }
         }
     }
