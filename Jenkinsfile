@@ -19,12 +19,25 @@ pipeline {
 
                     writeFile file: "local.properties", text: localProperties
                 }
+                script {
+                    def name = env.JOB_NAME.toLowerCase()
+
+                    def buildInfo = """\
+                        buildInfo.build.name=$name
+                        buildInfo.build.number=${env.BUILD_ID}
+                    """.stripIndent()
+
+                    sh (
+                        label: "append build identifiers",
+                        script: "echo \"$buildInfo\" >> gradle.properties"
+                    )
+                }
             }
         }
 
         stage("build") {
             steps {
-                sh './gradlew build'
+                sh './gradlew build --info'
             }
         }
 
@@ -37,7 +50,7 @@ pipeline {
                         passwordVariable: 'ARTIFACTORY_PASSWORD')
                 ]) { 
 
-                    sh './gradlew mapsdk:artifactoryPublish'
+                    sh './gradlew mapsdk:artifactoryPublish --info'
                 }
             }
         }
