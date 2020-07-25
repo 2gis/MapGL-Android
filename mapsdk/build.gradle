@@ -111,14 +111,13 @@ version = libraryVersion
 
 
 task sourcesJar(type: Jar) {
-    classifier = 'sources'
     from android.sourceSets.main.java.srcDirs
+    archiveClassifier.set('sources')
 }
 
 artifacts {
     archives sourcesJar
 }
-
 
 def pomConfig = {
     name = bintrayName
@@ -153,6 +152,8 @@ def publicationConfig = { versionName ->
     version versionName
 
     pom pomConfig
+
+    artifact sourcesJar
 }
 
 afterEvaluate {
@@ -166,32 +167,28 @@ afterEvaluate {
     artifactoryPublish {
         publications(publishing.publications.aarSnapshot)
     }
+}
 
-    bintray {
-        user = System.getenv('BINTRAY_USER')
-        key = System.getenv('BINTRAY_KEY')
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
 
-        publications = [
-                project.publishing.publications.aar
-        ]
-        dryRun = true
+    configurations = ['archives']
 
-        pkg {
-            userOrg = '2gis'
-            repo = bintrayRepo
-            name = bintrayName
+    pkg {
+        userOrg = '2gis'
+        repo = bintrayRepo
+        name = bintrayName
+        desc = libraryDescription
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = allLicenses
+        dryRun = false
+        publish = true
+        override = true
+        publicDownloadNumbers = true
+        version {
             desc = libraryDescription
-            websiteUrl = siteUrl
-            vcsUrl = gitUrl
-            licenses = allLicenses
-            dryRun = false
-            publish = true
-            override = false
-            publicDownloadNumbers = true
-            version {
-                desc = libraryDescription
-            }
         }
     }
 }
-
