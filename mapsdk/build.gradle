@@ -21,6 +21,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: "org.jetbrains.dokka"
+apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion 30
@@ -33,7 +34,6 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
     }
 
     buildTypes {
@@ -81,12 +81,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
 
-repositories {
-    google()
-    mavenCentral()
-}
-
-
 ext {
     bintrayRepo = 'maven'
     bintrayName = 'mapgl'
@@ -97,10 +91,10 @@ ext {
 
     libraryDescription = '2GIS Maps SDK for Android'
 
-    siteUrl = 'https://github.com/2gis/MapGL-Android'
+    siteUrl = 'https://docs.2gis.com/en/android/webgl/maps/overview'
     gitUrl = 'https://github.com/2gis/MapGL-Android.git'
 
-    libraryVersion = '1.1.0'
+    libraryVersion = '1.2.1'
 
     developerId = '2gis'
     developerName = '2gis'
@@ -115,38 +109,6 @@ ext {
 group = publishedGroupId
 version = libraryVersion
 
-install {
-    repositories.mavenInstaller {
-        pom.project {
-            packaging 'aar'
-            groupId publishedGroupId
-            artifactId artifact
-
-            name libraryName
-            description libraryDescription
-            url siteUrl
-
-            licenses {
-                license {
-                    name licenseName
-                    url licenseUrl
-                }
-            }
-            developers {
-                developer {
-                    id developerId
-                    name developerName
-                    email developerEmail
-                }
-            }
-            scm {
-                connection gitUrl
-                developerConnection gitUrl
-                url siteUrl
-            }
-        }
-    }
-}
 
 task sourcesJar(type: Jar) {
     classifier = 'sources'
@@ -157,25 +119,79 @@ artifacts {
     archives sourcesJar
 }
 
-bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
 
-    configurations = ['archives']
-    pkg {
-        userOrg = '2gis'
-        repo = bintrayRepo
-        name = bintrayName
-        desc = libraryDescription
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        licenses = allLicenses
-        dryRun = false
-        publish = true
-        override = false
-        publicDownloadNumbers = true
-        version {
+def pomConfig = {
+    name = bintrayName
+    description = libraryDescription
+    url = siteUrl
+
+    licenses {
+        license {
+            name = licenseName
+            url = licenseUrl
+        }
+    }
+    developers {
+        developer {
+            id = developerId
+            name = developerName
+            email = developerEmail
+        }
+    }
+    scm {
+        connection = gitUrl
+        developerConnection = gitUrl
+        url = siteUrl
+    }
+}
+
+def publicationConfig = { versionName ->
+    from components.release
+
+    groupId publishedGroupId
+    artifactId artifact
+    version versionName
+
+    pom pomConfig
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            create('aar', MavenPublication, publicationConfig.curry("$libraryVersion"))
+            create('aarSnapshot', MavenPublication, publicationConfig.curry("$libraryVersion-SNAPSHOT"))
+        }
+    }
+
+    artifactoryPublish {
+        publications(publishing.publications.aarSnapshot)
+    }
+
+    bintray {
+        user = System.getenv('BINTRAY_USER')
+        key = System.getenv('BINTRAY_KEY')
+
+        publications = [
+                project.publishing.publications.aar
+        ]
+        dryRun = true
+
+        pkg {
+            userOrg = '2gis'
+            repo = bintrayRepo
+            name = bintrayName
             desc = libraryDescription
+            websiteUrl = siteUrl
+            vcsUrl = gitUrl
+            licenses = allLicenses
+            dryRun = false
+            publish = true
+            override = false
+            publicDownloadNumbers = true
+            version {
+                desc = libraryDescription
+            }
         }
     }
 }
+

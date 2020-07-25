@@ -2,6 +2,8 @@
 
 buildscript {
     ext.kotlin_version = '1.3.72'
+    ext.info_extractor_version = "4.16.0"
+
     repositories {
         google()
         jcenter()
@@ -10,16 +12,40 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:4.0.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:$info_extractor_version"
     }
 }
-
 
 allprojects {
     repositories {
         google()
         jcenter()
     }
+
+    apply plugin: 'com.jfrog.artifactory'
 }
+
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+
+artifactory {
+    contextUrl = System.getenv("ARTIFACTORY_HOST") ?: ""
+    publish {
+        repository {
+            repoKey = "libs-snapshot-local"
+            username = System.getenv("ARTIFACTORY_USERNAME")
+            password = System.getenv("ARTIFACTORY_PASSWORD")
+        }
+        defaults {
+            publishBuildInfo = true
+            publishArtifacts = true
+            publishPom = true
+        }
+    }
+}
+
+artifactoryPublish.skip = true
 
 task clean(type: Delete) {
     delete rootProject.buildDir
