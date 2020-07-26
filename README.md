@@ -87,7 +87,7 @@ repositories {
 add dependency
 ```groovy
 dependencies {
-    implementation 'ru.dublgis.dgismobile.mapsdk:mapsdk:1.1.0'
+    implementation 'ru.dublgis.dgismobile.mapsdk:mapsdk:latest.release'
 }
 ```
 
