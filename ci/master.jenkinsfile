@@ -1,5 +1,8 @@
 pipeline {
-    agent {label 'ubuntu-18.04 && x64 && hw'}
+
+    agent {
+        label 'ubuntu-18.04 && x64 && hw'
+    }
 
     environment {
         GRADLE_OPTS = '-Dorg.gradle.daemon=false'
@@ -9,6 +12,7 @@ pipeline {
     stages {
         stage("prepare") {
             steps {
+
                 script {
                     def localProperties = '''\
                         sdk.dir=/opt/android-sdk/
@@ -19,6 +23,7 @@ pipeline {
 
                     writeFile file: "local.properties", text: localProperties
                 }
+
                 script {
                     def name = env.JOB_NAME.toLowerCase()
 
@@ -37,7 +42,7 @@ pipeline {
 
         stage("build") {
             steps {
-                sh './gradlew build --info'
+                sh './gradlew clean build --info'
             }
         }
 
@@ -50,7 +55,7 @@ pipeline {
                         passwordVariable: 'ARTIFACTORY_PASSWORD')
                 ]) { 
 
-                    sh './gradlew clean mapsdk:artifactoryPublish --info'
+                    sh './gradlew mapsdk:artifactoryPublish --info'
                 }
             }
         }

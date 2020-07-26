@@ -1,0 +1,64 @@
+pipeline {
+
+    agent {
+        label 'ubuntu-18.04 && x64 && hw'
+    }
+
+    environment {
+        GRADLE_OPTS = '-Dorg.gradle.daemon=false'
+    }
+
+    parameters {
+        password(
+            name: "BINTRAY_USER",
+            defaultValue: "",
+            description: "bintray user"
+        )
+        password(
+            name: "BINTRAY_KEY",
+            defaultValue: "",
+            description: "bintray API Key"
+        )
+    }
+
+    stages {
+        stage("prepare") {
+            steps {
+                checkParams()
+
+                script {
+                    def localProperties = '''\
+                        sdk.dir=/opt/android-sdk/
+
+                        apiKey=CI_INVALID_API_KEY
+                        directionsApiKey=CI_DIRECTIONS_INVALID_KEY
+                    '''.stripIndent()
+
+                    writeFile file: "local.properties", text: localProperties
+                }
+            }
+        }
+
+        stage("build") {
+            steps {
+                sh './gradlew clean build --info'
+            }
+        }
+
+        stage("deploy") {
+            steps {
+                sh './gradlew mapsdk:bintrayUpload --info'
+            }
+        }
+    }
+}
+
+def checkParams() {
+    if (!hudson.util.Secret.toString(params.BINTRAY_USER)) {
+        error('BINTRAY_USER is not defined')
+    }
+
+    if (!hudson.util.Secret.toString(params.BINTRAY_KEY)) {
+        error('BINTRAY_KEY is not defined')
+    }
+}
