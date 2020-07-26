@@ -50,7 +50,7 @@ pipeline {
                         passwordVariable: 'ARTIFACTORY_PASSWORD')
                 ]) { 
 
-                    sh './gradlew mapsdk:artifactoryPublish --info'
+                    sh './gradlew clean mapsdk:artifactoryPublish --info'
                 }
             }
         }
