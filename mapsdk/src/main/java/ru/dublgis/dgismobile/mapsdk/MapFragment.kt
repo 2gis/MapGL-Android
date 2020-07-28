@@ -33,7 +33,8 @@ class MapFragment : Fragment() {
         bridge = PlatformBridge(
             context?.packageName ?: "",
             this::evaluateJavaScript,
-            this::onMapReady
+            this::onMapReady,
+            this.activity
         )
     }
 

@@ -1,12 +1,15 @@
 package ru.dublgis.dgismobile.mapsdk
 
 import android.app.Activity
+import android.location.Location
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
 import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererImpl
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
@@ -31,7 +34,7 @@ import ru.dublgis.dgismobile.mapsdk.labels.Label
 import ru.dublgis.dgismobile.mapsdk.labels.LabelImpl
 import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
 import ru.dublgis.dgismobile.mapsdk.utils.location.LocationProvider
-import ru.dublgis.dgismobile.mapsdk.utils.location.LocationProviderImpl
+import ru.dublgis.dgismobile.mapsdk.utils.location.UserLocationOptions
 import java.lang.ref.WeakReference
 import kotlin.math.abs
 
@@ -43,7 +46,8 @@ typealias MapReadyCallback = (Map?) -> Unit
 internal class PlatformBridge(
     packageName: String,
     jsExecutor: JsExecutor,
-    mapReadyCallback: MapReadyCallback
+    mapReadyCallback: MapReadyCallback,
+    val activity: Activity?
 ) : WebViewClient(), Map {
 
     private val packageName = packageName
@@ -68,6 +72,7 @@ internal class PlatformBridge(
 
     private var _apiKey = ""
     private var _center = LonLat()
+    private var locationProvider: LocationProvider? = activity?.let { LocationProvider(it) }
 
     private var _zoom: Double = 0.0
     private var _maxZoom: Double = 0.0
@@ -383,9 +388,24 @@ internal class PlatformBridge(
         return directions
     }
 
-    override fun initLocationProvider(activity: Activity): LocationProvider {
-        return LocationProviderImpl(activity)
+    override fun showUserLocation(options: UserLocationOptions) {
+        locationProvider?.requestLocation(options, object : LocationCallback() {
+            override fun onLocationResult(res: LocationResult?) {
+                res?.lastLocation?.let {
+                    val position = LonLat(it.longitude, it.latitude)
+                    createCircle(CircleOptions(position, 15f))
+                    createCircleMarker(CircleMarkerOptions(position, 10f))
+                }
+            }
+        })
     }
+
+    override fun disableUserLocation() {
+        locationProvider?.removeLocationUpdates()
+    }
+
+    override val userLocation: Location?
+        get() = locationProvider?.location
 
     fun carRoute(id: String, carRouteOptions: CarRouteOptions) {
 

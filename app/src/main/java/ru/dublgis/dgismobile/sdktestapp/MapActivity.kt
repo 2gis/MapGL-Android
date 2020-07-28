@@ -9,20 +9,16 @@ import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import ru.dublgis.dgismobile.mapsdk.LonLat
 import ru.dublgis.dgismobile.mapsdk.Map
-import ru.dublgis.dgismobile.mapsdk.utils.location.LocationProvider
+import ru.dublgis.dgismobile.mapsdk.utils.Permission.ACCESS_FINE_LOCATION
+import ru.dublgis.dgismobile.mapsdk.utils.PermissionOptions
+import ru.dublgis.dgismobile.mapsdk.utils.location.UserLocationOptions
 import kotlin.reflect.KClass
 import ru.dublgis.dgismobile.mapsdk.MapFragment as DGisMapFragment
 
-//const val LOCATION_PERMISSION_REQUEST_ID: Int = 777
-//const val LOC_PERM = Manifest.permission.ACCESS_FINE_LOCATION
 
 abstract class MapActivity : AppCompatActivity() {
 
-    //private lateinit var locationProvider: FusedLocationProviderClient
     protected var map: Map? = null
-
-    //private var location: Location? = null
-    private lateinit var locationProvider: LocationProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.ActionBarAppTheme)
@@ -35,8 +31,6 @@ abstract class MapActivity : AppCompatActivity() {
             title = intent.getStringExtra(TEXT_EXTRA)
         }
 
-        //locationProvider = LocationServices.getFusedLocationProviderClient(this)
-
         val mapFragment = supportFragmentManager.findFragmentById(R.id.mapFragment)
                 as DGisMapFragment
 
@@ -48,17 +42,6 @@ abstract class MapActivity : AppCompatActivity() {
             center = LonLat(55.30771, 25.20314),
             zoom = 12.0
         )
-
-        /*val grant = ContextCompat.checkSelfPermission(this, LOC_PERM)
-        if (grant != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(LOC_PERM),
-                LOCATION_PERMISSION_REQUEST_ID
-            )
-        } else {
-            requestLocation()
-        }*/
 
         mapOf(
             R.id.zoom_in to this::zoomInMap,
@@ -73,15 +56,14 @@ abstract class MapActivity : AppCompatActivity() {
 
     private fun onDGisMapReady(controller: Map?) {
         map = controller
-        initLocationProvider()
+        map?.showUserLocation(
+            UserLocationOptions(
+                permissionOptions = PermissionOptions(
+                    ACCESS_FINE_LOCATION
+                )
+            )
+        )
         onDGisMapReady()
-    }
-
-    private fun initLocationProvider() {
-        map?.let {
-            locationProvider = it.initLocationProvider(this)
-            locationProvider.checkPermissionAndRequestLocation()
-        }
     }
 
     protected abstract fun onDGisMapReady()
@@ -94,19 +76,15 @@ abstract class MapActivity : AppCompatActivity() {
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        locationProvider.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        //locationProvider.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun centerMap(@Suppress("UNUSED_PARAMETER") view: View?) {
-        if (map == null) {
-            return
-        }
-
         map?.run {
-            locationProvider.location?.let {
+            this.userLocation?.let {
                 center = LonLat(it.longitude, it.latitude)
-                zoom = 16.0
             }
+            zoom = 16.0
         }
     }
 

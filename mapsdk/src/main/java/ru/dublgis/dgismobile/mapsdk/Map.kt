@@ -1,6 +1,6 @@
 package ru.dublgis.dgismobile.mapsdk
 
-import android.app.Activity
+import android.location.Location
 import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
 import ru.dublgis.dgismobile.mapsdk.directions.Directions
@@ -15,7 +15,7 @@ import ru.dublgis.dgismobile.mapsdk.geometries.polyline.Polyline
 import ru.dublgis.dgismobile.mapsdk.geometries.polyline.PolylineOptions
 import ru.dublgis.dgismobile.mapsdk.labels.Label
 import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
-import ru.dublgis.dgismobile.mapsdk.utils.location.LocationProvider
+import ru.dublgis.dgismobile.mapsdk.utils.location.UserLocationOptions
 
 
 typealias PositionChangeListener = (LonLat) -> Unit
@@ -70,5 +70,9 @@ interface Map {
 
     fun createDirections(options: DirectionsOptions): Directions
 
-    fun initLocationProvider(activity: Activity): LocationProvider
+    fun showUserLocation(options: UserLocationOptions)
+
+    fun disableUserLocation()
+
+    val userLocation: Location?
 }
