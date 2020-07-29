@@ -1,8 +1,8 @@
 buildscript {
     ext.kotlin_version = '1.3.72'
     ext {
-        springAutoRestDocsVersion = "2.0.2"
-        dokkaVersion = "0.9.16"
+        dokkaVersion = "0.9.18"
+        dokkaJsonVersion = "1.0.0-SNAPSHOT"
     }
     repositories {
         jcenter()
@@ -11,7 +11,7 @@ buildscript {
     dependencies {
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokkaVersion"
+        classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:$dokkaVersion"
     }
 }
 
@@ -20,7 +20,8 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
-apply plugin: "org.jetbrains.dokka"
+apply plugin: "org.jetbrains.dokka-android"
+apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion 30
@@ -33,7 +34,6 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
     }
 
     buildTypes {
@@ -44,8 +44,8 @@ android {
     }
 
     dokka {
-        outputFormat = "auto-restdocs-json"
-        dokkaFatJar = "capital.scalable:spring-auto-restdocs-dokka-json:$springAutoRestDocsVersion"
+        outputFormat = "json"
+        dokkaFatJar = "ru.dgis.dokka:dokka-json:${dokkaJsonVersion}"
 
         // Do not create index pages for empty packages
         skipEmptyPackages = true
@@ -82,12 +82,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
 
-repositories {
-    google()
-    mavenCentral()
-}
-
-
 ext {
     bintrayRepo = 'maven'
     bintrayName = 'mapgl'
@@ -98,10 +92,10 @@ ext {
 
     libraryDescription = '2GIS Maps SDK for Android'
 
-    siteUrl = 'https://github.com/2gis/MapGL-Android'
+    siteUrl = 'https://docs.2gis.com/en/android/webgl/maps/overview'
     gitUrl = 'https://github.com/2gis/MapGL-Android.git'
 
-    libraryVersion = '1.1.0'
+    libraryVersion = '1.3.0'
 
     developerId = '2gis'
     developerName = '2gis'
@@ -116,46 +110,64 @@ ext {
 group = publishedGroupId
 version = libraryVersion
 
-install {
-    repositories.mavenInstaller {
-        pom.project {
-            packaging 'aar'
-            groupId publishedGroupId
-            artifactId artifact
-
-            name libraryName
-            description libraryDescription
-            url siteUrl
-
-            licenses {
-                license {
-                    name licenseName
-                    url licenseUrl
-                }
-            }
-            developers {
-                developer {
-                    id developerId
-                    name developerName
-                    email developerEmail
-                }
-            }
-            scm {
-                connection gitUrl
-                developerConnection gitUrl
-                url siteUrl
-            }
-        }
-    }
-}
 
 task sourcesJar(type: Jar) {
-    classifier = 'sources'
     from android.sourceSets.main.java.srcDirs
+    archiveClassifier.set('sources')
 }
 
 artifacts {
     archives sourcesJar
+}
+
+def pomConfig = {
+    name = bintrayName
+    description = libraryDescription
+    url = siteUrl
+
+    licenses {
+        license {
+            name = licenseName
+            url = licenseUrl
+        }
+    }
+    developers {
+        developer {
+            id = developerId
+            name = developerName
+            email = developerEmail
+        }
+    }
+    scm {
+        connection = gitUrl
+        developerConnection = gitUrl
+        url = siteUrl
+    }
+}
+
+def publicationConfig = { versionName ->
+    from components.release
+
+    groupId publishedGroupId
+    artifactId artifact
+    version versionName
+
+    pom pomConfig
+
+    artifact sourcesJar
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            create('aar', MavenPublication, publicationConfig.curry("$libraryVersion"))
+            create('aarSnapshot', MavenPublication, publicationConfig.curry("$libraryVersion-SNAPSHOT"))
+        }
+    }
+
+    artifactoryPublish {
+        publications(publishing.publications.aarSnapshot)
+    }
 }
 
 bintray {
@@ -163,6 +175,7 @@ bintray {
     key = System.getenv('BINTRAY_KEY')
 
     configurations = ['archives']
+
     pkg {
         userOrg = '2gis'
         repo = bintrayRepo
@@ -173,7 +186,6 @@ bintray {
         licenses = allLicenses
         dryRun = false
         publish = true
-        override = false
         publicDownloadNumbers = true
         version {
             desc = libraryDescription

@@ -1,0 +1,102 @@
+pipeline {
+
+    agent {
+        label 'ubuntu-18.04 && x64 && hw'
+    }
+
+    environment {
+        GRADLE_OPTS = '-Dorg.gradle.daemon=false'
+        ARTIFACTORY_HOST='http://maven.v4core.os-n3.hw:8081/artifactory'
+    }
+
+    stages {
+        stage("prepare") {
+            steps {
+
+                script {
+                    def localProperties = '''\
+                        sdk.dir=/opt/android-sdk/
+
+                        apiKey=CI_INVALID_API_KEY
+                        directionsApiKey=CI_DIRECTIONS_INVALID_KEY
+                    '''.stripIndent()
+
+                    writeFile file: "local.properties", text: localProperties
+                }
+
+                script {
+                    def name = env.JOB_NAME.toLowerCase()
+
+                    def buildInfo = """\
+                        buildInfo.build.name=$name
+                        buildInfo.build.number=${env.BUILD_ID}
+                    """.stripIndent()
+
+                    sh (
+                        label: "append build identifiers",
+                        script: "echo \"$buildInfo\" >> gradle.properties"
+                    )
+                }
+            }
+        }
+
+        stage("build") {
+            steps {
+                sh './gradlew clean build --info'
+            }
+        }
+
+        stage("deploy") {
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'buildserver-v4core', 
+                        usernameVariable: 'ARTIFACTORY_USERNAME', 
+                        passwordVariable: 'ARTIFACTORY_PASSWORD')
+                ]) { 
+
+                    sh './gradlew mapsdk:artifactoryPublish --info'
+                }
+            }
+        }
+
+        stage("documentation") {
+            steps {
+                sh './gradlew mapsdk:dokka --info'
+
+                script {
+                    ["en", "ru"].each({
+                        sh(
+                            label: "Deploying $it documentation",
+                            script:"""
+                                docker run --rm \
+                                    -v \$(pwd)/build/mapsdk/dokka:/opt/docsJson \
+                                    docker-hub.2gis.ru/2gis-nativesdk/dokka-converter:prod \
+                                    ./converter.py -b /$it/android/webgl/maps/reference/unstable/
+                            """
+                        )
+                    })
+                }
+
+                withCredentials([
+                    string(credentialsId: 'NSDK_GITLAB_PRIVATE_TOKEN', variable: 'GITLAB_PRIVATE_TOKEN'),
+                    string(credentialsId: 'NSDK_GITLAB_PROJECT_TOKEN', variable: 'GITLAB_PROJECT_TOKEN'),
+                    string(credentialsId: 'NSDK_GITLAB_PROJECT_ID', variable: 'GITLAB_PROJECT_ID')
+                ]) {
+                    sh(
+                        label: 'Запуск регенерации документации',
+                        script:"""
+                            docker run --rm docker-hub.2gis.ru/2gis/gitlab-pipeline:1.0 trigger \
+                              -a ${env.GITLAB_PRIVATE_TOKEN} \
+                              -h gitlab.2gis.ru \
+                              -p ${env.GITLAB_PROJECT_TOKEN} \
+                              -t master \
+                              -e Android_SDK_CI=true \
+                              -u /api/v4/projects ${env.GITLAB_PROJECT_ID}
+                        """
+                    )
+                }
+            }
+        }
+    }
+}

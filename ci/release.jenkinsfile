@@ -1,0 +1,103 @@
+pipeline {
+
+    agent {
+        label 'ubuntu-18.04 && x64 && hw'
+    }
+
+    environment {
+        GRADLE_OPTS = '-Dorg.gradle.daemon=false'
+    }
+
+    parameters {
+        password(
+            name: "BINTRAY_USER",
+            defaultValue: "",
+            description: "bintray user"
+        )
+        password(
+            name: "BINTRAY_KEY",
+            defaultValue: "",
+            description: "bintray API Key"
+        )
+    }
+
+    stages {
+        stage("prepare") {
+            steps {
+                checkParams()
+
+                script {
+                    def localProperties = '''\
+                        sdk.dir=/opt/android-sdk/
+
+                        apiKey=CI_INVALID_API_KEY
+                        directionsApiKey=CI_DIRECTIONS_INVALID_KEY
+                    '''.stripIndent()
+
+                    writeFile file: "local.properties", text: localProperties
+                }
+            }
+        }
+
+        stage("build") {
+            steps {
+                sh './gradlew clean build --info'
+            }
+        }
+
+        stage("deploy") {
+            steps {
+                sh './gradlew mapsdk:bintrayUpload --info'
+            }
+        }
+
+        stage("documentation") {
+            steps {
+                sh './gradlew mapsdk:dokka --info'
+
+                script {
+                    ["en", "ru"].each({
+                        sh(
+                            label: "Deploying $it documentation",
+                            script:"""
+                                docker run --rm \
+                                    -v \$(pwd)/build/mapsdk/dokka:/opt/docsJson \
+                                    docker-hub.2gis.ru/2gis-nativesdk/dokka-converter:prod \
+                                    ./converter.py -b /$it/android/webgl/maps/reference/unstable/
+                            """
+                        )
+                    })
+                }
+
+                withCredentials([
+                    string(credentialsId: 'NSDK_GITLAB_PRIVATE_TOKEN', variable: 'GITLAB_PRIVATE_TOKEN'),
+                    string(credentialsId: 'NSDK_GITLAB_PROJECT_TOKEN', variable: 'GITLAB_PROJECT_TOKEN'),
+                    string(credentialsId: 'NSDK_GITLAB_PROJECT_ID', variable: 'GITLAB_PROJECT_ID')
+                ]) {
+                    sh(
+                        label: 'Запуск регенерации документации',
+                        script:"""
+                            docker run --rm docker-hub.2gis.ru/2gis/gitlab-pipeline:1.0 trigger \
+                              -a ${env.GITLAB_PRIVATE_TOKEN} \
+                              -h gitlab.2gis.ru \
+                              -p ${env.GITLAB_PROJECT_TOKEN} \
+                              -t master \
+                              -e Android_SDK_CI=true \
+                              -u /api/v4/projects ${env.GITLAB_PROJECT_ID}
+                        """
+                    )
+                }
+            }
+        }
+    }
+}
+
+def checkParams() {
+    if (!hudson.util.Secret.toString(params.BINTRAY_USER)) {
+        error('BINTRAY_USER is not defined')
+    }
+
+    if (!hudson.util.Secret.toString(params.BINTRAY_KEY)) {
+        error('BINTRAY_KEY is not defined')
+    }
+}
