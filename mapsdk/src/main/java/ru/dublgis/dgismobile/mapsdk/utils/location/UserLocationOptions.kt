@@ -1,6 +1,6 @@
 package ru.dublgis.dgismobile.mapsdk.utils.location
 
-import ru.dublgis.dgismobile.mapsdk.utils.PermissionOptions
+import ru.dublgis.dgismobile.mapsdk.utils.permissions.PermissionOptions
 
 class UserLocationOptions(
     /**

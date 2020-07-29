@@ -1,15 +1,18 @@
 package ru.dublgis.dgismobile.mapsdk.utils.location
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.location.Location
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
-import ru.dublgis.dgismobile.mapsdk.utils.Permission.ACCESS_FINE_LOCATION
+import ru.dublgis.dgismobile.mapsdk.utils.permissions.PermissionHandler
+import ru.dublgis.dgismobile.mapsdk.utils.permissions.Permissions
+
+const val LOCATION_PERMISSION_REQUEST_ID: Int = 777
+
 
 internal class LocationProvider(private val activity: Activity) {
-    private val LOCATION_PERMISSION_REQUEST_ID: Int = 777
 
     private var locationProvider: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(activity)
@@ -17,28 +20,14 @@ internal class LocationProvider(private val activity: Activity) {
 
     var location: Location? = null
 
-    fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        when (requestCode) {
-            LOCATION_PERMISSION_REQUEST_ID -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //requestLocation(LOC_PERM)
-                }
-            }
-        }
-    }
-
-    private fun requestPermissions(permission: String) {
-        ActivityCompat.requestPermissions(
+    private fun requestPermissions(permission: String, handler: PermissionHandler) {
+        val permissions = arrayOf<String?>(permission)
+        Permissions().request(
             activity,
-            arrayOf(permission),
-            LOCATION_PERMISSION_REQUEST_ID
+            permissions,
+            LOCATION_PERMISSION_REQUEST_ID,
+            handler
         )
-
-        //requestPermissions(permission)
     }
 
     private fun checkSelfPermission(permission: String): Boolean =
@@ -62,14 +51,23 @@ internal class LocationProvider(private val activity: Activity) {
 
     fun requestLocation(
         userLocationOptions: UserLocationOptions,
-        locationCallback: LocationCallback
+        locationCallback: LocationCallback,
+        handler: PermissionHandler
     ) {
         val permission = userLocationOptions.permissionOptions.permission
         if (checkSelfPermission(permission)) {
-            requestPermissions(permission)
+            requestPermissions(permission, handler)
             return
         }
 
+        requestLocation(userLocationOptions, locationCallback)
+    }
+
+    @SuppressLint("MissingPermission")
+    fun requestLocation(
+        userLocationOptions: UserLocationOptions,
+        locationCallback: LocationCallback
+    ) {
         val request = createLocationRequest(userLocationOptions)
 
         listener = object : LocationCallback() {

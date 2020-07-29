@@ -33,8 +33,10 @@ import ru.dublgis.dgismobile.mapsdk.geometries.polyline.PolylineOptions
 import ru.dublgis.dgismobile.mapsdk.labels.Label
 import ru.dublgis.dgismobile.mapsdk.labels.LabelImpl
 import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
+import ru.dublgis.dgismobile.mapsdk.utils.location.LOCATION_PERMISSION_REQUEST_ID
 import ru.dublgis.dgismobile.mapsdk.utils.location.LocationProvider
 import ru.dublgis.dgismobile.mapsdk.utils.location.UserLocationOptions
+import ru.dublgis.dgismobile.mapsdk.utils.permissions.PermissionHandler
 import java.lang.ref.WeakReference
 import kotlin.math.abs
 
@@ -389,7 +391,7 @@ internal class PlatformBridge(
     }
 
     override fun showUserLocation(options: UserLocationOptions) {
-        locationProvider?.requestLocation(options, object : LocationCallback() {
+        val locationCallback = object : LocationCallback() {
             override fun onLocationResult(res: LocationResult?) {
                 res?.lastLocation?.let {
                     val position = LonLat(it.longitude, it.latitude)
@@ -397,7 +399,24 @@ internal class PlatformBridge(
                     createCircleMarker(CircleMarkerOptions(position, 10f))
                 }
             }
-        })
+        }
+
+        locationProvider?.requestLocation(
+            options,
+            locationCallback,
+            object : PermissionHandler {
+                override fun onResult(
+                    requestCode: Int,
+                    grantedPermissions: Array<String?>
+                ) {
+                    when (requestCode) {
+                        LOCATION_PERMISSION_REQUEST_ID -> {
+                            locationProvider?.requestLocation(options, locationCallback)
+                        }
+                    }
+                }
+            }
+        )
     }
 
     override fun disableUserLocation() {

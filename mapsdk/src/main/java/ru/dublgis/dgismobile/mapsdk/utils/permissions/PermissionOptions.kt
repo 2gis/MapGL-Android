@@ -1,4 +1,4 @@
-package ru.dublgis.dgismobile.mapsdk.utils
+package ru.dublgis.dgismobile.mapsdk.utils.permissions
 
 class PermissionOptions(
     /**

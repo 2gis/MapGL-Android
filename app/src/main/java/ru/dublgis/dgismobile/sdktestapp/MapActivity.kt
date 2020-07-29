@@ -9,9 +9,9 @@ import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import ru.dublgis.dgismobile.mapsdk.LonLat
 import ru.dublgis.dgismobile.mapsdk.Map
-import ru.dublgis.dgismobile.mapsdk.utils.Permission.ACCESS_FINE_LOCATION
-import ru.dublgis.dgismobile.mapsdk.utils.PermissionOptions
 import ru.dublgis.dgismobile.mapsdk.utils.location.UserLocationOptions
+import ru.dublgis.dgismobile.mapsdk.utils.permissions.ACCESS_FINE_LOCATION
+import ru.dublgis.dgismobile.mapsdk.utils.permissions.PermissionOptions
 import kotlin.reflect.KClass
 import ru.dublgis.dgismobile.mapsdk.MapFragment as DGisMapFragment
 
