@@ -1,8 +1,7 @@
-package ru.dublgis.dgismobile.mapsdk.utils.location
-
-import ru.dublgis.dgismobile.mapsdk.utils.permissions.PermissionOptions
+package ru.dublgis.dgismobile.mapsdk.location
 
 class UserLocationOptions(
+    val isVisible: Boolean? = true,
     /**
      * Desired interval for active location updates, in milliseconds.
      */
@@ -14,9 +13,5 @@ class UserLocationOptions(
     /**
      * An accuracy or power constant.
      */
-    val priority: Int? = null,
-    /**
-     *  The permission options for location determination.
-     */
-    val permissionOptions: PermissionOptions
+    val priority: Int? = null
 )

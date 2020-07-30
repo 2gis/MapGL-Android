@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.fragment.app.Fragment
+import ru.dublgis.dgismobile.mapsdk.location.LocationProviderFactory
 
 /**
  * Class used for drawing a 2gis map.
@@ -34,7 +35,7 @@ class MapFragment : Fragment() {
             context?.packageName ?: "",
             this::evaluateJavaScript,
             this::onMapReady,
-            this.activity
+            LocationProviderFactory(activity!!)
         )
     }
 

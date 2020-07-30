@@ -15,7 +15,7 @@ import ru.dublgis.dgismobile.mapsdk.geometries.polyline.Polyline
 import ru.dublgis.dgismobile.mapsdk.geometries.polyline.PolylineOptions
 import ru.dublgis.dgismobile.mapsdk.labels.Label
 import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
-import ru.dublgis.dgismobile.mapsdk.utils.location.UserLocationOptions
+import ru.dublgis.dgismobile.mapsdk.location.UserLocationOptions
 
 
 typealias PositionChangeListener = (LonLat) -> Unit
@@ -70,7 +70,7 @@ interface Map {
 
     fun createDirections(options: DirectionsOptions): Directions
 
-    fun showUserLocation(options: UserLocationOptions)
+    fun enableUserLocation(options: UserLocationOptions)
 
     fun disableUserLocation()
 

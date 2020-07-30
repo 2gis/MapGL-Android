@@ -9,9 +9,7 @@ import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import ru.dublgis.dgismobile.mapsdk.LonLat
 import ru.dublgis.dgismobile.mapsdk.Map
-import ru.dublgis.dgismobile.mapsdk.utils.location.UserLocationOptions
-import ru.dublgis.dgismobile.mapsdk.utils.permissions.ACCESS_FINE_LOCATION
-import ru.dublgis.dgismobile.mapsdk.utils.permissions.PermissionOptions
+import ru.dublgis.dgismobile.mapsdk.location.UserLocationOptions
 import kotlin.reflect.KClass
 import ru.dublgis.dgismobile.mapsdk.MapFragment as DGisMapFragment
 
@@ -56,35 +54,18 @@ abstract class MapActivity : AppCompatActivity() {
 
     private fun onDGisMapReady(controller: Map?) {
         map = controller
-        map?.showUserLocation(
-            UserLocationOptions(
-                permissionOptions = PermissionOptions(
-                    ACCESS_FINE_LOCATION
-                )
-            )
-        )
+        map?.enableUserLocation(UserLocationOptions())
         onDGisMapReady()
     }
 
     protected abstract fun onDGisMapReady()
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        //locationProvider.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
-
     private fun centerMap(@Suppress("UNUSED_PARAMETER") view: View?) {
         map?.run {
             this.userLocation?.let {
                 center = LonLat(it.longitude, it.latitude)
+                zoom = 16.0
             }
-            zoom = 16.0
         }
     }
 

@@ -1,27 +1,33 @@
-package ru.dublgis.dgismobile.mapsdk.utils.location
+package ru.dublgis.dgismobile.mapsdk.location
 
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.location.Location
 import androidx.core.content.ContextCompat
-import com.google.android.gms.location.*
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import ru.dublgis.dgismobile.mapsdk.utils.permissions.PermissionHandler
 import ru.dublgis.dgismobile.mapsdk.utils.permissions.Permissions
 
 const val LOCATION_PERMISSION_REQUEST_ID: Int = 777
 
-
-internal class LocationProvider(private val activity: Activity) {
+@ExperimentalCoroutinesApi
+internal class LocationProviderImpl(private val activity: Activity) : LocationProvider {
 
     private var locationProvider: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(activity)
     private lateinit var listener: LocationCallback
 
-    var location: Location? = null
+    override var location: MutableStateFlow<Location?> = MutableStateFlow(null)
 
-    private fun requestPermissions(permission: String, handler: PermissionHandler) {
-        val permissions = arrayOf<String?>(permission)
+    private fun requestPermissions(handler: PermissionHandler) {
+        val permissions = arrayOf(ACCESS_FINE_LOCATION)
         Permissions().request(
             activity,
             permissions,
@@ -30,33 +36,26 @@ internal class LocationProvider(private val activity: Activity) {
         )
     }
 
-    private fun checkSelfPermission(permission: String): Boolean =
+    private fun checkLocationPermission(): Boolean =
         (ContextCompat.checkSelfPermission(
             activity,
-            permission
+            ACCESS_FINE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED)
 
     private fun createLocationRequest(userLocationOptions: UserLocationOptions): LocationRequest =
         LocationRequest.create().apply {
-            userLocationOptions.interval?.let {
-                interval = it
-            }
-            userLocationOptions.fastestInterval?.let {
-                interval = it
-            }
-            userLocationOptions.priority?.let {
-                priority = it
-            }
+            interval = 6000
+            fastestInterval = 20000
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
 
-    fun requestLocation(
+    override fun requestLocation(
         userLocationOptions: UserLocationOptions,
         locationCallback: LocationCallback,
         handler: PermissionHandler
     ) {
-        val permission = userLocationOptions.permissionOptions.permission
-        if (checkSelfPermission(permission)) {
-            requestPermissions(permission, handler)
+        if (checkLocationPermission()) {
+            requestPermissions(handler)
             return
         }
 
@@ -64,25 +63,17 @@ internal class LocationProvider(private val activity: Activity) {
     }
 
     @SuppressLint("MissingPermission")
-    fun requestLocation(
+    override fun requestLocation(
         userLocationOptions: UserLocationOptions,
         locationCallback: LocationCallback
     ) {
         val request = createLocationRequest(userLocationOptions)
 
-        listener = object : LocationCallback() {
-            override fun onLocationResult(res: LocationResult?) {
-                res?.lastLocation?.let {
-                    location = it
-                }
-
-                locationCallback.onLocationResult(res)
-            }
-        }
+        listener = locationCallback
         locationProvider.requestLocationUpdates(request, listener, null)
     }
 
-    fun removeLocationUpdates() {
+    override fun destroy() {
         locationProvider.removeLocationUpdates(listener);
     }
 }

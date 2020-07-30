@@ -1,6 +1,5 @@
 package ru.dublgis.dgismobile.mapsdk
 
-import android.app.Activity
 import android.location.Location
 import android.os.Handler
 import android.os.Looper
@@ -10,6 +9,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererImpl
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
@@ -33,9 +33,10 @@ import ru.dublgis.dgismobile.mapsdk.geometries.polyline.PolylineOptions
 import ru.dublgis.dgismobile.mapsdk.labels.Label
 import ru.dublgis.dgismobile.mapsdk.labels.LabelImpl
 import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
-import ru.dublgis.dgismobile.mapsdk.utils.location.LOCATION_PERMISSION_REQUEST_ID
-import ru.dublgis.dgismobile.mapsdk.utils.location.LocationProvider
-import ru.dublgis.dgismobile.mapsdk.utils.location.UserLocationOptions
+import ru.dublgis.dgismobile.mapsdk.location.LOCATION_PERMISSION_REQUEST_ID
+import ru.dublgis.dgismobile.mapsdk.location.LocationProvider
+import ru.dublgis.dgismobile.mapsdk.location.LocationProviderFactory
+import ru.dublgis.dgismobile.mapsdk.location.UserLocationOptions
 import ru.dublgis.dgismobile.mapsdk.utils.permissions.PermissionHandler
 import java.lang.ref.WeakReference
 import kotlin.math.abs
@@ -45,11 +46,12 @@ typealias JsExecutor = (String) -> Unit
 typealias MapReadyCallback = (Map?) -> Unit
 
 
+@ExperimentalCoroutinesApi
 internal class PlatformBridge(
     packageName: String,
     jsExecutor: JsExecutor,
     mapReadyCallback: MapReadyCallback,
-    val activity: Activity?
+    private val locationProviderFactory: LocationProviderFactory
 ) : WebViewClient(), Map {
 
     private val packageName = packageName
@@ -72,9 +74,11 @@ internal class PlatformBridge(
     private val labels = mutableMapOf<String, LabelImpl>()
     private val directionsMap = mutableMapOf<String, DirectionsImpl>()
 
+    private var userLocationMarker: CircleMarker? = null
+
     private var _apiKey = ""
     private var _center = LonLat()
-    private var locationProvider: LocationProvider? = activity?.let { LocationProvider(it) }
+    private var locationProvider: LocationProvider? = null
 
     private var _zoom: Double = 0.0
     private var _maxZoom: Double = 0.0
@@ -390,13 +394,42 @@ internal class PlatformBridge(
         return directions
     }
 
-    override fun showUserLocation(options: UserLocationOptions) {
+    override fun enableUserLocation(options: UserLocationOptions) {
+        locationProvider = locationProvider ?: locationProviderFactory.createLocationProvider()
+
         val locationCallback = object : LocationCallback() {
             override fun onLocationResult(res: LocationResult?) {
                 res?.lastLocation?.let {
-                    val position = LonLat(it.longitude, it.latitude)
-                    createCircle(CircleOptions(position, 15f))
-                    createCircleMarker(CircleMarkerOptions(position, 10f))
+                    options.isVisible?.let { it1 ->
+                        if (!it1) {
+                            hideUserLocation()
+                            return
+                        }
+
+                        val newPosition = LonLat(it.longitude, it.latitude)
+
+                        userLocation?.let { it2 ->
+                            if (LonLat(it2.longitude, it2.latitude).equals(newPosition)) {
+                                return
+                            }
+                        }
+
+                        showUserLocation(newPosition)
+                        userLocation = it
+                    }
+                }
+            }
+        }
+
+        val handler = object : PermissionHandler {
+            override fun onResult(
+                requestCode: Int,
+                grantedPermissions: Array<String>
+            ) {
+                when (requestCode) {
+                    LOCATION_PERMISSION_REQUEST_ID -> {
+                        locationProvider?.requestLocation(options, locationCallback)
+                    }
                 }
             }
         }
@@ -404,30 +437,30 @@ internal class PlatformBridge(
         locationProvider?.requestLocation(
             options,
             locationCallback,
-            object : PermissionHandler {
-                override fun onResult(
-                    requestCode: Int,
-                    grantedPermissions: Array<String?>
-                ) {
-                    when (requestCode) {
-                        LOCATION_PERMISSION_REQUEST_ID -> {
-                            locationProvider?.requestLocation(options, locationCallback)
-                        }
-                    }
-                }
-            }
+            handler
         )
     }
 
     override fun disableUserLocation() {
-        locationProvider?.removeLocationUpdates()
+        locationProvider?.destroy()
     }
 
-    override val userLocation: Location?
-        get() = locationProvider?.location
+    override var userLocation: Location?
+        get() = locationProvider?.location?.value
+        set(value) {
+            locationProvider?.location?.value = value
+        }
+
+    private fun showUserLocation(position: LonLat) {
+        userLocationMarker?.destroy()
+        userLocationMarker = createCircleMarker(CircleMarkerOptions(position, 14f))
+    }
+
+    private fun hideUserLocation() {
+        userLocationMarker?.destroy()
+    }
 
     fun carRoute(id: String, carRouteOptions: CarRouteOptions) {
-
         jsExecutor(
             """
             window.dgismap.carRoute($id, $carRouteOptions);
@@ -578,8 +611,6 @@ internal class PlatformBridge(
         impl.hidden = false
     }
 
-    // private
-
     fun setMarkerCoordinates(marker: Marker, position: LonLat) {
         val impl = marker as MarkerImpl
         jsExecutor(
@@ -630,7 +661,7 @@ internal class PlatformBridge(
     }
 
 
-    // called from JS thread -----------------------------------------------------------------------
+// called from JS thread -----------------------------------------------------------------------
 
     @JavascriptInterface
     fun onEvent(kind: String, payload: String) {

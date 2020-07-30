@@ -8,7 +8,7 @@ import androidx.core.content.PermissionChecker
 import java.util.*
 
 
-class PermissionActivity : Activity() {
+internal class PermissionActivity : Activity() {
     private var mPermissionHandler: PermissionHandler? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,11 +27,11 @@ class PermissionActivity : Activity() {
         }
 
         mPermissionHandler?.let {
-            val grantedPermissions = arrayOf<String?>()
+            val grantedPermissions = arrayOf<String>()
             it.onResult(requestCode, grantedPermissions)
         }
 
-
+        mPermissionHandler = null
     }
 
     private fun requestPermissions() {
@@ -65,13 +65,12 @@ class PermissionActivity : Activity() {
         permissions: Array<String>,
         grantResults: IntArray
     ) {
-        if (mPermissionHandler == null) {
-            finish()
-            return
+        mPermissionHandler?.let {
+            val grantedPermissions =
+                getGrantedPermissions(permissions, grantResults)
+            it.onResult(requestCode, grantedPermissions)
         }
-        val grantedPermissions =
-            getGrantedPermissions(permissions, grantResults)
-        mPermissionHandler!!.onResult(requestCode, grantedPermissions)
+
         mPermissionHandler = null
         finish()
     }
@@ -80,11 +79,11 @@ class PermissionActivity : Activity() {
         const val EXTRA_PERMISSIONS = "permissions"
         const val EXTRA_REQUEST_CODE = "requestCode"
         var sPermissionHandler: PermissionHandler? = null
-        private const val TAG = "Grym/PermissionActivity"
+        private const val TAG = "PermissionActivity"
         private fun getGrantedPermissions(
             permissions: Array<String>,
             grantResults: IntArray
-        ): Array<String?> {
+        ): Array<String> {
             val result = ArrayList<String?>()
             var i = 0
             while (i < permissions.size && i < grantResults.size) {

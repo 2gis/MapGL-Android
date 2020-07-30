@@ -5,7 +5,9 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application>
-        <activity android:name=".utils.permissions.PermissionActivity" />
+        <activity
+            android:name=".utils.permissions.PermissionActivity"
+            android:theme="@style/PermissionDialogTheme" />
     </application>
 
 </manifest>
