@@ -79,20 +79,19 @@ pipeline {
                 }
 
                 withCredentials([
-                    string(credentialsId: 'NSDK_GITLAB_PRIVATE_TOKEN', variable: 'GITLAB_PRIVATE_TOKEN'),
                     string(credentialsId: 'NSDK_GITLAB_PROJECT_TOKEN', variable: 'GITLAB_PROJECT_TOKEN'),
-                    string(credentialsId: 'NSDK_GITLAB_PROJECT_ID', variable: 'GITLAB_PROJECT_ID')
+                    string(credentialsId: 'NSDK_GITLAB_PROJECT_ID', variable: 'GITLAB_PROJECT_ID'),
+                    string(credentialsId: 'GITLAB_URL', variable: 'GITLAB_URL')
                 ]) {
                     sh(
                         label: 'Запуск регенерации документации',
                         script:"""
-                            docker run --rm docker-hub.2gis.ru/2gis/gitlab-pipeline:1.0 trigger \
-                              -a ${env.GITLAB_PRIVATE_TOKEN} \
-                              -h gitlab.2gis.ru \
-                              -p ${env.GITLAB_PROJECT_TOKEN} \
-                              -t master \
-                              -e Android_SDK_CI=true \
-                              -u /api/v4/projects ${env.GITLAB_PROJECT_ID}
+                            curl --location \
+                            -X POST \
+                            -F token=$GITLAB_PROJECT_TOKEN \
+                            -F ref=master \
+                            -F "variables[Android_SDK_CI]=true" \
+                            https://${env.GITLAB_URL}/api/v4/projects/${env.GITLAB_PROJECT_ID}/trigger/pipeline
                         """
                     )
                 }
