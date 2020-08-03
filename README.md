@@ -1,13 +1,57 @@
-# MapGL
-2GIS Maps SDK for Android.
+# 2GIS Android MapGL
+
+2GIS Android MapGL is an SDK that allows you to add a [2GIS](https://2gis.ae/) map to your Android application. It can be used to display the map in your layout, add custom markers to it, and highlight various objects on the map, such as buildings, roads, and others.
+
+This SDK uses [Android WebView](https://developer.android.com/reference/android/webkit/WebView) to render the map. If you need a more native solution (for example, if you don't want to display web content inside your app or if you need to support older versions of Android), take a look at [Android Native SDK](https://docs-canary.2gis.com/en/android/native/maps/overview).
+
+Full documentation, including more usage examples and detailed descriptions of all classes and methods, can be found at [https://docs.2gis.com/en/android/webgl/maps/overview](https://docs.2gis.com/en/android/webgl/maps/overview).
+
+
+## Getting an access key
+
+Usage of this SDK requires an API key to connect to 2GIS servers and retrieve the geographical data. This API key is unique to the SDK and cannot be used with other 2GIS SDKs.
+
+To obtain the key, contact us at [mapgl@2gis.com](mailto:mapgl@2gis.com).
+
+
+## Installation
+
+To install the SDK:
+
+1. Declare a custom repository in your _build.gradle_ file:
+
+```gradle
+repositories {
+    maven {
+        url "https://dl.bintray.com/2gis/maven"
+    }
+}
+```
+
+2. Add a build dependency:
+
+```gradle
+dependencies {
+    implementation 'ru.dublgis.dgismobile.mapsdk:mapsdk:latest.release'
+}
+```
+
 
 ## Usage
 
-### Get Access
-As a first step to use MapGL you need to get the access key (contact us mapgl@2gis.com if you need one).
+To run the example app, first add your API key to the [local.properties](https://developer.android.com/studio/build#properties-files) file in your project:
 
-### Creating the Map
-Add a <fragment> element to the activity's layout file to define a Fragment object. In this element, set the android:name attribute to "ru.dublgis.dgismobile.mapsdk.MapFragment".
+```
+apiKey=YOUR_API_KEY
+```
+
+You can find more usage examples at [https://docs.2gis.com/en/android/webgl/maps/examples](https://docs.2gis.com/en/android/webgl/maps/examples).
+
+
+### Creating a map widget
+
+To display a map, first add the following Fragment to your layout:
+
 ```xml
 <fragment
     android:name="ru.dublgis.dgismobile.mapsdk.MapFragment"
@@ -16,80 +60,116 @@ Add a <fragment> element to the activity's layout file to define a Fragment obje
     android:layout_height="match_parent"
 />
 ```
-You can also add a MapFragment to an Activity in code.  
-The only thing we require is that you setup api key. You can initialize default map parameters like center and zoom as well
-```kotlin
-val mapFragment = supportFragmentManager.findFragmentById(R.id.mapFragment)
-    as MapFragment
 
+Then, initialize the widget by calling the _setup()_ method and passing your API key. You can also pass the initial coordinates and the required zoom level. See the [API Reference](https://docs-canary.2gis.com/en/android/webgl/maps/reference/MapFragment) for the full list of options.
+
+For example, the following code will show the map of Moscow centered around the Kremlin with the default level of zoom:
+
+```kotlin
+val mapFragment = supportFragmentManager.findFragmentById(R.id.mapFragment) as MapFragment
 mapFragment.setup(
-    apiKey = "your api key here", 
-    zoom = 13.0,
-    center = LonLat(37.618317, 55.750574)
+    apiKey = "Your API key",
+    center = LonLat(37.6175, 55.7520),
+    zoom = 16.0
 )
+```
+
+To call a custom function after the map has been initialized, you can specify it as a callback:
+
+```kotlin
 mapFragment.mapReadyCallback = this::onDGisMapReady
 ```
-Once Map is ready mapReadyCallback will be called and Map object will be available for you
 
-### Receiving Map Click Events
-```kotlin
-fun onDGisMapReady(map: Map?) {
-    map?.setOnClickListener { event : MapPointerEvent ->
-        // event.lngLat - Geographical coordinates
-        // event.target - Target MapObject (geographical object)
-    }
-}
-```
 
-### Showing the Marker
-The following example demonstrates how to add a marker to a map. The marker displays the string 'Hello world' in a pop-up notification when clicked. All MarkerOptions parameters except position are optional
+### Adding a marker
+
+You can add any number of markers to a map. The most common way to do that is in the callback function of the map:
+
 ```kotlin
 private fun onDGisMapReady(map: DGisMap?) {
     map?.let {
         val marker = it.addMarker(MarkerOptions(
-            LonLat(37.618317, 55.750574),
+            LonLat(37.6175, 55.7520)
+        )
+    }
+}
+...
+mapFragment.mapReadyCallback = this::onDGisMapReady
+```
+
+The only required parameter is the coordinates of the marker.
+
+Additionally, you can change the marker's appearance. You can specify the _icon_ in SVG format, the _size_ of the marker in pixels (width × height), and the _anchor_ - the coordinates of the hotspot of the icon (X × Y, relative to the top-left corner). See the [API Reference](https://docs-canary.2gis.com/en/android/webgl/maps/reference/MarkerOptions) for more information on the MarkerOptions class.
+
+```kotlin  
+private fun onDGisMapReady(map: DGisMap?) {
+    map?.let {
+        val marker = it.addMarker(MarkerOptions(
+            LonLat(37.6175, 55.7520),
             icon = iconFromSvgAsset(assets, "pin.svg"),
             size = 30.0 to 48.0,
-            anchor = 15.0 to 48.0))
+            anchor = 15.0 to 48.0)
+        )
+    }
+}
+```
 
+You can also add a click listener to the marker to receive a click/tap event:
+
+```kotlin
+private fun onDGisMapReady(map: DGisMap?) {
+    map?.let {
+        val marker = it.addMarker(MarkerOptions(
+            LonLat(37.6175, 55.7520),
+            icon = iconFromSvgAsset(assets, "pin.svg"),
+            size = 30.0 to 48.0,
+            anchor = 15.0 to 48.0)
+        )
         marker.setOnClickListener {
-            Toast.makeText(this, "Hello world", Toast.LENGTH_LONG)
-                .show()
+            Toast.makeText(this, "Marker tap", Toast.LENGTH_LONG).show()
         }
     }
 }
 ```
 
-### Select map objects
-You can highlight objects on the map. Select them by object ids for that.
+
+### Getting information about the tapped object
+
+To receive map tap events, you can add a click listener to the map itself.
+
+For each object on a map, you can get the coordinates (_event.lngLat_) and internal ID (_event.target.id_). You can then use the ID of an object to highlight that object on the map (see [Highlighting objects](#highlighting-objects)). The same ID can be used, for example, to get full information about the object via the [Places API](https://docs-canary.2gis.com/en/api/search/places/overview), since the IDs are the same for all APIs.
+
 ```kotlin
-map?.setSelectedObjects(mapObjectsByIds("13933647002594323"))
+fun onDGisMapReady(map: Map?) {
+    map?.setOnClickListener { event : MapPointerEvent ->
+        val coordinates = "${event.lngLat.lat}° N, ${event.lngLat.lon}° E";
+        Toast.makeText(this, coordinates.toString(), Toast.LENGTH_LONG).show();
+        var objectId = event.target.id;
+        Toast.makeText(this, objectId.toString(), Toast.LENGTH_LONG).show();
+    }
+}
 ```
-Use empty list to remove any selection.
+
+
+### Highlighting objects
+
+You can highlight map objects, such as buildings, roads, and others.
+
+To do that, call the _setSelectedObjects()_ method and pass the list of object IDs wrapped in a call of _mapObjectsByIds()_. You can get the IDs by adding a click listener to the map (see the [Getting information about the tapped object](#getting-information-about-the-tapped-object) section).
+
+```kotlin
+map?.setSelectedObjects(mapObjectsByIds("48231504731808815", "23520539192555249"))
+```
+
+To change the list of highlighted objects, simply call this method again, passing the list of new IDs.
+
+To disable highlighting, pass an empty list to the _setSelectedObjects()_ method.
+
 ```kotlin
 map?.setSelectedObjects(listOf())
 ```
 
-## Example
-To make the example app work you need to have the access key (contact us mapgl@2gis.com if you need one).  
-At first, append your key to *local.properties* file in the root directory
-`apiKey=your_api_key_here`. Then build and run project as usual.
-
-## Installation
-Setup Gradle repositories
-```groovy
-repositories {
-	maven {
-		url  "https://dl.bintray.com/2gis/maven"
-	}
-}
-```
-add dependency
-```groovy
-dependencies {
-    implementation 'ru.dublgis.dgismobile.mapsdk:mapsdk:latest.release'
-}
-```
 
 ## License
-MapGL is available under the BSD 2-Clause "Simplified" license. See the LICENSE file for more info.
+
+2GIS Android MapGL is licensed under the BSD 2-Clause "Simplified" License. See the LICENSE file for more information.
