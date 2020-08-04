@@ -1,10 +1,15 @@
 package ru.dublgis.dgismobile.mapsdk.location
 
-import android.app.Activity
-import androidx.fragment.app.FragmentActivity
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import android.content.Context
+import com.google.android.gms.location.LocationCallback
 
-@ExperimentalCoroutinesApi
-internal class LocationProviderFactory(private val activity: Activity) {
-    fun createLocationProvider(): LocationProvider = LocationProviderImpl(activity)
+internal class LocationProviderFactory(private val context: Context) {
+    fun createLocationProvider(
+        options: UserLocationOptions
+    ): LocationProvider {
+        val locationProvider = LocationProviderImpl(context)
+        locationProvider.requestLocation(options)
+
+        return locationProvider
+    }
 }

@@ -31,12 +31,14 @@ class MapFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        bridge = PlatformBridge(
-            context?.packageName ?: "",
-            this::evaluateJavaScript,
-            this::onMapReady,
-            LocationProviderFactory(activity!!)
-        )
+        context?.let {
+            bridge = PlatformBridge(
+                it.packageName ?: "",
+                this::evaluateJavaScript,
+                this::onMapReady,
+                LocationProviderFactory(it)
+            )
+        }
     }
 
     /** @suppress */

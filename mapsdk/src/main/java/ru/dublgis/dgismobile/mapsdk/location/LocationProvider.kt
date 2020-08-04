@@ -1,26 +1,14 @@
 package ru.dublgis.dgismobile.mapsdk.location
 
 import android.location.Location
-import com.google.android.gms.location.LocationCallback
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
-import ru.dublgis.dgismobile.mapsdk.utils.permissions.PermissionHandler
+import androidx.lifecycle.LiveData
 
 
-interface LocationProvider {
-    @ExperimentalCoroutinesApi
-    val location: MutableStateFlow<Location?>
+internal interface LocationProvider {
+    val location: LiveData<Location>
 
-    fun requestLocation(
-        userLocationOptions: UserLocationOptions,
-        locationCallback: LocationCallback,
-        handler: PermissionHandler
-    )
-
-    fun requestLocation(
-        userLocationOptions: UserLocationOptions,
-        locationCallback: LocationCallback
-    )
-
+    /**
+     * Destroy the Location Provider.
+     */
     fun destroy()
 }

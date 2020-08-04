@@ -7,9 +7,10 @@ import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationResult
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.Observer
 import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererImpl
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
@@ -33,11 +34,9 @@ import ru.dublgis.dgismobile.mapsdk.geometries.polyline.PolylineOptions
 import ru.dublgis.dgismobile.mapsdk.labels.Label
 import ru.dublgis.dgismobile.mapsdk.labels.LabelImpl
 import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
-import ru.dublgis.dgismobile.mapsdk.location.LOCATION_PERMISSION_REQUEST_ID
 import ru.dublgis.dgismobile.mapsdk.location.LocationProvider
 import ru.dublgis.dgismobile.mapsdk.location.LocationProviderFactory
 import ru.dublgis.dgismobile.mapsdk.location.UserLocationOptions
-import ru.dublgis.dgismobile.mapsdk.utils.permissions.PermissionHandler
 import java.lang.ref.WeakReference
 import kotlin.math.abs
 
@@ -46,13 +45,12 @@ typealias JsExecutor = (String) -> Unit
 typealias MapReadyCallback = (Map?) -> Unit
 
 
-@ExperimentalCoroutinesApi
 internal class PlatformBridge(
     packageName: String,
     jsExecutor: JsExecutor,
     mapReadyCallback: MapReadyCallback,
     private val locationProviderFactory: LocationProviderFactory
-) : WebViewClient(), Map {
+) : WebViewClient(), Map, LifecycleOwner {
 
     private val packageName = packageName
     private val handler = Handler(Looper.getMainLooper())
@@ -79,6 +77,7 @@ internal class PlatformBridge(
     private var _apiKey = ""
     private var _center = LonLat()
     private var locationProvider: LocationProvider? = null
+    private val lifecycleRegistry = LifecycleRegistry(this)
 
     private var _zoom: Double = 0.0
     private var _maxZoom: Double = 0.0
@@ -395,49 +394,29 @@ internal class PlatformBridge(
     }
 
     override fun enableUserLocation(options: UserLocationOptions) {
-        locationProvider = locationProvider ?: locationProviderFactory.createLocationProvider()
+        val observer = Observer<Location> {
+            if (!options.isVisible) {
+                hideUserLocation()
+                return@Observer
+            }
 
-        val locationCallback = object : LocationCallback() {
-            override fun onLocationResult(res: LocationResult?) {
-                res?.lastLocation?.let {
-                    options.isVisible?.let { it1 ->
-                        if (!it1) {
-                            hideUserLocation()
-                            return
-                        }
+            val newPosition = LonLat(it.longitude, it.latitude)
 
-                        val newPosition = LonLat(it.longitude, it.latitude)
-
-                        userLocation?.let { it2 ->
-                            if (LonLat(it2.longitude, it2.latitude).equals(newPosition)) {
-                                return
-                            }
-                        }
-
-                        showUserLocation(newPosition)
-                        userLocation = it
-                    }
+            userLocation?.let { userLoc ->
+                if (LonLat(userLoc.longitude, userLoc.latitude).equals(newPosition)) {
+                    return@Observer
                 }
             }
+
+            showUserLocation(newPosition)
         }
 
-        val handler = object : PermissionHandler {
-            override fun onResult(
-                requestCode: Int,
-                grantedPermissions: Array<String>
-            ) {
-                when (requestCode) {
-                    LOCATION_PERMISSION_REQUEST_ID -> {
-                        locationProvider?.requestLocation(options, locationCallback)
-                    }
-                }
-            }
-        }
+        locationProvider = locationProvider ?: locationProviderFactory.createLocationProvider(
+            options
+        )
 
-        locationProvider?.requestLocation(
-            options,
-            locationCallback,
-            handler
+        locationProvider?.location?.observe(
+            this, observer
         )
     }
 
@@ -445,11 +424,8 @@ internal class PlatformBridge(
         locationProvider?.destroy()
     }
 
-    override var userLocation: Location?
+    override val userLocation: Location?
         get() = locationProvider?.location?.value
-        set(value) {
-            locationProvider?.location?.value = value
-        }
 
     private fun showUserLocation(position: LonLat) {
         userLocationMarker?.destroy()
@@ -762,5 +738,9 @@ internal class PlatformBridge(
                 }
             }
         }
+    }
+
+    override fun getLifecycle(): Lifecycle {
+        return lifecycleRegistry
     }
 }
