@@ -12,7 +12,7 @@ import com.google.android.gms.location.*
 import ru.dublgis.dgismobile.mapsdk.utils.permissions.PermissionHandler
 import ru.dublgis.dgismobile.mapsdk.utils.permissions.Permissions
 
-const val LOCATION_PERMISSION_REQUEST_ID: Int = 777
+internal const val LOCATION_PERMISSION_REQUEST_ID: Int = 777
 
 internal class LocationProviderImpl(private val context: Context) : LocationProvider {
 

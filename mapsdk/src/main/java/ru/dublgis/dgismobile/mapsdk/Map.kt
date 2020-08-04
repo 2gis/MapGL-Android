@@ -1,6 +1,7 @@
 package ru.dublgis.dgismobile.mapsdk
 
 import android.location.Location
+import androidx.lifecycle.LiveData
 import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
 import ru.dublgis.dgismobile.mapsdk.directions.Directions
@@ -74,5 +75,5 @@ interface Map {
 
     fun disableUserLocation()
 
-    val userLocation: Location?
+    val userLocation: LiveData<Location>?
 }

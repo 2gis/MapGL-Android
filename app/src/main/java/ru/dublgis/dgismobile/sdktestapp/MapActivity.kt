@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import ru.dublgis.dgismobile.mapsdk.LonLat
 import ru.dublgis.dgismobile.mapsdk.Map
 import ru.dublgis.dgismobile.mapsdk.location.UserLocationOptions
@@ -62,10 +63,12 @@ abstract class MapActivity : AppCompatActivity() {
 
     private fun centerMap(@Suppress("UNUSED_PARAMETER") view: View?) {
         map?.run {
-            this.userLocation?.let {
-                center = LonLat(it.longitude, it.latitude)
-                zoom = 16.0
-            }
+            this.userLocation?.observe(this@MapActivity, Observer { newLocation ->
+                newLocation?.let {
+                    center = LonLat(it.longitude, it.latitude)
+                    zoom = 16.0
+                }
+            })
         }
     }
 

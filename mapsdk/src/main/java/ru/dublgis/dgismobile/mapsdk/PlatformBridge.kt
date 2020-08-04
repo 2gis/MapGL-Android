@@ -7,9 +7,7 @@ import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererImpl
@@ -50,7 +48,7 @@ internal class PlatformBridge(
     jsExecutor: JsExecutor,
     mapReadyCallback: MapReadyCallback,
     private val locationProviderFactory: LocationProviderFactory
-) : WebViewClient(), Map, LifecycleOwner {
+) : WebViewClient(), Map {
 
     private val packageName = packageName
     private val handler = Handler(Looper.getMainLooper())
@@ -77,7 +75,6 @@ internal class PlatformBridge(
     private var _apiKey = ""
     private var _center = LonLat()
     private var locationProvider: LocationProvider? = null
-    private val lifecycleRegistry = LifecycleRegistry(this)
 
     private var _zoom: Double = 0.0
     private var _maxZoom: Double = 0.0
@@ -416,8 +413,8 @@ internal class PlatformBridge(
         locationProvider?.destroy()
     }
 
-    override val userLocation: Location?
-        get() = locationProvider?.location?.value
+    override val userLocation: LiveData<Location>?
+        get() = locationProvider?.location
 
     private fun showUserLocation(position: LonLat) {
         userLocationMarker?.destroy()
@@ -730,9 +727,5 @@ internal class PlatformBridge(
                 }
             }
         }
-    }
-
-    override fun getLifecycle(): Lifecycle {
-        return lifecycleRegistry
     }
 }
