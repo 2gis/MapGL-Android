@@ -74,6 +74,8 @@ mapFragment.setup(
 )
 ```
 
+![kremlin](https://user-images.githubusercontent.com/57934605/89265464-f33e6580-d64d-11ea-89eb-b4ee20f1dbb3.png)
+
 To call a custom function after the map has been initialized, you can specify it as a callback:
 
 ```kotlin
@@ -97,9 +99,13 @@ private fun onDGisMapReady(map: DGisMap?) {
 mapFragment.mapReadyCallback = this::onDGisMapReady
 ```
 
+![kremlin-marker](https://user-images.githubusercontent.com/57934605/89265704-4e705800-d64e-11ea-9c9e-1db831dcf34e.png)
+
 The only required parameter is the coordinates of the marker.
 
 Additionally, you can change the marker's appearance. You can specify the _icon_ in SVG format, the _size_ of the marker in pixels (width × height), and the _anchor_ - the coordinates of the hotspot of the icon (X × Y, relative to the top-left corner). See the [API Reference](https://docs.2gis.com/en/android/webgl/maps/reference/MarkerOptions) for more information on the MarkerOptions class.
+
+![anchor](https://user-images.githubusercontent.com/57934605/89265659-40223c00-d64e-11ea-9b66-4525dfb94329.png)
 
 ```kotlin  
 private fun onDGisMapReady(map: DGisMap?) {
@@ -160,6 +166,8 @@ To do that, call the _setSelectedObjects()_ method and pass the list of object I
 ```kotlin
 map?.setSelectedObjects(mapObjectsByIds("48231504731808815", "23520539192555249"))
 ```
+
+![highlight](https://user-images.githubusercontent.com/57934605/89265712-53cda280-d64e-11ea-98af-763d12105f96.gif)
 
 To change the list of highlighted objects, simply call this method again, passing the list of new IDs.
 
