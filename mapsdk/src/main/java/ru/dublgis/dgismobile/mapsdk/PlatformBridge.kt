@@ -394,29 +394,21 @@ internal class PlatformBridge(
     }
 
     override fun enableUserLocation(options: UserLocationOptions) {
+        locationProvider = locationProvider ?: locationProviderFactory.createLocationProvider(
+            options
+        )
+
         val observer = Observer<Location> {
             if (!options.isVisible) {
                 hideUserLocation()
                 return@Observer
             }
 
-            val newPosition = LonLat(it.longitude, it.latitude)
-
-            userLocation?.let { userLoc ->
-                if (LonLat(userLoc.longitude, userLoc.latitude).equals(newPosition)) {
-                    return@Observer
-                }
-            }
-
-            showUserLocation(newPosition)
+            showUserLocation(LonLat(it.longitude, it.latitude))
         }
 
-        locationProvider = locationProvider ?: locationProviderFactory.createLocationProvider(
-            options
-        )
-
-        locationProvider?.location?.observe(
-            this, observer
+        locationProvider?.location?.observeForever(
+            observer
         )
     }
 
