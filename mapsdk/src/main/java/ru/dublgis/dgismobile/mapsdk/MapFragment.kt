@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.fragment.app.Fragment
+import ru.dublgis.dgismobile.mapsdk.location.LocationProviderFactory
 
 /**
  * Class used for drawing a 2gis map.
@@ -30,11 +31,14 @@ class MapFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        bridge = PlatformBridge(
-            context?.packageName ?: "",
-            this::evaluateJavaScript,
-            this::onMapReady
-        )
+        context?.let {
+            bridge = PlatformBridge(
+                it.packageName ?: "",
+                this::evaluateJavaScript,
+                this::onMapReady,
+                LocationProviderFactory(it)
+            )
+        }
     }
 
     /** @suppress */
