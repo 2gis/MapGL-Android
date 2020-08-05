@@ -7,6 +7,7 @@ import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererImpl
@@ -73,7 +74,7 @@ internal class PlatformBridge(
 
     private var _apiKey = ""
     private var _center = LonLat()
-    private var locationProvider: LocationProvider? = null
+    private lateinit var locationProvider: LocationProvider
 
     private var _zoom: Double = 0.0
     private var _maxZoom: Double = 0.0
@@ -390,7 +391,7 @@ internal class PlatformBridge(
     }
 
     override fun enableUserLocation(options: UserLocationOptions) {
-        locationProvider = locationProvider ?: locationProviderFactory.createLocationProvider(
+        locationProvider = locationProviderFactory.createLocationProvider(
             options
         )
 
@@ -403,17 +404,18 @@ internal class PlatformBridge(
             showUserLocation(LonLat(it.longitude, it.latitude))
         }
 
-        locationProvider?.location?.observeForever(
+        locationProvider.location.observeForever(
             observer
         )
     }
 
     override fun disableUserLocation() {
-        locationProvider?.destroy()
+        hideUserLocation()
+        locationProvider.destroy()
     }
 
-    override val userLocation: Location?
-        get() = locationProvider?.location?.value
+    override val userLocation: LiveData<Location>
+        get() = locationProvider.location
 
     private fun showUserLocation(position: LonLat) {
         userLocationMarker?.destroy()

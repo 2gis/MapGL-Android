@@ -7,6 +7,8 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import ru.dublgis.dgismobile.mapsdk.LonLat
 import ru.dublgis.dgismobile.mapsdk.Map
@@ -55,7 +57,7 @@ abstract class MapActivity : AppCompatActivity() {
 
     private fun onDGisMapReady(controller: Map?) {
         map = controller
-        map?.enableUserLocation(UserLocationOptions(isVisible = true))
+        enableUserLocation()
         onDGisMapReady()
     }
 
@@ -63,10 +65,10 @@ abstract class MapActivity : AppCompatActivity() {
 
     private fun centerMap(@Suppress("UNUSED_PARAMETER") view: View?) {
         map?.run {
-            this.userLocation?.let {
+            this.userLocation.observeOnce(this@MapActivity, Observer {
                 center = LonLat(it.longitude, it.latitude)
                 zoom = 16.0
-            }
+            })
         }
     }
 
@@ -90,6 +92,17 @@ abstract class MapActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onResume() {
+        super.onResume()
+        enableUserLocation()
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        disableUserLocation()
+    }
+
     companion object {
         const val TEXT_EXTRA = "TEXT_EXTRA"
         fun startActivity(context: Context, text: String, kClass: KClass<out MapActivity>) {
@@ -97,5 +110,22 @@ abstract class MapActivity : AppCompatActivity() {
             intent.putExtra(TEXT_EXTRA, text)
             context.startActivity(intent)
         }
+    }
+
+    private fun enableUserLocation() {
+        map?.enableUserLocation(UserLocationOptions(isVisible = true))
+    }
+
+    private fun disableUserLocation() {
+        map?.disableUserLocation()
+    }
+
+    private fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
+        observe(lifecycleOwner, object : Observer<T> {
+            override fun onChanged(t: T?) {
+                observer.onChanged(t)
+                removeObserver(this)
+            }
+        })
     }
 }
