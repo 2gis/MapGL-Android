@@ -63,12 +63,10 @@ abstract class MapActivity : AppCompatActivity() {
 
     private fun centerMap(@Suppress("UNUSED_PARAMETER") view: View?) {
         map?.run {
-            this.userLocation?.observe(this@MapActivity, Observer { newLocation ->
-                newLocation?.let {
-                    center = LonLat(it.longitude, it.latitude)
-                    zoom = 16.0
-                }
-            })
+            this.userLocation?.let {
+                center = LonLat(it.longitude, it.latitude)
+                zoom = 16.0
+            }
         }
     }
 

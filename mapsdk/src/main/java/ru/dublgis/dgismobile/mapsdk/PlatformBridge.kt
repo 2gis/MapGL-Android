@@ -7,7 +7,6 @@ import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererImpl
@@ -413,8 +412,8 @@ internal class PlatformBridge(
         locationProvider?.destroy()
     }
 
-    override val userLocation: LiveData<Location>?
-        get() = locationProvider?.location
+    override val userLocation: Location?
+        get() = locationProvider?.location?.value
 
     private fun showUserLocation(position: LonLat) {
         userLocationMarker?.destroy()
