@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.fragment.app.Fragment
 import ru.dublgis.dgismobile.mapsdk.location.LocationProviderFactory
-import ru.dublgis.dgismobile.mapsdk.location.UserLocationOptions
 
 /**
  * Class used for drawing a 2gis map.
@@ -117,11 +116,11 @@ class MapFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        bridge.enableUserLocation(UserLocationOptions())
+        bridge.requestLocationUpdates()
     }
 
     override fun onPause() {
         super.onPause()
-        bridge.disableUserLocation()
+        bridge.removeLocationUpdates()
     }
 }

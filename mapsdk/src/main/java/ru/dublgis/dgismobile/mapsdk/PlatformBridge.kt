@@ -75,6 +75,7 @@ internal class PlatformBridge(
     private var _apiKey = ""
     private var _center = LonLat()
     private lateinit var locationProvider: LocationProvider
+    private var options: UserLocationOptions? = null
 
     private var _zoom: Double = 0.0
     private var _maxZoom: Double = 0.0
@@ -391,27 +392,24 @@ internal class PlatformBridge(
     }
 
     override fun enableUserLocation(options: UserLocationOptions) {
-        locationProvider = locationProviderFactory.createLocationProvider(
-            options
-        )
+        requestLocationUpdates(options)
 
-        val observer = Observer<Location> {
-            if (!options.isVisible) {
-                hideUserLocation()
-                return@Observer
+        val observer = Observer<Location> { loc ->
+            options.isVisible?.let { isVisible ->
+                if (!isVisible) {
+                    hideUserLocation()
+                    return@Observer
+                }
+
+                showUserLocation(LonLat(loc.longitude, loc.latitude))
             }
-
-            showUserLocation(LonLat(it.longitude, it.latitude))
         }
 
-        locationProvider.location.observeForever(
-            observer
-        )
+        locationProvider.location.observeForever(observer)
     }
 
     override fun disableUserLocation() {
-        hideUserLocation()
-        locationProvider.destroy()
+        removeLocationUpdates()
     }
 
     override val userLocation: LiveData<Location>
@@ -424,6 +422,21 @@ internal class PlatformBridge(
 
     private fun hideUserLocation() {
         userLocationMarker?.destroy()
+    }
+
+    private fun requestLocationUpdates(options: UserLocationOptions) {
+        this.options = options
+        locationProvider = locationProviderFactory.createLocationProvider(options)
+    }
+
+    fun requestLocationUpdates() {
+        options?.let {
+            locationProvider = locationProviderFactory.createLocationProvider(it)
+        }
+    }
+
+    fun removeLocationUpdates() {
+        locationProvider.destroy()
     }
 
     fun carRoute(id: String, carRouteOptions: CarRouteOptions) {

@@ -57,6 +57,7 @@ abstract class MapActivity : AppCompatActivity() {
 
     private fun onDGisMapReady(controller: Map?) {
         map = controller
+        map?.enableUserLocation(UserLocationOptions())
         onDGisMapReady()
     }
 

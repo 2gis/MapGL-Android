@@ -18,7 +18,11 @@ internal class LocationProviderImpl(private val context: Context) : LocationProv
 
     private var locationProvider: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(context)
-    private lateinit var listener: LocationCallback
+    private val listener: LocationCallback = object : LocationCallback() {
+        override fun onLocationResult(result: LocationResult) {
+            _location.value = result.lastLocation
+        }
+    }
 
     private fun requestPermissions(handler: PermissionHandler) {
         val permissions = arrayOf(ACCESS_FINE_LOCATION)
@@ -72,12 +76,6 @@ internal class LocationProviderImpl(private val context: Context) : LocationProv
         userLocationOptions: UserLocationOptions
     ) {
         val request = createLocationRequest(userLocationOptions)
-
-        listener = object : LocationCallback() {
-            override fun onLocationResult(result: LocationResult) {
-                _location.value = result.lastLocation
-            }
-        }
 
         locationProvider.requestLocationUpdates(request, listener, null)
     }

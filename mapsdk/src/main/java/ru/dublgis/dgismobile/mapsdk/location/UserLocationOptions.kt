@@ -1,7 +1,7 @@
 package ru.dublgis.dgismobile.mapsdk.location
 
 class UserLocationOptions(
-    val isVisible: Boolean = true,
+    val isVisible: Boolean? = null,
     /**
      * Desired interval for active location updates, in milliseconds.
      */
