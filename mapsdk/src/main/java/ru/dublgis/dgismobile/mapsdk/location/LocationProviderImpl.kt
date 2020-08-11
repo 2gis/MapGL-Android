@@ -14,7 +14,10 @@ import ru.dublgis.dgismobile.mapsdk.utils.permissions.Permissions
 
 internal const val LOCATION_PERMISSION_REQUEST_ID: Int = 777
 
-internal class LocationProviderImpl(private val context: Context) : LocationProvider {
+internal class LocationProviderImpl(
+    private val context: Context,
+    private val options: UserLocationOptions
+) : LocationProvider {
 
     private var locationProvider: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(context)
@@ -40,16 +43,14 @@ internal class LocationProviderImpl(private val context: Context) : LocationProv
             ACCESS_FINE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED)
 
-    private fun createLocationRequest(userLocationOptions: UserLocationOptions): LocationRequest =
+    private fun createLocationRequest(): LocationRequest =
         LocationRequest.create().apply {
-            interval = userLocationOptions.interval
-            fastestInterval = userLocationOptions.fastestInterval
-            priority = userLocationOptions.priority.value
+            interval = options.interval
+            fastestInterval = options.fastestInterval
+            priority = options.priority.value
         }
 
-    fun requestLocation(
-        userLocationOptions: UserLocationOptions
-    ) {
+    fun requestLocation() {
         if (checkLocationPermission()) {
             val handler = object : PermissionHandler {
                 override fun onResult(
@@ -58,7 +59,7 @@ internal class LocationProviderImpl(private val context: Context) : LocationProv
                 ) {
                     when (requestCode) {
                         LOCATION_PERMISSION_REQUEST_ID -> {
-                            requestLocationUpdates(userLocationOptions)
+                            requestLocationUpdates()
                         }
                     }
                 }
@@ -68,14 +69,12 @@ internal class LocationProviderImpl(private val context: Context) : LocationProv
             return
         }
 
-        requestLocationUpdates(userLocationOptions)
+        requestLocationUpdates()
     }
 
     @SuppressLint("MissingPermission")
-    private fun requestLocationUpdates(
-        userLocationOptions: UserLocationOptions
-    ) {
-        val request = createLocationRequest(userLocationOptions)
+    private fun requestLocationUpdates() {
+        val request = createLocationRequest()
 
         locationProvider.requestLocationUpdates(request, listener, null)
     }
@@ -83,7 +82,17 @@ internal class LocationProviderImpl(private val context: Context) : LocationProv
     override val location: LiveData<Location>
         get() = _location
 
-    private val _location = MutableLiveData<Location>()
+    private val _location = object : MutableLiveData<Location>() {
+        override fun onActive() {
+            super.onActive()
+            requestLocationUpdates()
+        }
+
+        override fun onInactive() {
+            super.onInactive()
+            destroy()
+        }
+    }
 
     override fun destroy() {
         locationProvider.removeLocationUpdates(listener);

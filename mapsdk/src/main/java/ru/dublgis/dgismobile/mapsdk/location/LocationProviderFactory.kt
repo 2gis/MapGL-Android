@@ -7,8 +7,8 @@ internal class LocationProviderFactory(private val context: Context) {
     fun createLocationProvider(
         options: UserLocationOptions
     ): LocationProvider {
-        val locationProvider = LocationProviderImpl(context)
-        locationProvider.requestLocation(options)
+        val locationProvider = LocationProviderImpl(context, options)
+        locationProvider.requestLocation()
 
         return locationProvider
     }

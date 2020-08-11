@@ -2,14 +2,11 @@ package ru.dublgis.dgismobile.sdktestapp
 
 import android.content.Context
 import android.content.Intent
-import android.location.Location
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.Observer
 import ru.dublgis.dgismobile.mapsdk.LonLat
 import ru.dublgis.dgismobile.mapsdk.Map
 import ru.dublgis.dgismobile.mapsdk.location.UserLocationOptions
@@ -20,7 +17,6 @@ import ru.dublgis.dgismobile.mapsdk.MapFragment as DGisMapFragment
 abstract class MapActivity : AppCompatActivity() {
 
     protected var map: Map? = null
-    private val mediatorLiveData: MediatorLiveData<Location> = MediatorLiveData()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.ActionBarAppTheme)
@@ -60,11 +56,6 @@ abstract class MapActivity : AppCompatActivity() {
         map = controller
 
         map?.enableUserLocation(UserLocationOptions(isVisible = true))
-        map?.run {
-            mediatorLiveData.addSource(this.userLocation) {
-                mediatorLiveData.value = it
-            }
-        }
 
         onDGisMapReady()
     }
@@ -73,10 +64,12 @@ abstract class MapActivity : AppCompatActivity() {
 
     private fun centerMap(@Suppress("UNUSED_PARAMETER") view: View?) {
         map?.run {
-            mediatorLiveData.observe(this@MapActivity, Observer {
-                center = LonLat(it.longitude, it.latitude)
-                zoom = 16.0
-            })
+            this.userLocation.let {
+                it.value?.let { location ->
+                    center = LonLat(location.longitude, location.latitude)
+                    zoom = 16.0
+                }
+            }
         }
     }
 
@@ -89,6 +82,7 @@ abstract class MapActivity : AppCompatActivity() {
     private fun zoomOutMap(@Suppress("UNUSED_PARAMETER") view: View?) {
         map?.run {
             zoom = zoom.dec()
+            map?.disableUserLocation()
         }
     }
 

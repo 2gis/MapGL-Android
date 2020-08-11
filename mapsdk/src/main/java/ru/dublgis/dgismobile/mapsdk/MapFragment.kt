@@ -113,14 +113,4 @@ class MapFragment : Fragment() {
             return Base64.encodeToString(it.readBytes(), Base64.NO_PADDING or Base64.NO_WRAP)
         }
     }
-
-    override fun onResume() {
-        super.onResume()
-        bridge.requestLocationUpdates()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        bridge.removeLocationUpdates()
-    }
 }

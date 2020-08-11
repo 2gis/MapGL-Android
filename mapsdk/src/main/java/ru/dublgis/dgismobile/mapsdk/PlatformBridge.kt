@@ -8,6 +8,7 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererImpl
@@ -75,7 +76,6 @@ internal class PlatformBridge(
     private var _apiKey = ""
     private var _center = LonLat()
     private lateinit var locationProvider: LocationProvider
-    private var options: UserLocationOptions? = null
 
     private var _zoom: Double = 0.0
     private var _maxZoom: Double = 0.0
@@ -392,7 +392,11 @@ internal class PlatformBridge(
     }
 
     override fun enableUserLocation(options: UserLocationOptions) {
-        requestLocationUpdates(options)
+        locationProvider = locationProviderFactory.createLocationProvider(options)
+
+        mediatorUserLocation.addSource(locationProvider.location) {
+            mediatorUserLocation.value = it
+        }
 
         val observer = Observer<Location> { loc ->
             options.isVisible?.let { isVisible ->
@@ -405,15 +409,18 @@ internal class PlatformBridge(
             }
         }
 
-        locationProvider.location.observeForever(observer)
+        mediatorUserLocation.observeForever(observer)
     }
 
     override fun disableUserLocation() {
-        removeLocationUpdates()
+        mediatorUserLocation.removeSource(locationProvider.location)
+        locationProvider.destroy()
     }
 
+    private val mediatorUserLocation = MediatorLiveData<Location>()
+
     override val userLocation: LiveData<Location>
-        get() = locationProvider.location
+        get() = mediatorUserLocation
 
     private fun showUserLocation(position: LonLat) {
         userLocationMarker?.destroy()
@@ -422,21 +429,6 @@ internal class PlatformBridge(
 
     private fun hideUserLocation() {
         userLocationMarker?.destroy()
-    }
-
-    private fun requestLocationUpdates(options: UserLocationOptions) {
-        this.options = options
-        locationProvider = locationProviderFactory.createLocationProvider(options)
-    }
-
-    fun requestLocationUpdates() {
-        options?.let {
-            locationProvider = locationProviderFactory.createLocationProvider(it)
-        }
-    }
-
-    fun removeLocationUpdates() {
-        locationProvider.destroy()
     }
 
     fun carRoute(id: String, carRouteOptions: CarRouteOptions) {
