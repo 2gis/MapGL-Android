@@ -77,7 +77,7 @@ internal class PlatformBridge(
 
     private var _apiKey = ""
     private var _center = LonLat()
-    private lateinit var locationProvider: LocationProvider
+    private var locationProvider: LocationProvider? = null
 
     private var _zoom: Double = 0.0
     private var _maxZoom: Double = 0.0
@@ -394,29 +394,38 @@ internal class PlatformBridge(
     }
 
     override fun enableUserLocation(options: UserLocationOptions) {
+        disableUserLocation()
+
         locationProvider = locationProviderFactory.createLocationProvider(options)
 
-        mediatorUserLocation.addSource(locationProvider.location) {
-            mediatorUserLocation.value = it
-        }
+        locationProvider?.let {
 
-        val observer = Observer<Location> { loc ->
-            options.isVisible?.let { isVisible ->
-                if (!isVisible) {
-                    hideUserLocation()
-                    return@Observer
-                }
-
-                showUserLocation(LonLat(loc.longitude, loc.latitude))
+            mediatorUserLocation.addSource(it.location) {loc ->
+                mediatorUserLocation.value = loc
             }
-        }
 
-        mediatorUserLocation.observe(lifecycleOwner, observer)
+            val observer = Observer<Location> { loc ->
+                options.isVisible?.let { isVisible ->
+                    if (!isVisible) {
+                        hideUserLocation()
+                        return@Observer
+                    }
+
+                    showUserLocation(LonLat(loc.longitude, loc.latitude))
+                }
+            }
+
+            mediatorUserLocation.observe(lifecycleOwner, observer)
+        }
     }
 
     override fun disableUserLocation() {
-        mediatorUserLocation.removeSource(locationProvider.location)
-        locationProvider.destroy()
+        if (mediatorUserLocation.hasObservers()) {
+            locationProvider?.let {
+                mediatorUserLocation.removeSource(it.location)
+            }
+        }
+        locationProvider = null
     }
 
     private val mediatorUserLocation = MediatorLiveData<Location>()
