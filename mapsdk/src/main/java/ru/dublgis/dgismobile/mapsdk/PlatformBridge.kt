@@ -400,11 +400,11 @@ internal class PlatformBridge(
 
         locationProvider?.let {
 
-            mediatorUserLocation.addSource(it.location) {loc ->
+            mediatorUserLocation.addSource(it.location) { loc ->
                 mediatorUserLocation.value = loc
             }
 
-            val observer = Observer<Location> { loc ->
+            observer = Observer<Location> { loc ->
                 options.isVisible?.let { isVisible ->
                     if (!isVisible) {
                         hideUserLocation()
@@ -423,10 +423,13 @@ internal class PlatformBridge(
         if (mediatorUserLocation.hasObservers()) {
             locationProvider?.let {
                 mediatorUserLocation.removeSource(it.location)
+                mediatorUserLocation.removeObserver(observer)
             }
         }
         locationProvider = null
     }
+
+    private lateinit var observer: Observer<Location>
 
     private val mediatorUserLocation = MediatorLiveData<Location>()
 
