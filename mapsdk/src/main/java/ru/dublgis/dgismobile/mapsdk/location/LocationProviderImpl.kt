@@ -50,7 +50,7 @@ internal class LocationProviderImpl(
             priority = options.priority.value
         }
 
-    fun requestLocation() {
+    private fun requestLocation() {
         if (checkLocationPermission()) {
             val handler = object : PermissionHandler {
                 override fun onResult(
@@ -85,7 +85,7 @@ internal class LocationProviderImpl(
     private val _location = object : MutableLiveData<Location>() {
         override fun onActive() {
             super.onActive()
-            requestLocationUpdates()
+            requestLocation()
         }
 
         override fun onInactive() {

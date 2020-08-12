@@ -82,7 +82,6 @@ abstract class MapActivity : AppCompatActivity() {
     private fun zoomOutMap(@Suppress("UNUSED_PARAMETER") view: View?) {
         map?.run {
             zoom = zoom.dec()
-            map?.disableUserLocation()
         }
     }
 

@@ -7,6 +7,7 @@ import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
@@ -48,7 +49,8 @@ internal class PlatformBridge(
     packageName: String,
     jsExecutor: JsExecutor,
     mapReadyCallback: MapReadyCallback,
-    private val locationProviderFactory: LocationProviderFactory
+    private val locationProviderFactory: LocationProviderFactory,
+    private val lifecycleOwner: LifecycleOwner
 ) : WebViewClient(), Map {
 
     private val packageName = packageName
@@ -409,7 +411,7 @@ internal class PlatformBridge(
             }
         }
 
-        mediatorUserLocation.observeForever(observer)
+        mediatorUserLocation.observe(lifecycleOwner, observer)
     }
 
     override fun disableUserLocation() {
