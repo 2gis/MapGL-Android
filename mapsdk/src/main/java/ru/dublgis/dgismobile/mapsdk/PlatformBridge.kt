@@ -405,19 +405,18 @@ internal class PlatformBridge(
             }
 
             observer = Observer { loc ->
-                options.isVisible?.let { isVisible ->
-                    if (loc == null) {
-                        hideUserLocation()
-                        return@Observer
-                    }
-
-                    if (!isVisible) {
-                        hideUserLocation()
-                        return@Observer
-                    }
-
-                    showUserLocation(LonLat(loc.longitude, loc.latitude))
+                if (loc == null) {
+                    hideUserLocation()
+                    return@Observer
                 }
+
+                if (!options.isVisible) {
+                    hideUserLocation()
+                    return@Observer
+                }
+
+                showUserLocation(LonLat(loc.longitude, loc.latitude))
+
             }
 
             mediatorUserLocation.observe(lifecycleOwner, observer)
