@@ -407,6 +407,7 @@ internal class PlatformBridge(
             observer = Observer { loc ->
                 options.isVisible?.let { isVisible ->
                     if (loc == null) {
+                        hideUserLocation()
                         return@Observer
                     }
 

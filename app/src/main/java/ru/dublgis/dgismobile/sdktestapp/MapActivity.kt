@@ -78,14 +78,12 @@ abstract class MapActivity : AppCompatActivity() {
     private fun zoomInMap(@Suppress("UNUSED_PARAMETER") view: View?) {
         map?.run {
             zoom = zoom.inc()
-            map?.disableUserLocation()
         }
     }
 
     private fun zoomOutMap(@Suppress("UNUSED_PARAMETER") view: View?) {
         map?.run {
             zoom = zoom.dec()
-            map?.enableUserLocation(UserLocationOptions(isVisible = true))
         }
     }
 
