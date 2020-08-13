@@ -3,6 +3,7 @@ package ru.dublgis.dgismobile.sdktestapp
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
@@ -56,6 +57,10 @@ abstract class MapActivity : AppCompatActivity() {
     private fun onDGisMapReady(controller: Map?) {
         map = controller
         map?.enableUserLocation(UserLocationOptions(isVisible = true))
+        map?.userLocation?.observe(this, Observer {
+            Log.i(ru.dublgis.dgismobile.mapsdk.TAG, "Location: $it")
+        })
+
         onDGisMapReady()
     }
 
@@ -63,7 +68,7 @@ abstract class MapActivity : AppCompatActivity() {
 
     private fun centerMap(@Suppress("UNUSED_PARAMETER") view: View?) {
         map?.run {
-            this.userLocation?.let {
+            this.userLocation.value?.let {
                 center = LonLat(it.longitude, it.latitude)
                 zoom = 16.0
             }

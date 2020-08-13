@@ -7,6 +7,9 @@ import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererImpl
@@ -46,7 +49,8 @@ internal class PlatformBridge(
     packageName: String,
     jsExecutor: JsExecutor,
     mapReadyCallback: MapReadyCallback,
-    private val locationProviderFactory: LocationProviderFactory
+    private val locationProviderFactory: LocationProviderFactory,
+    private val lifecycleOwner: LifecycleOwner
 ) : WebViewClient(), Map {
 
     private val packageName = packageName
@@ -390,30 +394,54 @@ internal class PlatformBridge(
     }
 
     override fun enableUserLocation(options: UserLocationOptions) {
-        locationProvider = locationProvider ?: locationProviderFactory.createLocationProvider(
-            options
-        )
+        disableUserLocation()
 
-        val observer = Observer<Location> {
-            if (!options.isVisible) {
-                hideUserLocation()
-                return@Observer
+        locationProvider = locationProviderFactory.createLocationProvider(options)
+
+        locationProvider?.let {
+
+            mediatorUserLocation.addSource(it.location) { loc ->
+                mediatorUserLocation.value = loc
             }
 
-            showUserLocation(LonLat(it.longitude, it.latitude))
-        }
+            observer = Observer { loc ->
+                if (loc == null) {
+                    hideUserLocation()
+                    return@Observer
+                }
 
-        locationProvider?.location?.observeForever(
-            observer
-        )
+                if (!options.isVisible) {
+                    hideUserLocation()
+                    return@Observer
+                }
+
+                showUserLocation(LonLat(loc.longitude, loc.latitude))
+
+            }
+
+            mediatorUserLocation.observe(lifecycleOwner, observer)
+        }
     }
 
     override fun disableUserLocation() {
-        locationProvider?.destroy()
+        if (mediatorUserLocation.hasObservers()) {
+            locationProvider?.let {
+                mediatorUserLocation.removeSource(it.location)
+                mediatorUserLocation.removeObserver(observer)
+                mediatorUserLocation.value = null
+            }
+        }
+        locationProvider = null
+
+        hideUserLocation()
     }
 
-    override val userLocation: Location?
-        get() = locationProvider?.location?.value
+    private lateinit var observer: Observer<Location>
+
+    private val mediatorUserLocation = MediatorLiveData<Location>()
+
+    override val userLocation: LiveData<Location>
+        get() = mediatorUserLocation
 
     private fun showUserLocation(position: LonLat) {
         userLocationMarker?.destroy()

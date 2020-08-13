@@ -36,7 +36,8 @@ class MapFragment : Fragment() {
                 it.packageName ?: "",
                 this::evaluateJavaScript,
                 this::onMapReady,
-                LocationProviderFactory(it)
+                LocationProviderFactory(it),
+                this
             )
         }
     }
