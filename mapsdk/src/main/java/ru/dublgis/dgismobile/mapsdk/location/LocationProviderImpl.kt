@@ -95,6 +95,6 @@ internal class LocationProviderImpl(
     }
 
     override fun destroy() {
-        locationProvider.removeLocationUpdates(listener);
+        locationProvider.removeLocationUpdates(listener)
     }
 }

@@ -3,10 +3,12 @@ package ru.dublgis.dgismobile.sdktestapp
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import ru.dublgis.dgismobile.mapsdk.LonLat
 import ru.dublgis.dgismobile.mapsdk.Map
 import ru.dublgis.dgismobile.mapsdk.location.UserLocationOptions
@@ -55,6 +57,9 @@ abstract class MapActivity : AppCompatActivity() {
     private fun onDGisMapReady(controller: Map?) {
         map = controller
         map?.enableUserLocation(UserLocationOptions(isVisible = true))
+        map?.userLocation?.observe(this, Observer {
+            Log.i(ru.dublgis.dgismobile.mapsdk.TAG, "Location: $it")
+        })
 
         onDGisMapReady()
     }
@@ -73,12 +78,14 @@ abstract class MapActivity : AppCompatActivity() {
     private fun zoomInMap(@Suppress("UNUSED_PARAMETER") view: View?) {
         map?.run {
             zoom = zoom.inc()
+            map?.disableUserLocation()
         }
     }
 
     private fun zoomOutMap(@Suppress("UNUSED_PARAMETER") view: View?) {
         map?.run {
             zoom = zoom.dec()
+            map?.enableUserLocation(UserLocationOptions(isVisible = true))
         }
     }
 
