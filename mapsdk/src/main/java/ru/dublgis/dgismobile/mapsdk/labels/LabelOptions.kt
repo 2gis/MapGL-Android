@@ -63,7 +63,11 @@ class LabelOptions(
     /**
      * Draw order.
      */
-    val zIndex: Float? = null
+    val zIndex: Float? = null,
+    /**
+     * Image background for the label.
+     */
+    val image: LabelImage? = null
 ) {
 
     override fun toString(): String {
@@ -82,6 +86,7 @@ class LabelOptions(
         if (maxZoom != null) builder.append("maxZoom: $maxZoom,")
         if (minZoom != null) builder.append("minZoom: $minZoom,")
         if (zIndex != null) builder.append("zIndex: $zIndex,")
+        if (image != null) builder.append("image: $image,")
 
         builder.append("}")
 

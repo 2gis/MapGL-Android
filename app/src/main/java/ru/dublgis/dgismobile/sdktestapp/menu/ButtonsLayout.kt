@@ -30,6 +30,7 @@ class ButtonsLayout(context: Context, attrs: AttributeSet) : LinearLayout(contex
 
     private fun addButtons() {
         addView(GroupButton(context, "Markers", MarkersActivity::class, onClickListener))
+        addView(GroupButton(context, "Labels", LabelsActivity::class, onClickListener))
         addView(GroupButton(context, "Clustering", ClusterersActivity::class, onClickListener))
         addView(
             GroupButton(
