@@ -1,7 +1,7 @@
 package ru.dublgis.dgismobile.mapsdk.labels
 
-import ru.dublgis.dgismobile.mapsdk.MarkerIconDescriptor
-import ru.dublgis.dgismobile.mapsdk.MarkerIconDescriptorImpl
+import ru.dublgis.dgismobile.mapsdk.utils.ImageDescriptor
+import ru.dublgis.dgismobile.mapsdk.utils.ImageDescriptorImpl
 
 
 typealias Size = Pair<Int, Int>
@@ -13,7 +13,7 @@ class LabelImage(
     /**
      * Source image URL.
      */
-    val url: MarkerIconDescriptor,
+    val image: ImageDescriptor,
     /**
      * [width, height] — image size in logical pixels
      */
@@ -60,7 +60,7 @@ class LabelImage(
             }
         )
 
-        builder.append("url: '${(this.url as MarkerIconDescriptorImpl).toJsFormat()}',")
+        builder.append("url: '${(this.image as ImageDescriptorImpl).toJsFormat()}',")
         builder.append(" size: [${size.first}, ${size.second}],")
         builder.append(" stretchX: $stretchX_,")
         builder.append(" stretchY: $stretchY_,")

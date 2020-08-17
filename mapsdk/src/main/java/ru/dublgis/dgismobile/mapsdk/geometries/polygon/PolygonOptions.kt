@@ -1,7 +1,6 @@
 package ru.dublgis.dgismobile.mapsdk.geometries.polygon
 
 import ru.dublgis.dgismobile.mapsdk.LonLat
-import ru.dublgis.dgismobile.mapsdk.utils.ColorUtils
 import ru.dublgis.dgismobile.mapsdk.utils.ColorUtils.jsColorFormat
 
 /**
