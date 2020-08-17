@@ -2,7 +2,9 @@ package ru.dublgis.dgismobile.sdktestapp
 
 import android.graphics.Color
 import ru.dublgis.dgismobile.mapsdk.labels.Label
+import ru.dublgis.dgismobile.mapsdk.labels.LabelImage
 import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
+import ru.dublgis.dgismobile.mapsdk.utils.iconFromSvgAsset
 
 class LabelsActivity : MapActivity() {
 
@@ -13,6 +15,14 @@ class LabelsActivity : MapActivity() {
     }
 
     private fun showLabel() {
+
+        val labelImage = LabelImage(
+            image = iconFromSvgAsset(assets, "tooltip-big.svg"),
+            size = 500 to 250,
+            stretchX = listOf(50 to 200, 300 to 450),
+            stretchY = listOf(50 to 150),
+            padding = listOf(50, 50, 100, 50)
+        )
         label =
             map?.createLabel(
                 LabelOptions(
@@ -22,7 +32,8 @@ class LabelsActivity : MapActivity() {
                     fontSize = 24f,
                     maxZoom = 14f,
                     minZoom = 10f,
-                    anchor = 15.0 to 48.0
+                    anchor = 15.0 to 48.0,
+                    image = labelImage
                 )
             )
 
