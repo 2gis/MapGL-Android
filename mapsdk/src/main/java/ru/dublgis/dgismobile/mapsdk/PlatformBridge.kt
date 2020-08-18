@@ -90,6 +90,7 @@ internal class PlatformBridge(
     private var _rotation: Double = 0.0
 
     private var _controls: Boolean = false
+    private val interactiveCopyright: Boolean = false
 
     private var clusterId = 0
     private var polylineId = 0
@@ -626,7 +627,8 @@ internal class PlatformBridge(
                 ${_rotation},
                 "$_apiKey",
                 "$packageName",
-                $_controls
+                $_controls,
+                $interactiveCopyright
             );
         """
         )
