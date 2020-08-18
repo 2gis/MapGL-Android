@@ -1,10 +1,11 @@
 package ru.dublgis.dgismobile.sdktestapp
 
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import ru.dublgis.dgismobile.mapsdk.labels.Label
 import ru.dublgis.dgismobile.mapsdk.labels.LabelImage
 import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
-import ru.dublgis.dgismobile.mapsdk.utils.iconFromSvgAsset
+import ru.dublgis.dgismobile.mapsdk.utils.icon.IconFactory
 
 class LabelsActivity : MapActivity() {
 
@@ -17,7 +18,13 @@ class LabelsActivity : MapActivity() {
     private fun showLabel() {
 
         val labelImage = LabelImage(
-            image = iconFromSvgAsset(assets, "tooltip-big.svg"),
+            //image = IconFactory(this).fromAsset("tooltip-big.svg"),
+            image = IconFactory(this).fromBitmap(
+                BitmapFactory.decodeResource(
+                    resources,
+                    R.drawable.icon_adaptive_background
+                )
+            ),
             size = 500 to 250,
             stretchX = listOf(50 to 200, 300 to 450),
             stretchY = listOf(50 to 150),
