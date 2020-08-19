@@ -1,11 +1,11 @@
 package ru.dublgis.dgismobile.sdktestapp
 
-import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.net.Uri
 import ru.dublgis.dgismobile.mapsdk.labels.Label
 import ru.dublgis.dgismobile.mapsdk.labels.LabelImage
 import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
-import ru.dublgis.dgismobile.mapsdk.utils.icon.IconFactory
+import ru.dublgis.dgismobile.mapsdk.utils.icon.ImageFactory
 
 class LabelsActivity : MapActivity() {
 
@@ -17,14 +17,19 @@ class LabelsActivity : MapActivity() {
 
     private fun showLabel() {
 
+        val drawId = resources.getIdentifier("icon_adaptive_background", "drawable", packageName)
+        val path =
+            Uri.parse("android.resource://$packageName/$drawId")
+
         val labelImage = LabelImage(
             //image = IconFactory(this).fromAsset("tooltip-big.svg"),
-            image = IconFactory(this).fromBitmap(
+            /*image = ImageFactory(this).fromBitmap(
                 BitmapFactory.decodeResource(
                     resources,
                     R.drawable.icon_adaptive_background
                 )
-            ),
+            ),*/
+            image = ImageFactory(this).fromResource(R.drawable.icon_adaptive_background),
             size = 500 to 250,
             stretchX = listOf(50 to 200, 300 to 450),
             stretchY = listOf(50 to 150),

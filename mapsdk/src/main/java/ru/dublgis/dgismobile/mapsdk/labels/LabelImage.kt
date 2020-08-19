@@ -1,6 +1,6 @@
 package ru.dublgis.dgismobile.mapsdk.labels
 
-import ru.dublgis.dgismobile.mapsdk.utils.icon.Icon
+import ru.dublgis.dgismobile.mapsdk.utils.icon.Image
 
 
 typealias Size = Pair<Int, Int>
@@ -12,7 +12,7 @@ class LabelImage(
     /**
      * Source image URL.
      */
-    val image: Icon,
+    val image: Image,
     /**
      * [width, height] — image size in logical pixels
      */

@@ -1,6 +1,6 @@
 package ru.dublgis.dgismobile.mapsdk.utils.icon
 
-internal class IconImpl(val buffer: String) : Icon {
+internal class ImageImpl(val buffer: String) : Image {
     override fun toJsFormat(): String {
         return buffer
     }
