@@ -1,4 +1,4 @@
-package ru.dublgis.dgismobile.mapsdk.utils.icon
+package ru.dublgis.dgismobile.mapsdk.utils.image
 
 import android.content.Context
 import android.graphics.Bitmap

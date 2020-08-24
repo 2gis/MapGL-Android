@@ -4,7 +4,7 @@ import android.graphics.Color
 import ru.dublgis.dgismobile.mapsdk.labels.Label
 import ru.dublgis.dgismobile.mapsdk.labels.LabelImage
 import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
-import ru.dublgis.dgismobile.mapsdk.utils.iconFromSvgAsset
+import ru.dublgis.dgismobile.mapsdk.utils.image.ImageFactory
 
 class LabelsActivity : MapActivity() {
 
@@ -16,8 +16,16 @@ class LabelsActivity : MapActivity() {
 
     private fun showLabel() {
 
-        val labelImage = LabelImage(
+        /*val labelImage = LabelImage(
             image = iconFromSvgAsset(assets, "tooltip-big.svg"),
+            size = 500 to 250,
+            stretchX = listOf(50 to 200, 300 to 450),
+            stretchY = listOf(50 to 150),
+            padding = listOf(50, 50, 100, 50)
+        )*/
+
+        val labelImage = LabelImage(
+            image = ImageFactory(this).fromAsset("tooltip-big.svg"),
             size = 500 to 250,
             stretchX = listOf(50 to 200, 300 to 450),
             stretchY = listOf(50 to 150),
