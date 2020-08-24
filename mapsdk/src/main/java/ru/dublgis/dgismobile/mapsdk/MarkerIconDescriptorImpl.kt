@@ -4,9 +4,8 @@ import android.content.res.AssetManager
 import android.util.Base64
 
 
-internal abstract class MarkerIconDescriptorImpl : MarkerIconDescriptor() {
-
-    abstract fun toJsFormat(): String
+internal abstract class MarkerIconDescriptorImpl : MarkerIconDescriptor {
+    abstract override fun toJsFormat(): String
 }
 
 

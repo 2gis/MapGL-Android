@@ -1,4 +1,4 @@
-package ru.dublgis.dgismobile.mapsdk.utils.image
+package ru.dublgis.dgismobile.mapsdk.image
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -56,7 +56,7 @@ class ImageFactory(private val context: Context) {
      * Create an Image using the name of a Bitmap image file located in the internal storage.
      */
     //TODO:
-    fun fromFile(fileName : String) : Image {
+    fun fromFile(fileName: String): Image {
         val bitmap = BitmapFactory.decodeFile(fileName)
         return fromBitmap(bitmap)
     }

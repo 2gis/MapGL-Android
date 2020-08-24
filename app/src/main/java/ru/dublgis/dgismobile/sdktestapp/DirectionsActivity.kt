@@ -1,6 +1,5 @@
 package ru.dublgis.dgismobile.sdktestapp
 
-import android.widget.Toast
 import ru.dublgis.dgismobile.mapsdk.LonLat
 import ru.dublgis.dgismobile.mapsdk.MapPointerEvent
 import ru.dublgis.dgismobile.mapsdk.directions.CarRouteOptions

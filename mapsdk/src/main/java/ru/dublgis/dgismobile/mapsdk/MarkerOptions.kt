@@ -1,11 +1,13 @@
 package ru.dublgis.dgismobile.mapsdk
 
+import ru.dublgis.dgismobile.mapsdk.image.Image
 import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
-import ru.dublgis.dgismobile.mapsdk.utils.image.Image
 
 
 typealias MarkerAnchor = Pair<Double, Double>
 typealias MarkerSize = Pair<Double, Double>
+@Deprecated("Use Image directly")
+typealias MarkerIconDescriptor = Image
 
 /**
  * Marker initialization options.
@@ -32,36 +34,6 @@ class MarkerOptions(
      */
     val label: LabelOptions? = null
 ) {
-
-    private var markerIconDescriptor: MarkerIconDescriptor? = null
-
-    @Deprecated("This constructor is deprecated. Use primary constructor instead.")
-    constructor(
-        /**
-         * Geographical coordinates of marker center [longitude, latitude].
-         */
-        position: LonLat,
-        /**
-         * Marker icon URL.
-         */
-        icon: MarkerIconDescriptor,
-        /**
-         * The position in pixels of the "tip" of the icon (relative to its top left corner).
-         */
-        anchor: MarkerAnchor? = null,
-        /**
-         * Marker icon size [width, height] in pixels.
-         */
-        size: MarkerSize? = null,
-        /**
-         * Initialization options of the marker's label.
-         */
-        label: LabelOptions? = null
-    ) : this(position = position, icon = null, anchor = anchor, size = size, label = label) {
-        markerIconDescriptor = icon
-    }
-
-
     override fun toString(): String {
         val builder = StringBuilder()
         builder.append("{")
@@ -80,7 +52,6 @@ class MarkerOptions(
 
     private fun getImageJsFormat(): String? {
         icon?.let { return it.toJsFormat() }
-        markerIconDescriptor?.let { return (it as MarkerIconDescriptorImpl).toJsFormat() }
 
         return null
     }

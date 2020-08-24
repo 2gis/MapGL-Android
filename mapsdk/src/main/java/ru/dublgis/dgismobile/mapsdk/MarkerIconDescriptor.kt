@@ -3,11 +3,6 @@ package ru.dublgis.dgismobile.mapsdk
 import android.content.res.AssetManager
 
 /**
- * Marker icon.
- */
-abstract class MarkerIconDescriptor
-
-/**
  * Get icon from assets
  *
  * @param assetManager Provides access to an application's raw asset files

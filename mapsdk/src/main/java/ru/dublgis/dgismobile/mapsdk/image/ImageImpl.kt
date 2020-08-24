@@ -1,4 +1,4 @@
-package ru.dublgis.dgismobile.mapsdk.utils.image
+package ru.dublgis.dgismobile.mapsdk.image
 
 internal class ImageImpl(val buffer: String) : Image {
     override fun toJsFormat(): String {

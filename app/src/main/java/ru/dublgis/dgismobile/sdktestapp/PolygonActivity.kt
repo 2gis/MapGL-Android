@@ -2,7 +2,6 @@ package ru.dublgis.dgismobile.sdktestapp
 
 import android.graphics.Color
 import android.widget.Toast
-import org.jetbrains.annotations.TestOnly
 import ru.dublgis.dgismobile.mapsdk.LonLat
 import ru.dublgis.dgismobile.mapsdk.geometries.polygon.PolygonOptions
 import java.lang.ref.WeakReference

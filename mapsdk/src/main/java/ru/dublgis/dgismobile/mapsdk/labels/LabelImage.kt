@@ -1,8 +1,6 @@
 package ru.dublgis.dgismobile.mapsdk.labels
 
-import ru.dublgis.dgismobile.mapsdk.utils.ImageDescriptor
-import ru.dublgis.dgismobile.mapsdk.utils.ImageDescriptorImpl
-import ru.dublgis.dgismobile.mapsdk.utils.image.Image
+import ru.dublgis.dgismobile.mapsdk.image.Image
 
 
 typealias Size = Pair<Int, Int>
@@ -14,7 +12,7 @@ class LabelImage(
     /**
      * Source image URL.
      */
-    var image: Image? = null,
+    val image: Image,
     /**
      * [width, height] — image size in logical pixels
      */
@@ -39,42 +37,6 @@ class LabelImage(
      */
     val pixelRatio: Float? = null
 ) {
-
-    private var imageDescriptor: ImageDescriptor? = null
-
-    @Deprecated("This constructor is deprecated. Use primary constructor instead.")
-    constructor(
-        /**
-         * Source image URL.
-         */
-        image: ImageDescriptor,
-        /**
-         * [width, height] — image size in logical pixels
-         */
-        size: Size,
-        /**
-         * Defines the parts of the image that can be stretched horizontally.
-         */
-        stretchX: Collection<Size>,
-        /**
-         * Defines the parts of the image that can be stretched vertically.
-         */
-        stretchY: Collection<Size>,
-        /**
-         * Sets the space in pixels between the label text box and the edge
-         * of the stretched image for all four sides [top, right, bottom, left],
-         * like in CSS. [0, 0, 0, 0] by default.
-         */
-        padding: Collection<Int>,
-
-        /**
-         * The ratio of logical pixels in the image to physical pixels on the screen.
-         */
-        pixelRatio: Float? = null
-    ) : this(null, size, stretchX, stretchY, padding, pixelRatio) {
-        this.imageDescriptor = image
-    }
-
     override fun toString(): String {
         val builder = StringBuilder()
         builder.append("{")
@@ -97,7 +59,7 @@ class LabelImage(
             }
         )
 
-        builder.append("url: '${getImageJsFormat()}',")
+        builder.append("url: '${image.toJsFormat()}',")
         builder.append(" size: [${size.first}, ${size.second}],")
         builder.append(" stretchX: $stretchX_,")
         builder.append(" stretchY: $stretchY_,")
@@ -107,12 +69,5 @@ class LabelImage(
         builder.append("}")
 
         return builder.toString()
-    }
-
-    private fun getImageJsFormat(): String? {
-        image?.let { return it.toJsFormat() }
-        imageDescriptor?.let { return (it as ImageDescriptorImpl).toJsFormat() }
-
-        return null
     }
 }
