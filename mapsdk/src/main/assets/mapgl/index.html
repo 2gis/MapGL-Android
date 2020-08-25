@@ -35,7 +35,8 @@ window.initMapGL = (
         maxPitch, minPitch, pitch,
         rotation,
         apiKey, packageId,
-        controls) => {
+        controls,
+        interactiveCopyright) => {
 
     const markers = new Map();
     const clusterers = new Map();
@@ -57,7 +58,8 @@ window.initMapGL = (
         rotation: rotation,
         appId: packageId,
         key: apiKey,
-        zoomControl: controls
+        zoomControl: controls,
+        interactiveCopyright : interactiveCopyright
     });
 
     const emit = (name, args) => {

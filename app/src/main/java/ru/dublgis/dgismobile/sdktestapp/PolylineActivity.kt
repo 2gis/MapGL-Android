@@ -1,7 +1,6 @@
 package ru.dublgis.dgismobile.sdktestapp
 
 import android.widget.Toast
-import org.jetbrains.annotations.TestOnly
 import ru.dublgis.dgismobile.mapsdk.LonLat
 import ru.dublgis.dgismobile.mapsdk.geometries.polyline.PolylineOptions
 import java.lang.ref.WeakReference

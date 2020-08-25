@@ -3,19 +3,12 @@ package ru.dublgis.dgismobile.mapsdk
 import android.content.res.AssetManager
 import android.util.Base64
 
-
-internal abstract class MarkerIconDescriptorImpl : MarkerIconDescriptor() {
-
-    abstract fun toJsFormat(): String
-}
-
-
 internal class SvgMarkerIconDescriptor(
     private val am: AssetManager,
     private val path: String
 )
 
-    : MarkerIconDescriptorImpl() {
+    : MarkerIconDescriptor {
     override fun toJsFormat(): String {
         am.open(path).let {
             val buffer = Base64.encodeToString(

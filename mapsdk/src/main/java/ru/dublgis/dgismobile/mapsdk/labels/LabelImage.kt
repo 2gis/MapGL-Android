@@ -1,7 +1,6 @@
 package ru.dublgis.dgismobile.mapsdk.labels
 
-import ru.dublgis.dgismobile.mapsdk.utils.ImageDescriptor
-import ru.dublgis.dgismobile.mapsdk.utils.ImageDescriptorImpl
+import ru.dublgis.dgismobile.mapsdk.image.Image
 
 
 typealias Size = Pair<Int, Int>
@@ -13,7 +12,7 @@ class LabelImage(
     /**
      * Source image URL.
      */
-    val image: ImageDescriptor,
+    val image: Image,
     /**
      * [width, height] — image size in logical pixels
      */
@@ -60,7 +59,7 @@ class LabelImage(
             }
         )
 
-        builder.append("url: '${(this.image as ImageDescriptorImpl).toJsFormat()}',")
+        builder.append("url: '${image.toJsFormat()}',")
         builder.append(" size: [${size.first}, ${size.second}],")
         builder.append(" stretchX: $stretchX_,")
         builder.append(" stretchY: $stretchY_,")

@@ -1,9 +1,15 @@
 package ru.dublgis.dgismobile.sdktestapp
 
 import android.widget.Toast
-import ru.dublgis.dgismobile.mapsdk.*
+import ru.dublgis.dgismobile.mapsdk.LonLat
+import ru.dublgis.dgismobile.mapsdk.MapPointerEvent
+import ru.dublgis.dgismobile.mapsdk.Marker
+import ru.dublgis.dgismobile.mapsdk.MarkerOptions
+import ru.dublgis.dgismobile.mapsdk.image.ImageFactory
 import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
+import java.io.File
 import java.lang.ref.WeakReference
+
 
 class MarkersActivity : MapActivity() {
 
@@ -41,7 +47,7 @@ class MarkersActivity : MapActivity() {
             } else {
                 val markerOptions = MarkerOptions(
                     pointer.lngLat,
-                    icon = iconFromSvgAsset(assets, "pin.svg"),
+                    icon = ImageFactory(this).fromResource(R.drawable.splash_logo),
                     size = 30.0 to 48.0,
                     anchor = 15.0 to 48.0
                 )

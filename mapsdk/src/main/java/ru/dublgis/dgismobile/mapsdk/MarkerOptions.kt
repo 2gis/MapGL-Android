@@ -1,5 +1,6 @@
 package ru.dublgis.dgismobile.mapsdk
 
+import ru.dublgis.dgismobile.mapsdk.image.Image
 import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
 
 
@@ -17,7 +18,7 @@ class MarkerOptions(
     /**
      * Marker icon URL.
      */
-    val icon: MarkerIconDescriptor? = null,
+    val icon: Image? = null,
     /**
      * The position in pixels of the "tip" of the icon (relative to its top left corner).
      */
@@ -31,13 +32,13 @@ class MarkerOptions(
      */
     val label: LabelOptions? = null
 ) {
-
     override fun toString(): String {
         val builder = StringBuilder()
         builder.append("{")
 
         builder.append("coordinates: [${position.lon}, ${position.lat}],")
-        if (icon != null) builder.append(" icon: '${(this.icon as MarkerIconDescriptorImpl).toJsFormat()}',")
+        val imageJsFormat = getImageJsFormat()
+        if (imageJsFormat != null) builder.append(" icon: '${imageJsFormat}',")
         if (size != null) builder.append(" size: [${size.first}, ${size.second}],")
         if (anchor != null) builder.append(" anchor: [${anchor.first}, ${anchor.second}],")
         if (label != null) builder.append(" label: $label,")
@@ -45,6 +46,12 @@ class MarkerOptions(
         builder.append("}")
 
         return builder.toString()
+    }
+
+    private fun getImageJsFormat(): String? {
+        icon?.let { return it.toJsFormat() }
+
+        return null
     }
 }
 

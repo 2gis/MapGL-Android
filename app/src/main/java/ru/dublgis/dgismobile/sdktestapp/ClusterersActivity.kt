@@ -1,7 +1,6 @@
 package ru.dublgis.dgismobile.sdktestapp
 
 import android.widget.Toast
-import org.jetbrains.annotations.TestOnly
 import ru.dublgis.dgismobile.mapsdk.LonLat
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
 import ru.dublgis.dgismobile.mapsdk.clustering.InputMarker
