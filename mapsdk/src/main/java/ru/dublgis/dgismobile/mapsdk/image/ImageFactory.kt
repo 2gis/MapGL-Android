@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
 import java.io.ByteArrayOutputStream
+import java.io.File
 
 /**
  * Factory for creating Images.
@@ -55,9 +56,10 @@ class ImageFactory(private val context: Context) {
     /**
      * Create an Image using the name of a Bitmap image file located in the internal storage.
      */
-    //TODO:
-    fun fromFile(fileName: String): Image {
-        val bitmap = BitmapFactory.decodeFile(fileName)
+    fun fromFile(file: File): Image {
+        val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+            ?: throw NullPointerException("bitmap is null")
+
         return fromBitmap(bitmap)
     }
 }
