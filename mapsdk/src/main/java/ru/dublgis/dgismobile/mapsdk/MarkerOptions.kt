@@ -6,8 +6,6 @@ import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
 
 typealias MarkerAnchor = Pair<Double, Double>
 typealias MarkerSize = Pair<Double, Double>
-@Deprecated("Use Image directly")
-typealias MarkerIconDescriptor = Image
 
 /**
  * Marker initialization options.

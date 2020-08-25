@@ -1,6 +1,10 @@
 package ru.dublgis.dgismobile.mapsdk
 
 import android.content.res.AssetManager
+import ru.dublgis.dgismobile.mapsdk.image.Image
+
+@Deprecated("Use Image directly")
+typealias MarkerIconDescriptor = Image
 
 /**
  * Get icon from assets

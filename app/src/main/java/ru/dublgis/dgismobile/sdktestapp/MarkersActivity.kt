@@ -45,12 +45,9 @@ class MarkersActivity : MapActivity() {
             if (marker != null) {
                 marker?.position = pointer.lngLat
             } else {
-                val fileName = "$filesDir/icon_adaptive_foreground.png"
-                val file = File(fileName)
-
                 val markerOptions = MarkerOptions(
                     pointer.lngLat,
-                    icon = ImageFactory(this).fromFile(file),
+                    icon = ImageFactory(this).fromResource(R.drawable.splash_logo),
                     size = 30.0 to 48.0,
                     anchor = 15.0 to 48.0
                 )
