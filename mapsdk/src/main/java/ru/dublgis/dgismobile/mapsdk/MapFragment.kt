@@ -3,12 +3,17 @@ package ru.dublgis.dgismobile.mapsdk
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Base64
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.ConsoleMessage
+import android.webkit.WebChromeClient
 import android.webkit.WebView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import ru.dublgis.dgismobile.mapsdk.location.LocationProviderFactory
+
 
 /**
  * Class used for drawing a 2gis map.
@@ -54,7 +59,25 @@ class MapFragment : Fragment() {
         webView = view.findViewById<WebView>(R.id.webview)?.apply {
             settings.javaScriptEnabled = true
             webViewClient = bridge
+            webChromeClient = object : WebChromeClient() {
+                override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
+                    val logMessage =
+                        "${consoleMessage.message()} -- From line ${consoleMessage.lineNumber()} of ${consoleMessage.sourceId()}"
 
+                    if (consoleMessage.messageLevel() == ConsoleMessage.MessageLevel.ERROR) {
+                        Toast.makeText(context, consoleMessage.message(), Toast.LENGTH_SHORT).show()
+                        Log.e(
+                            TAG, logMessage
+                        )
+                    } else {
+                        Log.d(
+                            TAG, logMessage
+                        )
+                    }
+
+                    return super.onConsoleMessage(consoleMessage)
+                }
+            }
             setBackgroundColor(Color.parseColor("#f7f3df"))
             addJavascriptInterface(bridge, "bridge")
             loadData(loadIndexHtml(), "text/html", "base64")
