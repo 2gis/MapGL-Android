@@ -13,6 +13,7 @@ import android.webkit.WebView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import ru.dublgis.dgismobile.mapsdk.location.LocationProviderFactory
+import java.lang.RuntimeException
 
 
 /**
@@ -62,18 +63,18 @@ class MapFragment : Fragment() {
             webChromeClient = object : WebChromeClient() {
                 override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
                     val logMessage =
-                        "${consoleMessage.message()} -- From line ${consoleMessage.lineNumber()} of ${consoleMessage.sourceId()}"
+                        "${consoleMessage.message()} -- line: ${consoleMessage.lineNumber()} of ${consoleMessage.sourceId()}"
 
                     if (consoleMessage.messageLevel() == ConsoleMessage.MessageLevel.ERROR) {
-                        Toast.makeText(context, consoleMessage.message(), Toast.LENGTH_SHORT).show()
                         Log.e(
                             TAG, logMessage
                         )
-                    } else {
-                        Log.d(
-                            TAG, logMessage
-                        )
+                        throw Exception(logMessage)
                     }
+
+                    Log.i(
+                        TAG, logMessage
+                    )
 
                     return super.onConsoleMessage(consoleMessage)
                 }
