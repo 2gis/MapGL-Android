@@ -266,7 +266,9 @@ window.initMapGL = (
 			const directions = directionsMap.get(id);
 			if (directions) {
 				try {
-					directions.carRoute(options);
+					directions.carRoute(options).catch(() => {
+                        emit('error', e.message);
+                    })
 				}
 				catch (e) {
 					emit('error', e.message);
