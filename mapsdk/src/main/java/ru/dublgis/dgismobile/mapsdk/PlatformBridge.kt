@@ -37,12 +37,14 @@ import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
 import ru.dublgis.dgismobile.mapsdk.location.LocationProvider
 import ru.dublgis.dgismobile.mapsdk.location.LocationProviderFactory
 import ru.dublgis.dgismobile.mapsdk.location.UserLocationOptions
+import java.lang.Exception
 import java.lang.ref.WeakReference
 import kotlin.math.abs
 
 
 typealias JsExecutor = (String) -> Unit
 typealias MapReadyCallback = (Map?) -> Unit
+typealias OnFinished<T> = (Result<T>) -> Unit
 
 
 internal class PlatformBridge(
@@ -63,6 +65,7 @@ internal class PlatformBridge(
     private var onPitchChanged: PropertyChangeListener? = null
     private var onZoomChanged: PropertyChangeListener? = null
     private var onRotationChanged: PropertyChangeListener? = null
+    private lateinit var onFinished: OnFinished<String>
 
     private val markers = mutableMapOf<String, MarkerImpl>()
     private val clusterers = mutableMapOf<String, ClustererImpl>()
@@ -461,6 +464,19 @@ internal class PlatformBridge(
         )
     }
 
+    fun carRoute(
+        id: String,
+        carRouteOptions: CarRouteOptions,
+        onFinished: OnFinished<String>
+    ) {
+        this.onFinished = onFinished
+        jsExecutor(
+            """
+            window.dgismap.carRoute($id, $carRouteOptions);
+        """
+        )
+    }
+
     fun destroyPolyline(id: String) {
         jsExecutor(
             """
@@ -750,6 +766,12 @@ internal class PlatformBridge(
                 }
                 "initialized" -> {
                     readyCallback(this)
+                }
+                "error" -> {
+                    onFinished.let {
+                        val result = Result.failure<String>(Exception(payload))
+                        it(result)
+                    }
                 }
                 else -> {
                     Log.w(TAG, "unexpected event type")
