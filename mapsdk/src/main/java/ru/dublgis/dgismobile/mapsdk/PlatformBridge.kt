@@ -44,7 +44,7 @@ import kotlin.math.abs
 
 typealias JsExecutor = (String) -> Unit
 typealias MapReadyCallback = (Map?) -> Unit
-typealias OnFinished<T> = (Result<T>) -> Unit
+typealias OnFailure<T> = (Result<T>) -> Unit
 
 
 internal class PlatformBridge(
@@ -65,7 +65,7 @@ internal class PlatformBridge(
     private var onPitchChanged: PropertyChangeListener? = null
     private var onZoomChanged: PropertyChangeListener? = null
     private var onRotationChanged: PropertyChangeListener? = null
-    private lateinit var onFinished: OnFinished<String>
+    private val onFailureMap = mutableMapOf<String, OnFailure<String>>()
 
     private val markers = mutableMapOf<String, MarkerImpl>()
     private val clusterers = mutableMapOf<String, ClustererImpl>()
@@ -467,9 +467,9 @@ internal class PlatformBridge(
     fun carRoute(
         id: String,
         carRouteOptions: CarRouteOptions,
-        onFinished: OnFinished<String>
+        onFailure: OnFailure<String>
     ) {
-        this.onFinished = onFinished
+        onFailureMap[id] = onFailure
         jsExecutor(
             """
             window.dgismap.carRoute($id, $carRouteOptions);
@@ -533,6 +533,7 @@ internal class PlatformBridge(
             window.dgismap.clearRoutes($id);
         """
         )
+        onFailureMap.remove(id)
     }
 
     fun destroyDirections(id: String) {
@@ -768,8 +769,10 @@ internal class PlatformBridge(
                     readyCallback(this)
                 }
                 "error" -> {
-                    onFinished.let {
-                        val result = Result.failure<String>(Exception(payload))
+                    val id = payload.substringBefore(" ")
+                    val message = payload.substringAfter(" ")
+                    onFailureMap[id]?.let {
+                        val result = Result.failure<String>(Exception(message))
                         it(result)
                     }
                 }

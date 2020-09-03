@@ -1,5 +1,6 @@
 package ru.dublgis.dgismobile.mapsdk.directions
 
+import ru.dublgis.dgismobile.mapsdk.OnFailure
 import ru.dublgis.dgismobile.mapsdk.PlatformBridge
 import java.lang.ref.WeakReference
 
@@ -9,6 +10,13 @@ internal class DirectionsImpl(
 ) : Directions {
     override fun carRoute(carRouteOptions: CarRouteOptions) {
         controller.get()?.carRoute(id, carRouteOptions)
+    }
+
+    override fun carRoute(
+        carRouteOptions: CarRouteOptions,
+        onFailure: OnFailure<String>
+    ) {
+        controller.get()?.carRoute(id, carRouteOptions, onFailure)
     }
 
     override fun clear() {

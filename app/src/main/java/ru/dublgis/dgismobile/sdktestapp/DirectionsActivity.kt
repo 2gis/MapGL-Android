@@ -1,5 +1,6 @@
 package ru.dublgis.dgismobile.sdktestapp
 
+import android.util.Log
 import ru.dublgis.dgismobile.mapsdk.LonLat
 import ru.dublgis.dgismobile.mapsdk.MapPointerEvent
 import ru.dublgis.dgismobile.mapsdk.directions.CarRouteOptions
@@ -24,7 +25,10 @@ class DirectionsActivity : MapActivity() {
         directions1?.carRoute(CarRouteOptions(generate1Coordinates()))
 
         directions2 = map?.createDirections(DirectionsOptions(apiKey))
-        directions2?.carRoute(CarRouteOptions(generate2Coordinates()))
+        directions2?.carRoute(CarRouteOptions(generate2Coordinates())) {
+            val errorMessage = it.toString()
+            Log.d(ru.dublgis.dgismobile.mapsdk.TAG, errorMessage)
+        }
     }
 
     private fun onMapClicked(pointer: MapPointerEvent) {

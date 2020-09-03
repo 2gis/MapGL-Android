@@ -67,12 +67,7 @@ class MapFragment : Fragment() {
                         Log.e(
                             TAG, logMessage
                         )
-                        throw Exception(logMessage)
                     }
-
-                    Log.i(
-                        TAG, logMessage
-                    )
 
                     return super.onConsoleMessage(consoleMessage)
                 }
