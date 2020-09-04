@@ -13,11 +13,11 @@ interface Directions {
     fun carRoute(carRouteOptions: CarRouteOptions)
 
     /**
-     * Show car route and check the result.
+     * Show car route with OnFailure callback.
      */
     fun carRoute(
         carRouteOptions: CarRouteOptions,
-        onFailure: OnFailure<String>
+        onFailure: OnFailure
     )
 
     /**

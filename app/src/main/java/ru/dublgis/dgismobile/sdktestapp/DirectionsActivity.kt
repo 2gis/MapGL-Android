@@ -26,8 +26,9 @@ class DirectionsActivity : MapActivity() {
 
         directions2 = map?.createDirections(DirectionsOptions(apiKey))
         directions2?.carRoute(CarRouteOptions(generate2Coordinates())) {
-            val errorMessage = it.toString()
-            Log.d(ru.dublgis.dgismobile.mapsdk.TAG, errorMessage)
+            it.message?.let { message ->
+                Log.d(ru.dublgis.dgismobile.mapsdk.TAG, message)
+            }
         }
     }
 

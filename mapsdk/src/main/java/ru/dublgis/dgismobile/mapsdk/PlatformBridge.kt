@@ -37,14 +37,13 @@ import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
 import ru.dublgis.dgismobile.mapsdk.location.LocationProvider
 import ru.dublgis.dgismobile.mapsdk.location.LocationProviderFactory
 import ru.dublgis.dgismobile.mapsdk.location.UserLocationOptions
-import java.lang.Exception
 import java.lang.ref.WeakReference
 import kotlin.math.abs
 
 
 typealias JsExecutor = (String) -> Unit
 typealias MapReadyCallback = (Map?) -> Unit
-typealias OnFailure<T> = (Result<T>) -> Unit
+typealias OnFailure = (Exception) -> Unit
 
 
 internal class PlatformBridge(
@@ -65,7 +64,7 @@ internal class PlatformBridge(
     private var onPitchChanged: PropertyChangeListener? = null
     private var onZoomChanged: PropertyChangeListener? = null
     private var onRotationChanged: PropertyChangeListener? = null
-    private val onFailureMap = mutableMapOf<String, OnFailure<String>>()
+    private val onFailureMap = mutableMapOf<String, OnFailure>()
 
     private val markers = mutableMapOf<String, MarkerImpl>()
     private val clusterers = mutableMapOf<String, ClustererImpl>()
@@ -103,6 +102,7 @@ internal class PlatformBridge(
     private var labelId = 0
     private var markerId = 0
     private var directionsId = 0
+    private var exceptionId = 0
 
     override var center: LonLat
         get() = _center
@@ -467,12 +467,14 @@ internal class PlatformBridge(
     fun carRoute(
         id: String,
         carRouteOptions: CarRouteOptions,
-        onFailure: OnFailure<String>
+        onFailure: OnFailure
     ) {
-        onFailureMap[id] = onFailure
+        val excId = "${exceptionId++}"
+
+        onFailureMap[excId] = onFailure
         jsExecutor(
             """
-            window.dgismap.carRoute($id, $carRouteOptions);
+            window.dgismap.carRoute($id, $carRouteOptions, $excId);
         """
         )
     }
@@ -772,8 +774,7 @@ internal class PlatformBridge(
                     val id = payload.substringBefore(" ")
                     val message = payload.substringAfter(" ")
                     onFailureMap[id]?.let {
-                        val result = Result.failure<String>(Exception(message))
-                        it(result)
+                        it(Exception(message))
                     }
                 }
                 else -> {
