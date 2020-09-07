@@ -8,15 +8,16 @@ internal class DirectionsImpl(
     private val controller: WeakReference<PlatformBridge>,
     private val id: String
 ) : Directions {
-    override fun carRoute(carRouteOptions: CarRouteOptions) {
-        controller.get()?.carRoute(id, carRouteOptions)
-    }
 
     override fun carRoute(
         carRouteOptions: CarRouteOptions,
-        onFailure: OnFailure
+        onFailure: OnFailure?
     ) {
-        controller.get()?.carRoute(id, carRouteOptions, onFailure)
+        if (onFailure != null) {
+            controller.get()?.carRoute(id, carRouteOptions, onFailure)
+        } else {
+            controller.get()?.carRoute(id, carRouteOptions)
+        }
     }
 
     override fun clear() {

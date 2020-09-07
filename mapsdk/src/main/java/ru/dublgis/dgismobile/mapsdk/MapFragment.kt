@@ -60,10 +60,9 @@ class MapFragment : Fragment() {
             webViewClient = bridge
             webChromeClient = object : WebChromeClient() {
                 override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
-                    val logMessage =
-                        "${consoleMessage.message()} -- line: ${consoleMessage.lineNumber()} of ${consoleMessage.sourceId()}"
-
                     if (consoleMessage.messageLevel() == ConsoleMessage.MessageLevel.ERROR) {
+                        val logMessage =
+                            "${consoleMessage.message()} -- line: ${consoleMessage.lineNumber()} of ${consoleMessage.sourceId()}"
                         Log.e(
                             TAG, logMessage
                         )

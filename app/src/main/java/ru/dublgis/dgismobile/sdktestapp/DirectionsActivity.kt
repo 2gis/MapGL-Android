@@ -22,9 +22,14 @@ class DirectionsActivity : MapActivity() {
 
         //first directions
         directions1 = map?.createDirections(DirectionsOptions(apiKey))
-        directions1?.carRoute(CarRouteOptions(generate1Coordinates()))
+        directions1?.carRoute(CarRouteOptions(generate2Coordinates()))
 
         directions2 = map?.createDirections(DirectionsOptions(apiKey))
+        directions2?.carRoute(CarRouteOptions(generate2Coordinates())) {
+            it.message?.let { message ->
+                Log.d(ru.dublgis.dgismobile.mapsdk.TAG, message)
+            }
+        }
         directions2?.carRoute(CarRouteOptions(generate2Coordinates())) {
             it.message?.let { message ->
                 Log.d(ru.dublgis.dgismobile.mapsdk.TAG, message)
@@ -51,6 +56,7 @@ class DirectionsActivity : MapActivity() {
     private fun generate2Coordinates(): Collection<LonLat> {
         val coordinates = mutableListOf<LonLat>()
         coordinates.add(LonLat(55.26770929, 25.20069944))
+        //TODO: remove //
         //coordinates.add(LonLat(55.32730, 25.12113))
 
         return coordinates

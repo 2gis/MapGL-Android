@@ -535,7 +535,8 @@ internal class PlatformBridge(
             window.dgismap.clearRoutes($id);
         """
         )
-        onFailureMap.remove(id)
+
+        onFailureMap.remove("$exceptionId")
     }
 
     fun destroyDirections(id: String) {
