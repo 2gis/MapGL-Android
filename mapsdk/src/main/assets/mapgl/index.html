@@ -262,23 +262,17 @@ window.initMapGL = (
 			directionsMap.set(id, directions)
 		},
 
-		carRoute: (id, options) => {
-			const directions = directionsMap.get(id);
-			if (directions) {
-				directions.carRoute(options)
-			}
-		},
-
-		carRoute: (id, options, exceptionId) => {
+		carRoute: (id, options, callbackId) => {
 			const directions = directionsMap.get(id);
 			if (directions) {
 				try {
-					directions.carRoute(options).catch((e) =>
-                      	{emit('error', exceptionId + " " + e.message);}
-                    )
+					directions.carRoute(options).then(
+						(value) => {emit('resultSuccess', callbackId);},
+						(reason) => {emit('resultFailure', callbackId + " " + reason.message);}
+					);
 				}
 				catch (e) {
-					emit('error', exceptionId + " " + e.message);
+					emit('resultFailure', callbackId + " " + e.message);
 				}
 			}
 		},
