@@ -774,7 +774,6 @@ internal class PlatformBridge(
                 }
                 "resultSuccess" -> {
                     val id = payload
-                    onFinishedMap[id]
                     onFinishedMap[id]?.let {
                         it(Result.success(Unit))
                         onFinishedMap.remove(id)
