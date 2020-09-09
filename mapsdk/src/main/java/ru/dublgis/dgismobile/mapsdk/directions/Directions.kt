@@ -10,11 +10,11 @@ interface Directions {
     /**
      * Show car route.
      * @param carRouteOptions - Car route options.
-     * @param onFailure - OnFailure callback.
+     * @param onFinished - Callback with the result: exception if error, else Unit.
      */
     fun carRoute(
         carRouteOptions: CarRouteOptions,
-        onFailure: OnFinished? = null
+        onFinished: OnFinished<Unit>? = null
     )
 
     /**

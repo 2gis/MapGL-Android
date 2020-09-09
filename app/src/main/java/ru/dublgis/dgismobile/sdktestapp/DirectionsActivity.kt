@@ -51,7 +51,7 @@ class DirectionsActivity : MapActivity() {
     private fun generate2Coordinates(): Collection<LonLat> {
         val coordinates = mutableListOf<LonLat>()
         coordinates.add(LonLat(55.26770929, 25.20069944))
-        //coordinates.add(LonLat(55.32730, 25.12113))
+        coordinates.add(LonLat(55.32730, 25.12113))
 
         return coordinates
     }

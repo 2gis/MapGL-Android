@@ -43,7 +43,7 @@ import kotlin.math.abs
 
 typealias JsExecutor = (String) -> Unit
 typealias MapReadyCallback = (Map?) -> Unit
-typealias OnFinished = (Result<String>) -> Unit
+typealias OnFinished<T> = (Result<T>) -> Unit
 
 
 internal class PlatformBridge(
@@ -64,7 +64,7 @@ internal class PlatformBridge(
     private var onPitchChanged: PropertyChangeListener? = null
     private var onZoomChanged: PropertyChangeListener? = null
     private var onRotationChanged: PropertyChangeListener? = null
-    private val onFailureMap = mutableMapOf<String, OnFinished>()
+    private val onFinishedMap = mutableMapOf<String, OnFinished<Unit>>()
 
     private val markers = mutableMapOf<String, MarkerImpl>()
     private val clusterers = mutableMapOf<String, ClustererImpl>()
@@ -467,7 +467,7 @@ internal class PlatformBridge(
     fun carRoute(
         id: String,
         carRouteOptions: CarRouteOptions,
-        onFinished: OnFinished?
+        onFinished: OnFinished<Unit>?
     ) {
         if (onFinished == null) {
             carRoute(id, carRouteOptions)
@@ -476,7 +476,7 @@ internal class PlatformBridge(
 
         val callbackId = "${this.callbackId++}"
 
-        onFailureMap[callbackId] = onFinished
+        onFinishedMap[callbackId] = onFinished
         jsExecutor(
             """
             window.dgismap.carRoute($id, $carRouteOptions, $callbackId);
@@ -540,8 +540,6 @@ internal class PlatformBridge(
             window.dgismap.clearRoutes($id);
         """
         )
-
-        onFailureMap.remove("$callbackId")
     }
 
     fun destroyDirections(id: String) {
@@ -550,8 +548,6 @@ internal class PlatformBridge(
             window.dgismap.destroyDirections($id);
         """
         )
-
-        directionsMap.remove(id)
     }
 
     fun showLabel(id: String) {
@@ -778,14 +774,18 @@ internal class PlatformBridge(
                 }
                 "resultSuccess" -> {
                     val id = payload
-                    onFailureMap.remove(id)
+                    onFinishedMap[id]
+                    onFinishedMap[id]?.let {
+                        it(Result.success(Unit))
+                        onFinishedMap.remove(id)
+                    }
                 }
                 "resultFailure" -> {
                     val id = payload.substringBefore(" ")
                     val message = payload.substringAfter(" ")
-                    onFailureMap[id]?.let {
+                    onFinishedMap[id]?.let {
                         it(Result.failure(Exception(message)))
-                        onFailureMap.remove(id)
+                        onFinishedMap.remove(id)
                     }
                 }
                 else -> {

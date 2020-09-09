@@ -11,9 +11,9 @@ internal class DirectionsImpl(
 
     override fun carRoute(
         carRouteOptions: CarRouteOptions,
-        onFailure: OnFinished?
+        onFinished: OnFinished<Unit>?
     ) {
-        controller.get()?.carRoute(id, carRouteOptions, onFailure)
+        controller.get()?.carRoute(id, carRouteOptions, onFinished)
     }
 
     override fun clear() {
