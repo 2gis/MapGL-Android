@@ -43,6 +43,7 @@ import kotlin.math.abs
 
 typealias JsExecutor = (String) -> Unit
 typealias MapReadyCallback = (Map?) -> Unit
+typealias OnFinished<T> = (Result<T>) -> Unit
 
 
 internal class PlatformBridge(
@@ -63,6 +64,7 @@ internal class PlatformBridge(
     private var onPitchChanged: PropertyChangeListener? = null
     private var onZoomChanged: PropertyChangeListener? = null
     private var onRotationChanged: PropertyChangeListener? = null
+    private val onFinishedMap = mutableMapOf<String, OnFinished<Unit>>()
 
     private val markers = mutableMapOf<String, MarkerImpl>()
     private val clusterers = mutableMapOf<String, ClustererImpl>()
@@ -100,6 +102,7 @@ internal class PlatformBridge(
     private var labelId = 0
     private var markerId = 0
     private var directionsId = 0
+    private var callbackId = 0
 
     override var center: LonLat
         get() = _center
@@ -453,10 +456,30 @@ internal class PlatformBridge(
         userLocationMarker?.destroy()
     }
 
-    fun carRoute(id: String, carRouteOptions: CarRouteOptions) {
+    private fun carRoute(id: String, carRouteOptions: CarRouteOptions) {
         jsExecutor(
             """
             window.dgismap.carRoute($id, $carRouteOptions);
+        """
+        )
+    }
+
+    fun carRoute(
+        id: String,
+        carRouteOptions: CarRouteOptions,
+        onFinished: OnFinished<Unit>?
+    ) {
+        if (onFinished == null) {
+            carRoute(id, carRouteOptions)
+            return
+        }
+
+        val callbackId = "${this.callbackId++}"
+
+        onFinishedMap[callbackId] = onFinished
+        jsExecutor(
+            """
+            window.dgismap.carRoute($id, $carRouteOptions, $callbackId);
         """
         )
     }
@@ -525,8 +548,6 @@ internal class PlatformBridge(
             window.dgismap.destroyDirections($id);
         """
         )
-
-        directionsMap.remove(id)
     }
 
     fun showLabel(id: String) {
@@ -750,6 +771,21 @@ internal class PlatformBridge(
                 }
                 "initialized" -> {
                     readyCallback(this)
+                }
+                "resultSuccess" -> {
+                    val id = payload
+                    onFinishedMap[id]?.let {
+                        it(Result.success(Unit))
+                        onFinishedMap.remove(id)
+                    }
+                }
+                "resultFailure" -> {
+                    val id = payload.substringBefore(" ")
+                    val message = payload.substringAfter(" ")
+                    onFinishedMap[id]?.let {
+                        it(Result.failure(Exception(message)))
+                        onFinishedMap.remove(id)
+                    }
                 }
                 else -> {
                     Log.w(TAG, "unexpected event type")

@@ -7,7 +7,6 @@ import ru.dublgis.dgismobile.mapsdk.Marker
 import ru.dublgis.dgismobile.mapsdk.MarkerOptions
 import ru.dublgis.dgismobile.mapsdk.image.ImageFactory
 import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
-import java.io.File
 import java.lang.ref.WeakReference
 
 

@@ -54,5 +54,3 @@ class MarkerOptions(
         return null
     }
 }
-
-
