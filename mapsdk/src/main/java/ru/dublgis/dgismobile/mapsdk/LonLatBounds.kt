@@ -1,11 +1,11 @@
-package ru.dublgis.dgismobile.mapsdk.interfaces
+package ru.dublgis.dgismobile.mapsdk
 
 import ru.dublgis.dgismobile.mapsdk.LonLat
 
 /**
  * Geographical bounds.
  */
-class LngLatBounds(
+class LonLatBounds(
     /**
      * The north-east point of the bounds [longitude, latitude].
      */

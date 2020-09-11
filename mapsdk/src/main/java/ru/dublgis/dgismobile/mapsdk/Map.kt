@@ -14,7 +14,6 @@ import ru.dublgis.dgismobile.mapsdk.geometries.polygon.Polygon
 import ru.dublgis.dgismobile.mapsdk.geometries.polygon.PolygonOptions
 import ru.dublgis.dgismobile.mapsdk.geometries.polyline.Polyline
 import ru.dublgis.dgismobile.mapsdk.geometries.polyline.PolylineOptions
-import ru.dublgis.dgismobile.mapsdk.interfaces.LngLatBounds
 import ru.dublgis.dgismobile.mapsdk.labels.Label
 import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
 import ru.dublgis.dgismobile.mapsdk.location.UserLocationOptions
@@ -38,7 +37,7 @@ interface Map {
     var minPitch: Double
     var pitch: Double
 
-    val lngLatBounds: LngLatBounds
+    val bounds: LonLatBounds
 
     fun addMarker(options: MarkerOptions): Marker
 

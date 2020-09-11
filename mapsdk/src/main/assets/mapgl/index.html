@@ -90,7 +90,7 @@ window.initMapGL = (
     subscribe('rotationend', (ev) => map.getRotation());
     subscribe('moveend', (ev) => {
         const bounds = map.getBounds();
-        return `${bounds.northEast[0]};${bounds.northEast[1]};${bounds.southWest[0]};${bounds.southWest[1]}`;
+        return `${bounds.northEast[0]};${bounds.northEast[1]} ${bounds.southWest[0]};${bounds.southWest[1]}`;
     });
 
     window.addEventListener('resize', () => map.invalidateSize());

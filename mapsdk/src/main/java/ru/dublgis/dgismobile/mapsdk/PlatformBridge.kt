@@ -31,7 +31,6 @@ import ru.dublgis.dgismobile.mapsdk.geometries.polygon.PolygonOptions
 import ru.dublgis.dgismobile.mapsdk.geometries.polyline.Polyline
 import ru.dublgis.dgismobile.mapsdk.geometries.polyline.PolylineImpl
 import ru.dublgis.dgismobile.mapsdk.geometries.polyline.PolylineOptions
-import ru.dublgis.dgismobile.mapsdk.interfaces.LngLatBounds
 import ru.dublgis.dgismobile.mapsdk.labels.Label
 import ru.dublgis.dgismobile.mapsdk.labels.LabelImpl
 import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
@@ -92,7 +91,7 @@ internal class PlatformBridge(
 
     private var _rotation: Double = 0.0
 
-    private lateinit var _lngLatBounds: LngLatBounds
+    private lateinit var _bounds: LonLatBounds
 
     private var _controls: Boolean = false
     private val interactiveCopyright: Boolean = false
@@ -185,8 +184,8 @@ internal class PlatformBridge(
             """
             )
         }
-    override val lngLatBounds: LngLatBounds
-        get() = _lngLatBounds
+    override val bounds: LonLatBounds
+        get() = _bounds
 
     override var rotation: Double
         get() = _rotation
@@ -795,7 +794,7 @@ internal class PlatformBridge(
                 "moveend", "initBounds" -> {
                     val northEast = parseLonLat(payload.substringBefore(" "))
                     val southWest = parseLonLat(payload.substringAfter(" "))
-                    _lngLatBounds = LngLatBounds(northEast, southWest)
+                    _bounds = LonLatBounds(northEast, southWest)
                 }
                 else -> {
                     Log.w(TAG, "unexpected event type")
