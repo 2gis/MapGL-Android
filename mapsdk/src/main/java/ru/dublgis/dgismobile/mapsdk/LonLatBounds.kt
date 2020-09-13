@@ -5,7 +5,7 @@ import ru.dublgis.dgismobile.mapsdk.LonLat
 /**
  * Geographical bounds.
  */
-class LonLatBounds(
+data class LonLatBounds(
     /**
      * The north-east point of the bounds [longitude, latitude].
      */

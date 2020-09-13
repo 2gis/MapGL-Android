@@ -791,7 +791,7 @@ internal class PlatformBridge(
                         onFinishedMap.remove(id)
                     }
                 }
-                "moveend", "initBounds" -> {
+                "moveend", "initBounds", "resize" -> {
                     val northEast = parseLonLat(payload.substringBefore(" "))
                     val southWest = parseLonLat(payload.substringAfter(" "))
                     _bounds = LonLatBounds(northEast, southWest)
