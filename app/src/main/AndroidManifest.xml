@@ -21,34 +21,34 @@
         </activity>
         <activity
             android:name=".MarkersActivity"
-            android:configChanges="orientation|keyboardHidden" />
+            android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
             android:name=".ClusterersActivity"
-            android:configChanges="orientation|keyboardHidden" />
+            android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
             android:name=".GeometriesActivity"
-            android:configChanges="orientation|keyboardHidden" />
+            android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
             android:name=".PolylineActivity"
-            android:configChanges="orientation|keyboardHidden" />
+            android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
             android:name=".PolygonActivity"
-            android:configChanges="orientation|keyboardHidden" />
+            android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
             android:name=".CircleActivity"
-            android:configChanges="orientation|keyboardHidden" />
+            android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
             android:name=".CircleMarkerActivity"
-            android:configChanges="orientation|keyboardHidden" />
+            android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
             android:name=".LabelsActivity"
-            android:configChanges="orientation|keyboardHidden" />
+            android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
             android:name=".ObjectSelectionActivity"
-            android:configChanges="orientation|keyboardHidden" />
+            android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
             android:name=".DirectionsActivity"
-            android:configChanges="orientation|keyboardHidden" />
+            android:configChanges="orientation|screenSize|keyboardHidden" />
 
     </application>
 

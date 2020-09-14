@@ -91,6 +91,8 @@ internal class PlatformBridge(
 
     private var _rotation: Double = 0.0
 
+    private lateinit var _bounds: LonLatBounds
+
     private var _controls: Boolean = false
     private val interactiveCopyright: Boolean = false
 
@@ -182,6 +184,8 @@ internal class PlatformBridge(
             """
             )
         }
+    override val bounds: LonLatBounds
+        get() = _bounds
 
     override var rotation: Double
         get() = _rotation
@@ -786,6 +790,11 @@ internal class PlatformBridge(
                         it(Result.failure(Exception(message)))
                         onFinishedMap.remove(id)
                     }
+                }
+                "moveend", "initBounds", "resize" -> {
+                    val northEast = parseLonLat(payload.substringBefore(" "))
+                    val southWest = parseLonLat(payload.substringAfter(" "))
+                    _bounds = LonLatBounds(northEast, southWest)
                 }
                 else -> {
                     Log.w(TAG, "unexpected event type")

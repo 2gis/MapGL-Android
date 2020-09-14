@@ -37,6 +37,8 @@ interface Map {
     var minPitch: Double
     var pitch: Double
 
+    val bounds: LonLatBounds
+
     fun addMarker(options: MarkerOptions): Marker
 
     fun removeMarker(marker: Marker)

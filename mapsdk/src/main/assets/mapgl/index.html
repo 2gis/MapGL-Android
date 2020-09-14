@@ -81,13 +81,21 @@ window.initMapGL = (
     }
 
     subscribe('click', (ev) => `${ev.lngLat[0]};${ev.lngLat[1]};${ev.target.id}`);
-	subscribe('centerend', (ev) => {
-		const center = map.getCenter();
-		return `${center[0]};${center[1]}`;
-	});
+    subscribe('centerend', (ev) => {
+        const center = map.getCenter();
+        return `${center[0]};${center[1]}`;
+    });
     subscribe('zoomend', (ev) => map.getZoom());
     subscribe('pitchend', (ev) => map.getPitch());
     subscribe('rotationend', (ev) => map.getRotation());
+    subscribe('moveend', (ev) => {
+        const bounds = map.getBounds();
+        return `${bounds.northEast[0]};${bounds.northEast[1]} ${bounds.southWest[0]};${bounds.southWest[1]}`;
+    });
+    subscribe('resize', (ev) => {
+        const bounds = map.getBounds();
+        return `${bounds.northEast[0]};${bounds.northEast[1]} ${bounds.southWest[0]};${bounds.southWest[1]}`;
+    });
 
     window.addEventListener('resize', () => map.invalidateSize());
 
@@ -293,6 +301,8 @@ window.initMapGL = (
 		}
     };
 
+    const bounds = map.getBounds();
+    emit('initBounds', `${bounds.northEast[0]};${bounds.northEast[1]} ${bounds.southWest[0]};${bounds.southWest[1]}`);
     emit('initialized');
 };
 
