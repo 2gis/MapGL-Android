@@ -14,12 +14,12 @@ pipeline {
             steps {
 
                 script {
-                    def localProperties = '''\
+                    def localProperties = """\
                         sdk.dir=/opt/android-sdk/
 
-                        apiKey=CI_INVALID_API_KEY
-                        directionsApiKey=CI_DIRECTIONS_INVALID_KEY
-                    '''.stripIndent()
+                        apiKey=${params.API_KEY}
+                        directionsApiKey=${params.DIRECTIONS_API_KEY}
+                    """.stripIndent()
 
                     writeFile file: "local.properties", text: localProperties
                 }
@@ -50,13 +50,15 @@ pipeline {
             steps {
                 withCredentials([
                     usernamePassword(
-                        credentialsId: 'buildserver-v4core', 
-                        usernameVariable: 'ARTIFACTORY_USERNAME', 
+                        credentialsId: 'buildserver-v4core',
+                        usernameVariable: 'ARTIFACTORY_USERNAME',
                         passwordVariable: 'ARTIFACTORY_PASSWORD')
-                ]) { 
+                ]) {
 
                     sh './gradlew mapsdk:artifactoryPublish --info'
                 }
+
+                archiveArtifacts(artifacts: 'build/app/outputs/apk/debug/app-debug.apk')
             }
         }
 

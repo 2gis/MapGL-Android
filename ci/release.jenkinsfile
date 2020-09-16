@@ -27,12 +27,12 @@ pipeline {
                 checkParams()
 
                 script {
-                    def localProperties = '''\
+                    def localProperties = """\
                         sdk.dir=/opt/android-sdk/
 
-                        apiKey=CI_INVALID_API_KEY
-                        directionsApiKey=CI_DIRECTIONS_INVALID_KEY
-                    '''.stripIndent()
+                        apiKey=${params.API_KEY}
+                        directionsApiKey=${params.DIRECTIONS_API_KEY}
+                    """.stripIndent()
 
                     writeFile file: "local.properties", text: localProperties
                 }
@@ -48,6 +48,7 @@ pipeline {
         stage("deploy") {
             steps {
                 sh './gradlew mapsdk:bintrayUpload --info'
+                archiveArtifacts(artifacts: 'build/app/outputs/apk/release/app-release-unsigned.apk')
             }
         }
 
