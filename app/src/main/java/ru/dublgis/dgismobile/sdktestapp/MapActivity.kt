@@ -2,11 +2,15 @@ package ru.dublgis.dgismobile.sdktestapp
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import ru.dublgis.dgismobile.mapsdk.LonLat
@@ -54,6 +58,12 @@ abstract class MapActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.information_menu, menu)
+        return true
+    }
+
     private fun onDGisMapReady(controller: Map?) {
         map = controller
         map?.enableUserLocation(UserLocationOptions(isVisible = true))
@@ -91,6 +101,27 @@ abstract class MapActivity : AppCompatActivity() {
         // handle arrow click here
         if (item.itemId === android.R.id.home) {
             finish() // close this activity and return to preview activity (if there is any)
+        } else if (item.itemId === R.id.information) {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Getting started")
+            builder.setMessage("Like maps and examples?\n" + "Learn how to add them to your app!")
+            builder.setCancelable(false)
+            builder.setPositiveButton("Start Learning ") { dialog, _ ->
+                val openURL = Intent(android.content.Intent.ACTION_VIEW)
+                openURL.data = Uri.parse("https://docs.2gis.com/en/android/webgl/maps/overview")
+                startActivity(openURL)
+                dialog.dismiss()
+            }
+
+            builder.setNegativeButton("Not now") { dialog, _ ->
+                dialog.dismiss()
+            }
+
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK)
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK)
         }
         return super.onOptionsItemSelected(item)
     }
