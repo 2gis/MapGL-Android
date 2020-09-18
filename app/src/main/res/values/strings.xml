@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">SDK TestApp</string>
-    <string name="title">2GIS WebGL map features\nand examples</string>
+    <string name="title">WebGL map features\nand examples</string>
+    <string name="information_symbol">Info</string>
+    <string name="info_dialog_title">Getting started</string>
+    <string name="info_dialog_message">Like maps and examples?\n Learn how to add them to your app!</string>
+    <string name="info_dialog_positive_text">Start Learning</string>
+    <string name="info_dialog_negative_text">Not now</string>
+    <string name="info_url">https://docs.2gis.com/en/android/webgl/maps/overview</string>
 </resources>

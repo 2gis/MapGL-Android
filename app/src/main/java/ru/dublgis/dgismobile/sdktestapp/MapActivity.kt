@@ -2,11 +2,15 @@ package ru.dublgis.dgismobile.sdktestapp
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import ru.dublgis.dgismobile.mapsdk.LonLat
@@ -54,6 +58,11 @@ abstract class MapActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.information_menu, menu)
+        return true
+    }
+
     private fun onDGisMapReady(controller: Map?) {
         map = controller
         map?.enableUserLocation(UserLocationOptions(isVisible = true))
@@ -88,11 +97,36 @@ abstract class MapActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // handle arrow click here
         if (item.itemId === android.R.id.home) {
-            finish() // close this activity and return to preview activity (if there is any)
+            finish()
+        } else if (item.itemId === R.id.information) {
+            showInfoDialog()
         }
+
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun showInfoDialog(){
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(getString(R.string.info_dialog_title))
+        builder.setMessage(getString(R.string.info_dialog_message))
+        builder.setCancelable(false)
+        builder.setPositiveButton(getString(R.string.info_dialog_positive_text)) { dialog, _ ->
+            val openURL = Intent(android.content.Intent.ACTION_VIEW)
+            openURL.data = Uri.parse(getString(R.string.info_url))
+            startActivity(openURL)
+            dialog.dismiss()
+        }
+
+        builder.setNegativeButton(getString(R.string.info_dialog_negative_text)) { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK)
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK)
     }
 
     companion object {
