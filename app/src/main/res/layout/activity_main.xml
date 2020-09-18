@@ -39,6 +39,7 @@
             app:layout_constraintTop_toBottomOf="@+id/ic_2_gis_logo" />
 
         <ru.dublgis.dgismobile.sdktestapp.menu.ButtonsLayout
+            android:layout_marginTop="24dp"
             android:id="@+id/buttonsList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
