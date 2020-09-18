@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">SDK TestApp</string>
     <string name="title">WebGL map features\nand examples</string>
-    <string name="information_symbol">🛈</string>
+    <string name="information_symbol">Info</string>
 </resources>
