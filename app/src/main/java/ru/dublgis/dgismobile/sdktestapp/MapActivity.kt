@@ -97,32 +97,36 @@ abstract class MapActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // handle arrow click here
         if (item.itemId === android.R.id.home) {
-            finish() // close this activity and return to preview activity (if there is any)
+            finish()
         } else if (item.itemId === R.id.information) {
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle("Getting started")
-            builder.setMessage("Like maps and examples?\n" + "Learn how to add them to your app!")
-            builder.setCancelable(false)
-            builder.setPositiveButton("Start Learning ") { dialog, _ ->
-                val openURL = Intent(android.content.Intent.ACTION_VIEW)
-                openURL.data = Uri.parse("https://docs.2gis.com/en/android/webgl/maps/overview")
-                startActivity(openURL)
-                dialog.dismiss()
-            }
-
-            builder.setNegativeButton("Not now") { dialog, _ ->
-                dialog.dismiss()
-            }
-
-            val dialog: AlertDialog = builder.create()
-            dialog.show()
-
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK)
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK)
+            showInfoDialog()
         }
+
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun showInfoDialog(){
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(getString(R.string.info_dialog_title))
+        builder.setMessage(getString(R.string.info_dialog_message))
+        builder.setCancelable(false)
+        builder.setPositiveButton(getString(R.string.info_dialog_positive_text)) { dialog, _ ->
+            val openURL = Intent(android.content.Intent.ACTION_VIEW)
+            openURL.data = Uri.parse(getString(R.string.info_url))
+            startActivity(openURL)
+            dialog.dismiss()
+        }
+
+        builder.setNegativeButton(getString(R.string.info_dialog_negative_text)) { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK)
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK)
     }
 
     companion object {
