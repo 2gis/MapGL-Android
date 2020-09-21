@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-    x="0px" y="0px" width="36px" height="36px" viewBox="0 0 36 36" enable-background="new 0 0 36 36"
-    xml:space="preserve">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="36px" height="36px"
+    viewBox="0 0 36 36" enable-background="new 0 0 36 36" xml:space="preserve">
 <filter filterUnits="objectBoundingBox" height="185.0%" id="filter-3" width="185.0%" x="-42.5%"
     y="-32.5%">
 	<feMorphology in="SourceAlpha" operator="dilate" radius="3"

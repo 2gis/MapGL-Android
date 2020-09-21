@@ -1,6 +1,7 @@
 package ru.dublgis.dgismobile.mapsdk.clustering
 
 typealias ClustererClickCallback = () -> Unit
+typealias ClustererDblClickCallback = () -> Unit
 
 /**
  * A class that provides markers clustering functionality.
@@ -23,4 +24,9 @@ interface Clusterer {
      * On click event.
      */
     fun setOnClickListener(listener: ClustererClickCallback?)
+
+    /**
+     * On double click event.
+     */
+    fun setOnDblClickListener(listener: ClustererDblClickCallback?)
 }

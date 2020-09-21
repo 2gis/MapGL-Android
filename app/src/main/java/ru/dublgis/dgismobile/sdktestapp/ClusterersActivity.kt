@@ -21,9 +21,17 @@ class ClusterersActivity : MapActivity() {
         clusterer?.setOnClickListener {
             ctx.get()?.let { activity ->
 
-                clusterer.destroy()
+                val msg = "Clicked to cluster"
 
-                val msg = "remove cluster"
+                Toast.makeText(activity, msg, Toast.LENGTH_LONG)
+                    .show()
+            }
+        }
+
+        clusterer?.setOnDblClickListener {
+            ctx.get()?.let { activity ->
+
+                val msg = "Double clicked to cluster"
 
                 Toast.makeText(activity, msg, Toast.LENGTH_LONG)
                     .show()

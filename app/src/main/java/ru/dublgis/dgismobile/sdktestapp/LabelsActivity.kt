@@ -1,47 +1,58 @@
 package ru.dublgis.dgismobile.sdktestapp
 
 import android.graphics.Color
+import ru.dublgis.dgismobile.mapsdk.LonLat
 import ru.dublgis.dgismobile.mapsdk.image.ImageFactory
-import ru.dublgis.dgismobile.mapsdk.labels.Label
 import ru.dublgis.dgismobile.mapsdk.labels.LabelImage
 import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
 
 class LabelsActivity : MapActivity() {
-
-    private var label: Label? = null
 
     override fun onDGisMapReady() {
         showLabel()
     }
 
     private fun showLabel() {
+        map?.createLabel(
+            LabelOptions(
+                coordinates = LonLat(55.32878, 25.23584),
+                text = "Default"
+            )
+        )
+
+        map?.createLabel(
+            LabelOptions(
+                coordinates = LonLat(55.32878, 25.24584),
+                text = "Right",
+                relativeAnchor = 0.0 to 0.5
+            )
+        )
+
+        map?.createLabel(
+            LabelOptions(
+                coordinates = LonLat(55.30878, 25.22584),
+                text = "Left",
+                offset = -10.0 to 10.0,
+                relativeAnchor = 1.0 to 1.0
+            )
+        )
+
+
 
         val labelImage = LabelImage(
-            image = ImageFactory(this).fromAsset("tooltip-big.svg"),
-            size = 500 to 250,
-            stretchX = listOf(50 to 200, 300 to 450),
-            stretchY = listOf(50 to 150),
-            padding = listOf(50, 50, 100, 50)
+            image = ImageFactory(this).fromAsset("tooltip.svg"),
+            size = 100 to 50,
+            stretchX = listOf(10 to 30, 50 to 90),
+            stretchY = listOf(10 to 30),
+            padding = listOf(10, 10, 20, 10)
         )
-        label =
-            map?.createLabel(
-                LabelOptions(
-                    coordinates = map?.center!!,
-                    text = "This is label",
-                    color = Color.BLUE,
-                    fontSize = 24f,
-                    maxZoom = 14f,
-                    minZoom = 10f,
-                    anchor = 15.0 to 48.0,
-                    image = labelImage
-                )
-            )
 
-        map?.setOnClickListener {
-            if (label?.isHidden!!)
-                label?.show()
-            else
-                label?.hide()
-        }
+        map?.createLabel(
+            LabelOptions(
+                coordinates = LonLat(55.3252833, 25.2085033),
+                text = "Label with image",
+                image = labelImage
+            )
+        )
     }
 }
