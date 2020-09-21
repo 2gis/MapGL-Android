@@ -78,14 +78,12 @@ pipeline {
                     sh(
                         label: 'Запуск регенерации документации',
                         script:"""
-                            script:"""
-                                curl --location \
-                                -X POST \
-                                -F token=$GITLAB_PROJECT_TOKEN \
-                                -F ref=master \
-                                -F "variables[Android_SDK_CI]=true" \
-                                https://${env.GITLAB_URL}/api/v4/projects/${env.GITLAB_PROJECT_ID}/trigger/pipeline
-                            """
+                            curl --location \
+                            -X POST \
+                            -F token=$GITLAB_PROJECT_TOKEN \
+                            -F ref=master \
+                            -F "variables[Android_SDK_CI]=true" \
+                            https://${env.GITLAB_URL}/api/v4/projects/${env.GITLAB_PROJECT_ID}/trigger/pipeline
                         """
                     )
                 }
