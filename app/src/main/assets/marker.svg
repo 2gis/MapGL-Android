@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+    x="0px" y="0px" width="36px" height="36px" viewBox="0 0 36 36" enable-background="new 0 0 36 36"
+    xml:space="preserve">
+<filter filterUnits="objectBoundingBox" height="185.0%" id="filter-3" width="185.0%" x="-42.5%"
+    y="-32.5%">
+	<feMorphology in="SourceAlpha" operator="dilate" radius="3"
+        result="shadowSpreadOuter1"></feMorphology>
+    <feOffset dx="0" dy="2" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+    <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1"
+        stdDeviation="1.5"></feGaussianBlur>
+    <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out"
+        result="shadowBlurOuter1"></feComposite>
+    <feColorMatrix in="shadowBlurOuter1" type="matrix"
+        values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.18 0"></feColorMatrix>
+</filter>
+    <g filter="url(#filter-3)">
+	<circle cx="18" cy="17" r="10" />
+</g>
+    <linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="-0.4565" y1="37.9565"
+        x2="-0.4565" y2="38.9565" gradientTransform="matrix(23 0 0 -23 28.5 901.5)">
+	<stop offset="0" style="stop-color:#027AF2" />
+        <stop offset="0.2454" style="stop-color:#087CF1" />
+        <stop offset="1" style="stop-color:#3198EC" />
+</linearGradient>
+    <circle fill="#FFFFFF" stroke="url(#SVGID_1_)" stroke-width="3" cx="18" cy="17" r="11.5" />
+    <polygon id="Rectangle" fill="#087DF1"
+        points="13,12 15.5,15.5 18,12 20.5,15.5 23,12 23,21 13,21 " />
+</svg>

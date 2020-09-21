@@ -4,6 +4,7 @@ import ru.dublgis.dgismobile.mapsdk.LonLat
 import ru.dublgis.dgismobile.mapsdk.utils.ColorUtils.jsColorFormat
 
 typealias LabelAnchor = Pair<Double, Double>
+typealias LabelNumber = Pair<Double, Double>
 
 /**
  * Label initialization options.
@@ -67,7 +68,20 @@ class LabelOptions(
     /**
      * Image background for the label.
      */
-    val image: LabelImage? = null
+    val image: LabelImage? = null,
+    /**
+     * The offset distance of text box from its relativeAnchor.
+     * Positive values indicate right and down, while negative values indicate left and up.
+     */
+    val offset: LabelNumber? = null,
+    /**
+     * The relative, from 0 to 1 in each dimension, coordinates of the text box "tip".
+     * relative to its top left corner, for example: [0, 0] value is the top left corner,
+     * [0.5, 0.5] — center point, and [1, 1] is the bottom right corner of the box.
+     * The label will be placed so that this point is at geographical coordinates
+     * respects the absolute offset.
+     */
+    val relativeAnchor: LabelNumber? = null
 ) {
 
     override fun toString(): String {
@@ -87,6 +101,8 @@ class LabelOptions(
         if (minZoom != null) builder.append("minZoom: $minZoom,")
         if (zIndex != null) builder.append("zIndex: $zIndex,")
         if (image != null) builder.append("image: $image,")
+        if (offset != null) builder.append(" offset: [${offset.first}, ${offset.second}],")
+        if (relativeAnchor != null) builder.append(" relativeAnchor: [${relativeAnchor.first}, ${relativeAnchor.second}],")
 
         builder.append("}")
 
