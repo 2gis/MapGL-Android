@@ -6,9 +6,11 @@ import ru.dublgis.dgismobile.mapsdk.MapPointerEvent
 class ObjectSelectionActivity : MapActivity() {
 
     override fun onDGisMapReady() {
-        zoomMap(18.0)
-        centerMap(LonLat(55.308, 25.237))
-        map?.setOnClickListener(this::onMapClicked)
+        map?.apply {
+            center = LonLat(55.308, 25.237)
+            zoom = 18.0
+            setOnClickListener(ObjectSelectionActivity@ ::onMapClicked)
+        }
     }
 
     private fun onMapClicked(pointer: MapPointerEvent) {

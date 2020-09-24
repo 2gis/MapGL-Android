@@ -1,6 +1,5 @@
 package ru.dublgis.dgismobile.sdktestapp
 
-import android.graphics.Color
 import ru.dublgis.dgismobile.mapsdk.LonLat
 import ru.dublgis.dgismobile.mapsdk.image.ImageFactory
 import ru.dublgis.dgismobile.mapsdk.labels.LabelImage
@@ -8,14 +7,21 @@ import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
 
 class LabelsActivity : MapActivity() {
 
+    val centerLonLat = LonLat(55.32878, 25.23584)
+
     override fun onDGisMapReady() {
+        map?.apply {
+            center = centerLonLat
+            zoom = 13.0
+        }
+
         showLabel()
     }
 
     private fun showLabel() {
         map?.createLabel(
             LabelOptions(
-                coordinates = LonLat(55.32878, 25.23584),
+                coordinates = centerLonLat,
                 text = "Default"
             )
         )
@@ -36,7 +42,6 @@ class LabelsActivity : MapActivity() {
                 relativeAnchor = 1.0 to 1.0
             )
         )
-
 
 
         val labelImage = LabelImage(

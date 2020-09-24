@@ -90,18 +90,6 @@ abstract class MapActivity : AppCompatActivity() {
         }
     }
 
-    protected fun zoomMap(zoom: Double) {
-        map?.run {
-            this.zoom = zoom
-        }
-    }
-
-    protected fun centerMap(centerLocation: LonLat) {
-        map?.run {
-            this.center = centerLocation
-        }
-    }
-
     private fun zoomOutMap(@Suppress("UNUSED_PARAMETER") view: View?) {
         map?.run {
             zoom = zoom.dec()
