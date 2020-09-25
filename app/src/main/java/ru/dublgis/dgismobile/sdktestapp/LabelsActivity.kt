@@ -1,27 +1,28 @@
 package ru.dublgis.dgismobile.sdktestapp
 
 import ru.dublgis.dgismobile.mapsdk.LonLat
+import ru.dublgis.dgismobile.mapsdk.MarkerOptions
 import ru.dublgis.dgismobile.mapsdk.image.ImageFactory
 import ru.dublgis.dgismobile.mapsdk.labels.LabelImage
 import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
 
 class LabelsActivity : MapActivity() {
 
-    val centerLonLat = LonLat(55.32878, 25.23584)
 
     override fun onDGisMapReady() {
         map?.apply {
-            center = centerLonLat
+            center = LonLat(55.32078, 25.22784)
             zoom = 13.0
         }
 
-        showLabel()
+        showLabels()
+        showPlacementAnchors()
     }
 
-    private fun showLabel() {
+    private fun showLabels() {
         map?.createLabel(
             LabelOptions(
-                coordinates = centerLonLat,
+                coordinates = LonLat(55.32878, 25.23584),
                 text = "Default"
             )
         )
@@ -47,7 +48,7 @@ class LabelsActivity : MapActivity() {
         val labelImage = LabelImage(
             image = ImageFactory(this).fromAsset("tooltip.svg"),
             size = 100 to 50,
-            stretchX = listOf(10 to 30, 50 to 90),
+            stretchX = listOf(10 to 40, 60 to 90),
             stretchY = listOf(10 to 30),
             padding = listOf(10, 10, 20, 10)
         )
@@ -59,5 +60,25 @@ class LabelsActivity : MapActivity() {
                 image = labelImage
             )
         )
+    }
+
+    private fun showPlacementAnchors() {
+        // The markers below are only for visualizing the geo-coordinates of the labels.
+        // You don't need them in common.
+
+        map?.apply {
+            addMarker(MarkerOptions(
+                position = LonLat(55.32878, 25.23584),
+                icon = ImageFactory(applicationContext).fromAsset("anchor.svg")
+            ))
+            addMarker(MarkerOptions(
+                position = LonLat(55.3287, 25.24584),
+                icon = ImageFactory(applicationContext).fromAsset("anchor.svg")
+            ))
+            addMarker(MarkerOptions(
+                position = LonLat(55.30878, 25.22584),
+                icon = ImageFactory(applicationContext).fromAsset("anchor.svg")
+            ))
+        }
     }
 }

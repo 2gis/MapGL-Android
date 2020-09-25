@@ -28,7 +28,7 @@ class MarkersActivity : MapActivity() {
             MarkerOptions(
                 LonLat(55.2803513, 25.1593204),
                 label = LabelOptions(
-                    text = "Label with background",
+                    text = "The marker's label",
                     offset = 0.0 to 25.0,
                     relativeAnchor = 0.5 to 0.0,
                     image = LabelImage(
