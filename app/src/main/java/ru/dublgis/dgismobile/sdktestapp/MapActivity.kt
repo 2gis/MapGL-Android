@@ -106,7 +106,7 @@ abstract class MapActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun showInfoDialog(){
+    private fun showInfoDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.info_dialog_title))
         builder.setMessage(getString(R.string.info_dialog_message))

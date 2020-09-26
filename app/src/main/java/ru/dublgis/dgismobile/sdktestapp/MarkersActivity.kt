@@ -6,6 +6,7 @@ import ru.dublgis.dgismobile.mapsdk.MapPointerEvent
 import ru.dublgis.dgismobile.mapsdk.Marker
 import ru.dublgis.dgismobile.mapsdk.MarkerOptions
 import ru.dublgis.dgismobile.mapsdk.image.ImageFactory
+import ru.dublgis.dgismobile.mapsdk.labels.LabelImage
 import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
 import java.lang.ref.WeakReference
 
@@ -18,6 +19,37 @@ class MarkersActivity : MapActivity() {
         map?.setOnClickListener(this::onMapClicked)
         showMarkerLabel()
         showMarker()
+        showMarkerWithCustomIcon()
+        showMarkerWithLabelBackground()
+    }
+
+    private fun showMarkerWithLabelBackground() {
+        map?.addMarker(
+            MarkerOptions(
+                LonLat(55.2803513, 25.1593204),
+                label = LabelOptions(
+                    text = "The marker's label",
+                    offset = 0.0 to 25.0,
+                    relativeAnchor = 0.5 to 0.0,
+                    image = LabelImage(
+                        image = ImageFactory(this).fromAsset("tooltip-top.svg"),
+                        size = 100 to 50,
+                        stretchX = listOf(10 to 40, 60 to 90),
+                        stretchY = listOf(20 to 40),
+                        padding = listOf(20, 10, 10, 10)
+                    )
+                )
+            )
+        )
+    }
+
+    private fun showMarkerWithCustomIcon() {
+        map?.addMarker(
+            MarkerOptions(
+                LonLat(55.2762656, 25.2228653),
+                icon = ImageFactory(this).fromAsset("marker.svg")
+            )
+        )
     }
 
     private fun showMarker() {
