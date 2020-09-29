@@ -1,7 +1,5 @@
 package ru.dublgis.dgismobile.mapsdk
 
-import ru.dublgis.dgismobile.mapsdk.LonLat
-
 /**
  * Geographical bounds.
  */
