@@ -58,7 +58,6 @@ class MapFragment : Fragment() {
 
         webView = view.findViewById<WebView>(R.id.webview)?.apply {
             settings.javaScriptEnabled = true
-            settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
             webViewClient = bridge
             webChromeClient = object : WebChromeClient() {
                 override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
