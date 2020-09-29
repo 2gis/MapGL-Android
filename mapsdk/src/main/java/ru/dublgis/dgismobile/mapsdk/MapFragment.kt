@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.ConsoleMessage
 import android.webkit.WebChromeClient
+import android.webkit.WebSettings
 import android.webkit.WebView
 import androidx.fragment.app.Fragment
 import ru.dublgis.dgismobile.mapsdk.location.LocationProviderFactory
