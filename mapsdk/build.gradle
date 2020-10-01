@@ -95,7 +95,7 @@ ext {
     siteUrl = 'https://docs.2gis.com/en/android/webgl/maps/overview'
     gitUrl = 'https://github.com/2gis/MapGL-Android.git'
 
-    libraryVersion = '1.4.0'
+    libraryVersion = '1.5.0'
 
     developerId = '2gis'
     developerName = '2gis'
