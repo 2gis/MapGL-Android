@@ -8,6 +8,7 @@ interface Polyline {
      * Destroys the polyline.
      */
     fun destroy()
+
     /**
      * On click event.
      */

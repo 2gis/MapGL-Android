@@ -93,6 +93,9 @@ internal class PlatformBridge(
 
     private lateinit var _bounds: LonLatBounds
 
+    private var _disableRotationByUserInteraction: Boolean = false
+    private var _disablePitchByUserInteraction: Boolean = false
+
     private var _controls: Boolean = false
     private val interactiveCopyright: Boolean = false
 
@@ -197,6 +200,12 @@ internal class PlatformBridge(
             """
             )
         }
+
+    override val disableRotationByUserInteraction: Boolean
+        get() = _disableRotationByUserInteraction
+
+    override val disablePitchByUserInteraction: Boolean
+        get() = _disablePitchByUserInteraction
 
     override fun setOnClickListener(listener: PointerChangeListener?) {
         onClickCallback = listener
@@ -653,7 +662,9 @@ internal class PlatformBridge(
                 "$_apiKey",
                 "$packageName",
                 $_controls,
-                $interactiveCopyright
+                $interactiveCopyright,
+                $_disablePitchByUserInteraction,
+                $_disableRotationByUserInteraction
             );
         """
         )
@@ -665,7 +676,10 @@ internal class PlatformBridge(
         maxZoom: Double, minZoom: Double, zoom: Double,
         maxPitch: Double, minPitch: Double, pitch: Double,
         rotation: Double,
-        controls: Boolean
+        controls: Boolean,
+        disablePitchByUserInteraction: Boolean,
+        disableRotationByUserInteraction: Boolean
+
     ) {
         _center = center
         _maxZoom = maxZoom
@@ -677,6 +691,8 @@ internal class PlatformBridge(
         _rotation = rotation
         _apiKey = apiKey
         _controls = controls
+        _disablePitchByUserInteraction = disablePitchByUserInteraction
+        _disableRotationByUserInteraction = disableRotationByUserInteraction
     }
 
 

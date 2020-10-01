@@ -11,6 +11,7 @@ interface Circle {
      * Destroys the circle.
      */
     fun destroy()
+
     /**
      * On click event.
      */

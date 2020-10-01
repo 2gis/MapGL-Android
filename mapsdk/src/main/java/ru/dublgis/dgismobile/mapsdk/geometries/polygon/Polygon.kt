@@ -8,6 +8,7 @@ interface Polygon {
      * Destroys the polygon.
      */
     fun destroy()
+
     /**
      * On click event.
      */
