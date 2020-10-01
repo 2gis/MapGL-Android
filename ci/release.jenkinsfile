@@ -64,7 +64,7 @@ pipeline {
                                 docker run --rm \
                                     -v \$(pwd)/build/mapsdk/dokka:/opt/docsJson \
                                     docker-hub.2gis.ru/2gis-nativesdk/dokka-converter:prod \
-                                    ./converter.py -b /$it/android/webgl/maps/reference/unstable/
+                                    ./converter.py -b /$it/android/webgl/maps/reference/
                             """
                         )
                     })
