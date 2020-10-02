@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.ConsoleMessage
 import android.webkit.WebChromeClient
-import android.webkit.WebSettings
 import android.webkit.WebView
 import androidx.fragment.app.Fragment
 import ru.dublgis.dgismobile.mapsdk.location.LocationProviderFactory
@@ -103,7 +102,9 @@ class MapFragment : Fragment() {
         minPitch: Double = 0.0,
         pitch: Double = 0.0,
         rotation: Double = 0.0,
-        controls: Boolean = false
+        controls: Boolean = false,
+        disablePitchByUserInteraction: Boolean = false,
+        disableRotationByUserInteraction: Boolean = false
 
     ) = bridge.setup(
         apiKey,
@@ -111,7 +112,9 @@ class MapFragment : Fragment() {
         maxZoom, minZoom, zoom,
         maxPitch, minPitch, pitch,
         rotation,
-        controls
+        controls,
+        disablePitchByUserInteraction,
+        disableRotationByUserInteraction
     )
 
     // ------------------------------------------------------

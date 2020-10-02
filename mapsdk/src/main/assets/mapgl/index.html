@@ -36,7 +36,9 @@ window.initMapGL = (
         rotation,
         apiKey, packageId,
         controls,
-        interactiveCopyright) => {
+        interactiveCopyright,
+        disablePitchByUserInteraction,
+        disableRotationByUserInteraction) => {
 
     const markers = new Map();
     const clusterers = new Map();
@@ -59,7 +61,9 @@ window.initMapGL = (
         appId: packageId,
         key: apiKey,
         zoomControl: controls,
-        interactiveCopyright : interactiveCopyright
+        interactiveCopyright: interactiveCopyright,
+        disablePitchByUserInteraction: disablePitchByUserInteraction,
+        disableRotationByUserInteraction: disableRotationByUserInteraction
     });
 
     const emit = (name, args) => {

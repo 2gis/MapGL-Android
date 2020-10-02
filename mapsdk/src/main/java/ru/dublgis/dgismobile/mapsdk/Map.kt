@@ -39,6 +39,9 @@ interface Map {
 
     val bounds: LonLatBounds
 
+    val disableRotationByUserInteraction: Boolean
+    val disablePitchByUserInteraction: Boolean
+
     fun addMarker(options: MarkerOptions): Marker
 
     fun removeMarker(marker: Marker)
