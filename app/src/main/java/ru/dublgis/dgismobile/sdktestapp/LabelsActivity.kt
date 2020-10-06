@@ -11,7 +11,7 @@ class LabelsActivity : MapActivity() {
 
     override fun onDGisMapReady() {
         map?.apply {
-            center = LonLat(55.32078, 25.22784)
+            center = LonLat(55.32158, 25.22584)
             zoom = 13.0
         }
 
@@ -30,7 +30,7 @@ class LabelsActivity : MapActivity() {
         map?.createLabel(
             LabelOptions(
                 coordinates = LonLat(55.32878, 25.24584),
-                text = "Right",
+                text = "Right center",
                 relativeAnchor = 0.0 to 0.5
             )
         )
@@ -38,7 +38,7 @@ class LabelsActivity : MapActivity() {
         map?.createLabel(
             LabelOptions(
                 coordinates = LonLat(55.30878, 25.22584),
-                text = "Left",
+                text = "Left top",
                 offset = -10.0 to 10.0,
                 relativeAnchor = 1.0 to 1.0
             )

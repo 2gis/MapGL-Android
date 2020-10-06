@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">SDK TestApp</string>
-    <string name="title">WebGL map features\nand examples</string>
+    <string name="app_name">MapGL Demo</string>
+    <string name="title">MapGL map features\nand examples</string>
     <string name="information_symbol">Info</string>
     <string name="info_dialog_title">Getting started</string>
     <string name="info_dialog_message">Like maps and examples?\nLearn how to add them to your app!</string>
