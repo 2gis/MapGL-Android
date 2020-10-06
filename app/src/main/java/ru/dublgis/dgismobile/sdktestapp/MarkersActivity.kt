@@ -79,7 +79,7 @@ class MarkersActivity : MapActivity() {
                 val markerOptions = MarkerOptions(
                     pointer.lngLat,
                     icon = ImageFactory(this).fromResource(R.drawable.splash_logo),
-                    size = 30.0 to 48.0,
+                    size = 60.0 to 20.0,
                     anchor = 15.0 to 48.0
                 )
                 marker = map.addMarker(
