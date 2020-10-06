@@ -30,7 +30,11 @@ class MarkerOptions(
     /**
      * Initialization options of the marker's label.
      */
-    val label: LabelOptions? = null
+    val label: LabelOptions? = null,
+    /**
+     * Draw order.
+     */
+    val zIndex: Int? = null
 ) {
     override fun toString(): String {
         val builder = StringBuilder()
@@ -42,6 +46,7 @@ class MarkerOptions(
         if (size != null) builder.append(" size: [${size.first}, ${size.second}],")
         if (anchor != null) builder.append(" anchor: [${anchor.first}, ${anchor.second}],")
         if (label != null) builder.append(" label: $label,")
+        if (zIndex != null) builder.append("zIndex: $zIndex,")
 
         builder.append("}")
 
