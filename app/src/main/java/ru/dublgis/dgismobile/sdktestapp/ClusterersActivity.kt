@@ -27,16 +27,6 @@ class ClusterersActivity : MapActivity() {
                     .show()
             }
         }
-
-        clusterer?.setOnDblClickListener {
-            ctx.get()?.let { activity ->
-
-                val msg = "Double clicked to cluster"
-
-                Toast.makeText(activity, msg, Toast.LENGTH_LONG)
-                    .show()
-            }
-        }
     }
 
     private fun generate1Markers(): Collection<InputMarker> {

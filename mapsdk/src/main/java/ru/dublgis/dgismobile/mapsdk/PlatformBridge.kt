@@ -745,10 +745,6 @@ internal class PlatformBridge(
                     val clusterer = clusterers[payload]
                     clusterer?.onClick?.invoke()
                 }
-                "clustererDblclick" -> {
-                    val clusterer = clusterers[payload]
-                    clusterer?.onDblClick?.invoke()
-                }
                 "polylineClick" -> {
                     val polyline = polylines[payload]
                     polyline?.onClick?.invoke()
