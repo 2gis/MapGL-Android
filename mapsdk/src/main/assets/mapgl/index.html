@@ -152,9 +152,6 @@ window.initMapGL = (
 			clusterer.on('click', (ev) => {
 				emit('clustererClick', String(id));
 			});
-			clusterer.on('dblclick', (ev) => {
-				emit('clustererDblclick', String(id));
-			});
 			clusterers.set(id, clusterer);
 		},
 

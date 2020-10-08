@@ -12,7 +12,6 @@ internal class ClustererImpl(
     val radius = clustererOptions.radius
 
     var onClick: ClustererClickCallback? = null
-    var onDblClick: ClustererClickCallback? = null
 
     override fun destroy() {
         controller.get()?.destroyClusterer(id)
@@ -24,9 +23,5 @@ internal class ClustererImpl(
 
     override fun setOnClickListener(listener: ClustererClickCallback?) {
         onClick = listener
-    }
-
-    override fun setOnDblClickListener(listener: ClustererDblClickCallback?) {
-        onDblClick = listener
     }
 }
