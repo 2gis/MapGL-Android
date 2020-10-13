@@ -2,7 +2,6 @@ package ru.dublgis.dgismobile.sdktestapp
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +12,7 @@ import android.widget.ImageButton
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import kotlinx.android.synthetic.main.dialog_layout.view.*
 import ru.dublgis.dgismobile.mapsdk.LonLat
 import ru.dublgis.dgismobile.mapsdk.Map
 import ru.dublgis.dgismobile.mapsdk.location.UserLocationOptions
@@ -108,25 +108,34 @@ abstract class MapActivity : AppCompatActivity() {
 
     private fun showInfoDialog() {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle(getString(R.string.info_dialog_title))
-        builder.setMessage(getString(R.string.info_dialog_message))
-        builder.setCancelable(false)
-        builder.setPositiveButton(getString(R.string.info_dialog_positive_text)) { dialog, _ ->
-            val openURL = Intent(android.content.Intent.ACTION_VIEW)
-            openURL.data = Uri.parse(getString(R.string.info_url))
-            startActivity(openURL)
-            dialog.dismiss()
-        }
-
-        builder.setNegativeButton(getString(R.string.info_dialog_negative_text)) { dialog, _ ->
-            dialog.dismiss()
-        }
-
         val dialog: AlertDialog = builder.create()
-        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK)
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK)
+        val customLayout = layoutInflater.inflate(R.layout.dialog_layout, null)
+            .apply {
+                title.text = getString(R.string.info_dialog_title)
+                message.text = getString(R.string.info_dialog_message)
+                buttonYes.apply {
+                    text = getString(R.string.info_dialog_positive_text)
+                    setOnClickListener {
+                        val openURL = Intent(android.content.Intent.ACTION_VIEW)
+                        openURL.data = Uri.parse(getString(R.string.info_url))
+                        startActivity(openURL)
+                        dialog.dismiss()
+                    }
+                }
+
+                buttonNo.apply {
+                    text = getString(R.string.info_dialog_negative_text)
+                    setOnClickListener {
+                        dialog.dismiss()
+                    }
+                }
+            }
+
+
+        dialog.setView(customLayout)
+        dialog.show()
     }
 
     companion object {

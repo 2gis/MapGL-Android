@@ -3,5 +3,6 @@
 
     <dimen name="map_control">44dp</dimen>
     <dimen name="map_control_radius">22dp</dimen>
+    <dimen name="dialog_radius">8dp</dimen>
 
 </resources>
