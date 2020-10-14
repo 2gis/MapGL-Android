@@ -41,7 +41,24 @@ pipeline {
 
         stage("build") {
             steps {
-                sh './gradlew clean build --info'
+                withCredentials([
+                    file(credentialsId: 'RELEASE_KEYSTORE', variable: 'RELEASE_KEYSTORE'),
+                    string(credentialsId: 'RELEASE_KEYSTORE_PASSWORD', variable: 'RELEASE_KEYSTORE_PASSWORD'),
+                    string(credentialsId: 'WEBGL_RELEASE_KEY_ALIAS', variable: 'RELEASE_KEY_ALIAS'),
+                    string(credentialsId: 'WEBGL_RELEASE_KEY_PASSWORD', variable: 'RELEASE_KEY_PASSWORD'),
+                ]) {
+                    sh './gradlew clean build --info'
+                    sh './gradlew bundle'
+                    sh """
+                        jarsigner \
+                            -keystore \$RELEASE_KEYSTORE \
+                            -storepass \$RELEASE_KEYSTORE_PASSWORD \
+                            -keypass \$RELEASE_KEY_PASSWORD \
+                            build/app/outputs/bundle/release/app-release.aab \
+                            \$RELEASE_KEY_ALIAS
+                    """
+                    sh 'jarsigner -verify build/app/outputs/bundle/release/app-release.aab -keystore \$RELEASE_KEYSTORE'
+                }
             }
         }
 
@@ -49,6 +66,7 @@ pipeline {
             steps {
                 sh './gradlew mapsdk:bintrayUpload --info'
                 archiveArtifacts(artifacts: 'build/app/outputs/apk/release/app-release-unsigned.apk')
+                archiveArtifacts(artifacts: 'build/app/outputs/bundle/release/app-release.aab')
             }
         }
 
