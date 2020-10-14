@@ -5,4 +5,5 @@
     <color name="colorAccent">#f5f5f5</color>
     <color name="splash_background">#fff</color>
     <color name="white_gray">#0c000000</color>
+    <color name="azure">#057ddf</color>
 </resources>
