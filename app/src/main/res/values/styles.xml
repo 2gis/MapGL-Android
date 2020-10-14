@@ -23,7 +23,7 @@
     </style>
 
     <style name="DialogTextStyle" parent="@style/Widget.AppCompat.TextView">
-        <item name="android:fontFamily">@font/suisseintl_regular</item>
+        <item name="android:fontFamily">@string/roboto_regular</item>
         <item name="android:textStyle">normal</item>
         <item name="android:gravity">left</item>
         <item name="android:textSize">14sp</item>
@@ -33,7 +33,7 @@
     </style>
 
     <style name="DialogTitleStyle" parent="@style/Widget.AppCompat.TextView">
-        <item name="android:fontFamily">@font/suisseintl_semibold</item>
+        <item name="android:fontFamily">@string/roboto_regular</item>
         <item name="android:textStyle">bold</item>
         <item name="android:gravity">left</item>
         <item name="android:textSize">18sp</item>
@@ -43,7 +43,7 @@
     </style>
 
     <style name="DialogButtonYesStyle" parent="@style/Widget.AppCompat.TextView">
-        <item name="android:fontFamily">@font/suisseintl_medium</item>
+        <item name="android:fontFamily">@string/roboto_medium</item>
         <item name="android:textSize">13.5sp</item>
         <item name="android:paddingTop">8dp</item>
         <item name="android:paddingBottom">8dp</item>
@@ -55,7 +55,7 @@
     </style>
 
     <style name="DialogButtonNoStyle" parent="@style/Widget.AppCompat.TextView">
-        <item name="android:fontFamily">@font/suisseintl_medium</item>
+        <item name="android:fontFamily">@string/roboto_medium</item>
         <item name="android:textSize">13.5sp</item>
         <item name="android:paddingTop">8dp</item>
         <item name="android:paddingBottom">8dp</item>
