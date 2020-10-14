@@ -42,6 +42,8 @@ interface Map {
     val disableRotationByUserInteraction: Boolean
     val disablePitchByUserInteraction: Boolean
 
+    val autoHideOSMCopyright: Boolean
+
     fun addMarker(options: MarkerOptions): Marker
 
     fun removeMarker(marker: Marker)

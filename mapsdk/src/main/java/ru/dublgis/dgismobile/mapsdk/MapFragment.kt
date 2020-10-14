@@ -104,7 +104,8 @@ class MapFragment : Fragment() {
         rotation: Double = 0.0,
         controls: Boolean = false,
         disablePitchByUserInteraction: Boolean = false,
-        disableRotationByUserInteraction: Boolean = false
+        disableRotationByUserInteraction: Boolean = false,
+        autoHideOSMCopyright: Boolean = false
 
     ) = bridge.setup(
         apiKey,
@@ -114,7 +115,8 @@ class MapFragment : Fragment() {
         rotation,
         controls,
         disablePitchByUserInteraction,
-        disableRotationByUserInteraction
+        disableRotationByUserInteraction,
+        autoHideOSMCopyright
     )
 
     // ------------------------------------------------------

@@ -96,6 +96,8 @@ internal class PlatformBridge(
     private var _disableRotationByUserInteraction: Boolean = false
     private var _disablePitchByUserInteraction: Boolean = false
 
+    private var _autoHideOSMCopyright: Boolean = false
+
     private var _controls: Boolean = false
     private val interactiveCopyright: Boolean = false
 
@@ -206,6 +208,9 @@ internal class PlatformBridge(
 
     override val disablePitchByUserInteraction: Boolean
         get() = _disablePitchByUserInteraction
+
+    override val autoHideOSMCopyright: Boolean
+        get() = _autoHideOSMCopyright
 
     override fun setOnClickListener(listener: PointerChangeListener?) {
         onClickCallback = listener
@@ -664,7 +669,8 @@ internal class PlatformBridge(
                 $_controls,
                 $interactiveCopyright,
                 $_disablePitchByUserInteraction,
-                $_disableRotationByUserInteraction
+                $_disableRotationByUserInteraction,
+                $_autoHideOSMCopyright
             );
         """
         )
@@ -678,8 +684,8 @@ internal class PlatformBridge(
         rotation: Double,
         controls: Boolean,
         disablePitchByUserInteraction: Boolean,
-        disableRotationByUserInteraction: Boolean
-
+        disableRotationByUserInteraction: Boolean,
+        autoHideOSMCopyright: Boolean
     ) {
         _center = center
         _maxZoom = maxZoom
@@ -693,6 +699,7 @@ internal class PlatformBridge(
         _controls = controls
         _disablePitchByUserInteraction = disablePitchByUserInteraction
         _disableRotationByUserInteraction = disableRotationByUserInteraction
+        _autoHideOSMCopyright = autoHideOSMCopyright
     }
 
 
