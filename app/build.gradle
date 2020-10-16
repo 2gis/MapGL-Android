@@ -14,7 +14,7 @@ android {
         applicationId "ru.dublgis.dgismobile.sdktestapp"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 1
+        versionCode 2
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         resValue("string", "dgis_map_key", localProperties.getProperty("apiKey"))
