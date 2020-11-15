@@ -2,6 +2,7 @@ package ru.dublgis.dgismobile.mapsdk.directions
 
 import ru.dublgis.dgismobile.mapsdk.OnFinished
 import ru.dublgis.dgismobile.mapsdk.PlatformBridge
+import java.lang.IllegalStateException
 import java.lang.ref.WeakReference
 
 internal class DirectionsImpl(
@@ -9,18 +10,22 @@ internal class DirectionsImpl(
     private val id: String
 ) : Directions {
 
+    private val bridge: PlatformBridge
+        get() {
+            return controller.get() ?: throw IllegalStateException("Web Bridge is not available")
+        }
+
     override fun carRoute(
         carRouteOptions: CarRouteOptions,
         onFinished: OnFinished<Unit>?
-    ) {
-        controller.get()?.carRoute(id, carRouteOptions, onFinished)
-    }
+    ) = bridge.carRoute(id, carRouteOptions, onFinished)
 
-    override fun clear() {
-        controller.get()?.clearRoutes(id)
-    }
+    override fun pedestrianRoute(
+        options: PedestrianRouteOptions,
+        onFinished: OnFinished<Unit>?
+    ) = bridge.pedestrianRoute(id, options, onFinished)
 
-    override fun destroy() {
-        controller.get()?.destroyDirections(id)
-    }
+    override fun clear() = bridge.clearRoutes(id)
+
+    override fun destroy() = bridge.destroyDirections(id)
 }

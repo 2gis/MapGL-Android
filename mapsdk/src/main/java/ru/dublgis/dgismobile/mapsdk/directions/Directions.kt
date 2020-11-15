@@ -18,6 +18,16 @@ interface Directions {
     )
 
     /**
+     * Show car route.
+     * @param options - Pedestrian route options.
+     * @param onFinished - Callback with the result: exception if error, else Unit.
+     */
+   fun pedestrianRoute(
+        options: PedestrianRouteOptions,
+        onFinished: OnFinished<Unit>? = null
+    )
+
+    /**
      * Clears the map from any previously drawn routes.
      */
     fun clear()

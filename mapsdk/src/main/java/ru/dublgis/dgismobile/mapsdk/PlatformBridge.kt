@@ -15,10 +15,8 @@ import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererImpl
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
 import ru.dublgis.dgismobile.mapsdk.clustering.InputMarker
-import ru.dublgis.dgismobile.mapsdk.directions.CarRouteOptions
-import ru.dublgis.dgismobile.mapsdk.directions.Directions
+import ru.dublgis.dgismobile.mapsdk.directions.*
 import ru.dublgis.dgismobile.mapsdk.directions.DirectionsImpl
-import ru.dublgis.dgismobile.mapsdk.directions.DirectionsOptions
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.Circle
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.CircleImpl
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.CircleOptions
@@ -502,6 +500,21 @@ internal class PlatformBridge(
         )
     }
 
+    fun pedestrianRoute(
+        id: String,
+        options: PedestrianRouteOptions,
+        onFinished: OnFinished<Unit>?
+    ) {
+        val callbackId = if (onFinished == null) {
+            "null"
+        } else {
+            val cid = "pr-${this.callbackId++}"
+            onFinishedMap[cid] = onFinished
+            "\"$cid\""
+        }
+        jsExecutor("""window.dgismap.pedestrianRoute($id, $options, $callbackId);""")
+    }
+
     fun destroyPolyline(id: String) {
         jsExecutor(
             """
@@ -800,10 +813,16 @@ internal class PlatformBridge(
                     readyCallback(this)
                 }
                 "resultSuccess" -> {
-                    val id = payload
-                    onFinishedMap[id]?.let {
-                        it(Result.success(Unit))
-                        onFinishedMap.remove(id)
+                    if (payload.isEmpty()) {
+                        Log.w(TAG, "resultSuccess but callbackId is empty");
+                    } else {
+                        val callback = onFinishedMap.remove(payload)
+
+                        if (callback != null) {
+                            callback(Result.success(Unit))
+                        } else {
+                            Log.w(TAG, "could not find callback for $payload")
+                        }
                     }
                 }
                 "resultFailure" -> {

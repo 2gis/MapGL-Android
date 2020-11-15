@@ -289,6 +289,30 @@ window.initMapGL = (
 			}
 		},
 
+
+		pedestrianRoute: (id, options, callbackId) => {
+			const directions = directionsMap.get(id);
+			if (directions) {
+				try {
+					const promise = directions.pedestrianRoute(options)
+					if (callbackId) {
+						promise.then(
+							(value) => {
+								emit('resultSuccess', callbackId);
+							},
+							(reason) => {
+								emit('resultFailure', callbackId + " " + reason.message);
+							}
+						);
+					}
+				}
+				catch (e) {
+					emit('resultFailure', callbackId + " " + e.message);
+				}
+			}
+		},
+
+
 		clearRoutes: (id) => {
 			const directions = directionsMap.get(id);
 			if (directions) {

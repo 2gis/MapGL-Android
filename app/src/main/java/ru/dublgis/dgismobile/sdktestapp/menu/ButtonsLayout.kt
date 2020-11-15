@@ -51,10 +51,13 @@ class ButtonsLayout(context: Context, attrs: AttributeSet) : LinearLayout(contex
         addView(GroupButton(context, "Clustering", ClusterersActivity::class, onClickListener))
 
         addView(
-            GroupButton(
+            ExpandableGroupButton(
                 context,
                 "Directions",
-                DirectionsActivity::class,
+                listOf(
+                    ItemButton(context, "Car Route", DirectionsActivity::class),
+                    ItemButton(context, "Pedestrian Route", PedestrianRouteActivity::class)
+                ),
                 onClickListener
             )
         )
