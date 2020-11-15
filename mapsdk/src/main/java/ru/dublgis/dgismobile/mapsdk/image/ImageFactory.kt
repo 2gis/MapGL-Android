@@ -3,10 +3,14 @@ package ru.dublgis.dgismobile.mapsdk.image
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
 import android.util.Base64
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
+import java.lang.IllegalArgumentException
+import java.lang.RuntimeException
 
 /**
  * Factory for creating Images.
@@ -50,7 +54,20 @@ class ImageFactory(private val context: Context) {
      * Creates an image using the resource ID of a Bitmap image.
      */
     fun fromResource(resourceId: Int): Image {
-        val bitmap = BitmapFactory.decodeResource(context.resources, resourceId)
+        val drawable = context.getDrawable(resourceId)
+            ?: throw IllegalArgumentException("Failed to load bitmap resource $resourceId")
+
+        val bitmap = if (drawable is BitmapDrawable) {
+            drawable.bitmap
+        } else {
+            Bitmap
+                .createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+                .also {
+                    val canvas = Canvas(it)
+                    drawable.setBounds(0, 0, canvas.width, canvas.height)
+                    drawable.draw(canvas)
+                }
+        }
         return fromBitmap(bitmap)
     }
 
