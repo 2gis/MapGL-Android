@@ -49,6 +49,9 @@
         <activity
             android:name=".DirectionsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />
+        <activity
+            android:name=".PedestrianRouteActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
 
     </application>
 
