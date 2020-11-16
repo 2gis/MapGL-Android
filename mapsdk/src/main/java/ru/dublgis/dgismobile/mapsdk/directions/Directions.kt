@@ -1,6 +1,8 @@
 package ru.dublgis.dgismobile.mapsdk.directions
 
+import androidx.annotation.RequiresApi
 import ru.dublgis.dgismobile.mapsdk.OnFinished
+import java.util.concurrent.CompletableFuture
 
 
 /**
@@ -19,6 +21,16 @@ interface Directions {
 
     /**
      * Show car route.
+     * @param carRouteOptions - Car route options.
+     * @param onFinished - Callback with the result: exception if error, else Unit.
+     */
+    @RequiresApi(24)
+    fun carRoute(
+        carRouteOptions: CarRouteOptions
+    ) : CompletableFuture<Unit>
+
+    /**
+     * Show pedestrian route.
      * @param options - Pedestrian route options.
      * @param onFinished - Callback with the result: exception if error, else Unit.
      */
@@ -26,6 +38,16 @@ interface Directions {
         options: PedestrianRouteOptions,
         onFinished: OnFinished<Unit>? = null
     )
+
+    /**
+     * Show pedestrian route.
+     * @param options - Pedestrian route options.
+     * @param onFinished - Callback with the result: exception if error, else Unit.
+     */
+    @RequiresApi(24)
+    fun pedestrianRoute(
+        options: PedestrianRouteOptions
+    ) : CompletableFuture<Unit>
 
     /**
      * Clears the map from any previously drawn routes.

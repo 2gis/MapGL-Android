@@ -1,5 +1,7 @@
 package ru.dublgis.dgismobile.mapsdk.directions
 
+import android.util.JsonWriter
+import ru.dublgis.dgismobile.mapsdk.IPlatformSerializable
 import ru.dublgis.dgismobile.mapsdk.LonLat
 
 /**
@@ -11,7 +13,7 @@ class CarRouteOptions(
      * You can set up to 10 points.
      */
     var points: Collection<LonLat>
-) {
+) : IPlatformSerializable {
 
     override fun toString(): String {
         val builder = StringBuilder()
@@ -31,5 +33,18 @@ class CarRouteOptions(
         builder.append("}")
 
         return builder.toString()
+    }
+
+    override fun dump(writer: JsonWriter) {
+        writer.apply {
+            beginObject()
+            name("points")
+                beginArray()
+                    points.forEach {
+                        it.dump(writer)
+                    }
+                endArray()
+            endObject()
+        }
     }
 }

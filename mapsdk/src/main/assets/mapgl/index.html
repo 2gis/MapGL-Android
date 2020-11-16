@@ -49,6 +49,14 @@ window.initMapGL = (
     const labels = new Map();
     const directionsMap = new Map();
 
+	const getFromMap = (objects, key) => {
+		const value = objects.get(key);
+		if (!value) {
+			throw new Error(`Object with ${key} was not found`);
+		}
+		return value;
+	}
+
     const map = new mapgl.Map('map', {
         center: center,
         maxZoom: maxZoom,
@@ -84,7 +92,12 @@ window.initMapGL = (
         });
     }
 
-    subscribe('click', (ev) => `${ev.lngLat[0]};${ev.lngLat[1]};${ev.target.id}`);
+	subscribe('click', (ev) => {
+		const id = ev.target && ev.target.id
+			? ev.target.id
+			: "";
+		return `${ev.lngLat[0]};${ev.lngLat[1]};${id}`;
+	});
     subscribe('centerend', (ev) => {
         const center = map.getCenter();
         return `${center[0]};${center[1]}`;
@@ -274,58 +287,65 @@ window.initMapGL = (
 			directionsMap.set(id, directions)
 		},
 
-		carRoute: (id, options, callbackId) => {
-			const directions = directionsMap.get(id);
-			if (directions) {
-				try {
-					directions.carRoute(options).then(
-						(value) => {emit('resultSuccess', callbackId);},
-						(reason) => {emit('resultFailure', callbackId + " " + reason.message);}
-					);
-				}
-				catch (e) {
-					emit('resultFailure', callbackId + " " + e.message);
-				}
-			}
+		carRoute: (contextObject, carRouteOptions) => {
+			const directions = getFromMap(directionsMap, contextObject.directionsObjectId);
+			return directions.carRoute(carRouteOptions);
 		},
 
-
-		pedestrianRoute: (id, options, callbackId) => {
-			const directions = directionsMap.get(id);
-			if (directions) {
-				try {
-					const promise = directions.pedestrianRoute(options)
-					if (callbackId) {
-						promise.then(
-							(value) => {
-								emit('resultSuccess', callbackId);
-							},
-							(reason) => {
-								emit('resultFailure', callbackId + " " + reason.message);
-							}
-						);
-					}
-				}
-				catch (e) {
-					emit('resultFailure', callbackId + " " + e.message);
-				}
-			}
+		pedestrianRoute: (contextObject, pedestrianRouteOptions) => {
+			const directions = getFromMap(directionsMap, contextObject.directionsObjectId);
+			return directions.pedestrianRoute(pedestrianRouteOptions);
 		},
 
-
-		clearRoutes: (id) => {
-			const directions = directionsMap.get(id);
-			if (directions) {
-				directions.clear();
-			}
+		clearRoutes: (contextObject) => {
+			const directions = getFromMap(directionsMap, contextObject.directionsObjectId);
+			directions.clear();
 		},
 
-		destroyDirections: (id) => {
-			const directions = directionsMap.get(id);
-			if (directions) {
-				directions.clear();
+		destroyDirections: (contextObject) => {
+			const directions = getFromMap(directionsMap, contextObject.directionsObjectId);
+			directions.clear();
+			directionsMap.delete(contextObject.directionsObjectId);
+		},
+
+		call: (callId, name, args) => {
+			const dm = window.dgismap;
+			const action = dm[name];
+			try {
+				if (!action) {
+					throw new Error(`method ${name} was not found`);
+				}
+
+				const result = action.apply(dm, args);
+				if (!callId) {
+					return;
+				}
+
+				if (Promise.resolve(result) == result) {
+					result.then(
+						(value) => {
+							emit('resultSuccess', `${callId}`);
+						},
+						(reason) => {
+							const msg = reason && reason.message
+								? reason.message
+								: "";
+							emit('resultFailure', callId + " " + msg);
+						}
+					)
+				} else {
+					emit('resultSuccess', `${callId}`);
+				}
+			} catch (err) {
+				const msg = err.name && err.message
+					? `${err.name}:${err.message}`
+					: `${err}`
+				if (callId) {
+					emit('resultFailure', callId + " " + msg);
+				} else {
+					console.error(msg);
+				}
 			}
-			directionsMap.delete(id);
 		}
     };
 
@@ -333,19 +353,6 @@ window.initMapGL = (
     emit('initBounds', `${bounds.northEast[0]};${bounds.northEast[1]} ${bounds.southWest[0]};${bounds.southWest[1]}`);
     emit('initialized');
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </script>
 
