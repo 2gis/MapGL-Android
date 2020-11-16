@@ -67,7 +67,6 @@ abstract class MapActivity : AppCompatActivity() {
         map = controller
         map?.enableUserLocation(UserLocationOptions(isVisible = true))
         map?.userLocation?.observe(this, Observer {
-            Log.i(ru.dublgis.dgismobile.mapsdk.TAG, "Location: $it")
         })
 
         onDGisMapReady()
