@@ -1,5 +1,6 @@
 package ru.dublgis.dgismobile.mapsdk
 
+import android.util.JsonWriter
 import kotlin.math.abs
 
 
@@ -16,7 +17,7 @@ data class LonLat(
      */
     val lat: Double = 0.0
 
-) {
+) : IPlatformSerializable {
     /**
      *  Used to compare equality of two LonLat objects.
      *
@@ -36,5 +37,14 @@ data class LonLat(
         }
 
         return closeEnough(lon, other.lon) && closeEnough(lat, other.lat)
+    }
+
+    override fun dump(writer: JsonWriter) {
+        writer.apply {
+            beginArray()
+            value(lon)
+            value(lat)
+            endArray()
+        }
     }
 }

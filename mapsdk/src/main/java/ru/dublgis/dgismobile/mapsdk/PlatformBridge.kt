@@ -3,10 +3,12 @@ package ru.dublgis.dgismobile.mapsdk
 import android.location.Location
 import android.os.Handler
 import android.os.Looper
+import android.util.JsonWriter
 import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -35,7 +37,9 @@ import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
 import ru.dublgis.dgismobile.mapsdk.location.LocationProvider
 import ru.dublgis.dgismobile.mapsdk.location.LocationProviderFactory
 import ru.dublgis.dgismobile.mapsdk.location.UserLocationOptions
+import java.io.StringWriter
 import java.lang.ref.WeakReference
+import java.util.concurrent.CompletableFuture
 import kotlin.math.abs
 
 
@@ -108,6 +112,46 @@ internal class PlatformBridge(
     private var markerId = 0
     private var directionsId = 0
     private var callbackId = 0
+
+    @RequiresApi(24)
+    fun call(methodName: String, vararg args: IPlatformSerializable): CompletableFuture<Unit> {
+        val future = CompletableFuture<Unit>()
+
+        val finalizer = { res: Result<Unit> ->
+            if (res.isSuccess) {
+                future.complete(Unit)
+            } else {
+                future.completeExceptionally(res.exceptionOrNull())
+            }
+            Unit
+        }
+        call(methodName, finalizer, *args)
+
+        return future
+    }
+
+    fun call(methodName: String, onFinished: OnFinished<Unit>?, vararg args: IPlatformSerializable) {
+        val callId = if (onFinished == null) {
+            "null"
+        } else {
+            val cid = "call-${this.callbackId++}"
+            onFinishedMap[cid] = onFinished
+            "\"$cid\""
+        }
+
+        val argsDump = with(StringWriter()) {
+            JsonWriter(this).let {
+                it.beginArray()
+                for (arg in args) {
+                    arg.dump(it)
+                }
+                it.endArray()
+            }
+            toString()
+        }
+
+        jsExecutor("""window.dgismap.call($callId, "$methodName", $argsDump)""")
+    }
 
     override var center: LonLat
         get() = _center
@@ -398,17 +442,13 @@ internal class PlatformBridge(
     }
 
     override fun createDirections(options: DirectionsOptions): Directions {
-        val id = "${directionsId++}"
+        val id = "directions_${directionsId++}"
 
         val directions = DirectionsImpl(WeakReference(this), id)
 
         directionsMap[id] = directions
 
-        jsExecutor(
-            """
-            window.dgismap.createDirections($id, $options);
-        """
-        )
+        jsExecutor("""window.dgismap.createDirections("$id", $options);""")
 
         return directions
     }
@@ -472,49 +512,6 @@ internal class PlatformBridge(
         userLocationMarker?.destroy()
     }
 
-    private fun carRoute(id: String, carRouteOptions: CarRouteOptions) {
-        jsExecutor(
-            """
-            window.dgismap.carRoute($id, $carRouteOptions);
-        """
-        )
-    }
-
-    fun carRoute(
-        id: String,
-        carRouteOptions: CarRouteOptions,
-        onFinished: OnFinished<Unit>?
-    ) {
-        if (onFinished == null) {
-            carRoute(id, carRouteOptions)
-            return
-        }
-
-        val callbackId = "${this.callbackId++}"
-
-        onFinishedMap[callbackId] = onFinished
-        jsExecutor(
-            """
-            window.dgismap.carRoute($id, $carRouteOptions, $callbackId);
-        """
-        )
-    }
-
-    fun pedestrianRoute(
-        id: String,
-        options: PedestrianRouteOptions,
-        onFinished: OnFinished<Unit>?
-    ) {
-        val callbackId = if (onFinished == null) {
-            "null"
-        } else {
-            val cid = "pr-${this.callbackId++}"
-            onFinishedMap[cid] = onFinished
-            "\"$cid\""
-        }
-        jsExecutor("""window.dgismap.pedestrianRoute($id, $options, $callbackId);""")
-    }
-
     fun destroyPolyline(id: String) {
         jsExecutor(
             """
@@ -563,22 +560,6 @@ internal class PlatformBridge(
         )
 
         labels.remove(id)
-    }
-
-    fun clearRoutes(id: String) {
-        jsExecutor(
-            """
-            window.dgismap.clearRoutes($id);
-        """
-        )
-    }
-
-    fun destroyDirections(id: String) {
-        jsExecutor(
-            """
-            window.dgismap.destroyDirections($id);
-        """
-        )
     }
 
     fun showLabel(id: String) {
@@ -720,7 +701,6 @@ internal class PlatformBridge(
 
     @JavascriptInterface
     fun onEvent(kind: String, payload: String) {
-        Log.i(TAG, "from js $kind, payload $payload")
         handler.post {
 
             val parseLonLat = { payload: String ->
