@@ -114,10 +114,10 @@ internal class PlatformBridge(
     private var callbackId = 0
 
     @RequiresApi(24)
-    fun call(methodName: String, vararg args: IPlatformSerializable): CompletableFuture<Unit> {
+    fun call(methodName: String, vararg args: JsArg): CompletableFuture<Unit> {
         val future = CompletableFuture<Unit>()
 
-        val finalizer = { res: Result<Unit> ->
+        call(methodName, listOf(*args)) { res ->
             if (res.isSuccess) {
                 future.complete(Unit)
             } else {
@@ -125,32 +125,23 @@ internal class PlatformBridge(
             }
             Unit
         }
-        call(methodName, finalizer, *args)
 
         return future
     }
 
-    fun call(methodName: String, onFinished: OnFinished<Unit>?, vararg args: IPlatformSerializable) {
+    fun call(methodName: String, args: Iterable<JsArg> = listOf(), onFinished: OnFinished<Unit>? = null) {
         val callId = if (onFinished == null) {
-            "null"
+            JsArg(null)
         } else {
             val cid = "call-${this.callbackId++}"
             onFinishedMap[cid] = onFinished
-            "\"$cid\""
+            JsArg(cid)
         }
+        val method = JsArg(methodName)
+        val argsDump = JsArg(args)
+        val separator = if (args.count() == 0) "" else ", "
 
-        val argsDump = with(StringWriter()) {
-            JsonWriter(this).let {
-                it.beginArray()
-                for (arg in args) {
-                    arg.dump(it)
-                }
-                it.endArray()
-            }
-            toString()
-        }
-
-        jsExecutor("""window.dgismap.call($callId, "$methodName", $argsDump)""")
+        jsExecutor("""window.dgismap.call($callId, $method$separator$argsDump);""")
     }
 
     override var center: LonLat
