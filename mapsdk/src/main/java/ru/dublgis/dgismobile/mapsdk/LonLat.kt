@@ -17,7 +17,7 @@ data class LonLat(
      */
     val lat: Double = 0.0
 
-) : IPlatformSerializable {
+) : PlatformSerializable {
     /**
      *  Used to compare equality of two LonLat objects.
      *
