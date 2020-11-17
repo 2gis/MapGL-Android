@@ -1,7 +1,7 @@
 package ru.dublgis.dgismobile.mapsdk.directions
 
 import android.util.JsonWriter
-import ru.dublgis.dgismobile.mapsdk.IPlatformSerializable
+import ru.dublgis.dgismobile.mapsdk.PlatformSerializable
 import ru.dublgis.dgismobile.mapsdk.LonLat
 
 
@@ -14,7 +14,7 @@ open class PedestrianRouteOptions(
      * You can set up to 10 points.
      */
     var points: Collection<LonLat>
-) : IPlatformSerializable {
+) : PlatformSerializable {
 
     override fun toString(): String {
         val arg = points.joinToString(
