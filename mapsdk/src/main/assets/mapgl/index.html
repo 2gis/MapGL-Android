@@ -49,7 +49,7 @@ window.initMapGL = (
     const labels = new Map();
     const directionsMap = new Map();
 
-	const getFromMap = (objects, key) => {
+	const getObjectFromMap = (objects, key) => {
 		const value = objects.get(key);
 		if (!value) {
 			throw new Error(`Object with ${key} was not found`);
@@ -288,31 +288,31 @@ window.initMapGL = (
 		},
 
 		carRoute: (contextObject, carRouteOptions) => {
-			const directions = getFromMap(directionsMap, contextObject.directionsObjectId);
+			const directions = getObjectFromMap(directionsMap, contextObject.directionsObjectId);
 			return directions.carRoute(carRouteOptions);
 		},
 
 		pedestrianRoute: (contextObject, pedestrianRouteOptions) => {
-			const directions = getFromMap(directionsMap, contextObject.directionsObjectId);
+			const directions = getObjectFromMap(directionsMap, contextObject.directionsObjectId);
 			return directions.pedestrianRoute(pedestrianRouteOptions);
 		},
 
-		clearRoutes: (contextObject) => {
-			const directions = getFromMap(directionsMap, contextObject.directionsObjectId);
+		clearRoutes: (id) => {
+			const directions = getObjectFromMap(directionsMap, id);
 			directions.clear();
 		},
 
-		destroyDirections: (contextObject) => {
-			const directions = getFromMap(directionsMap, contextObject.directionsObjectId);
+		destroyDirections: (id) => {
+			const directions = getObjectFromMap(directionsMap, id);
 			directions.clear();
-			directionsMap.delete(contextObject.directionsObjectId);
+			directionsMap.delete(id);
 		},
 
 		call: (callId, name, args) => {
 			const dm = window.dgismap;
 			const action = dm[name];
 			try {
-				if (!action) {
+				if (typeof action !== 'function') {
 					throw new Error(`method ${name} was not found`);
 				}
 
@@ -321,21 +321,17 @@ window.initMapGL = (
 					return;
 				}
 
-				if (Promise.resolve(result) == result) {
-					result.then(
-						(value) => {
-							emit('resultSuccess', `${callId}`);
-						},
-						(reason) => {
-							const msg = reason && reason.message
-								? reason.message
-								: "";
-							emit('resultFailure', callId + " " + msg);
-						}
-					)
-				} else {
-					emit('resultSuccess', `${callId}`);
-				}
+				Promise.resolve(result).then(
+					(value) => {
+						emit('resultSuccess', `${callId}`);
+					},
+					(reason) => {
+						const msg = reason && reason.message
+							? reason.message
+							: "";
+						emit('resultFailure', callId + " " + msg);
+					}
+				)
 			} catch (err) {
 				const msg = err.name && err.message
 					? `${err.name}:${err.message}`
