@@ -21,8 +21,10 @@ interface Directions {
 
     /**
      * Show car route.
+     * The method is available only for Android API 24 and above.
+     *
      * @param carRouteOptions - Car route options.
-     * @param onFinished - Callback with the result: exception if error, else Unit.
+     * @return CompletableFuture with result or Exception
      */
     @RequiresApi(24)
     fun carRoute(
@@ -41,8 +43,10 @@ interface Directions {
 
     /**
      * Show pedestrian route.
+     * The method is available only for Android API 24 and above.
+     *
      * @param options - Pedestrian route options.
-     * @param onFinished - Callback with the result: exception if error, else Unit.
+     * @return CompletableFuture with result or Exception
      */
     @RequiresApi(24)
     fun pedestrianRoute(
