@@ -22,7 +22,7 @@ class DirectionsActivity : MapActivity() {
 
         //first directions
         directions1 = map?.createDirections(DirectionsOptions(apiKey))
-        directions1?.carRoute(CarRouteOptions(generate1Coordinates()))
+        directions1?.carRoute(CarRouteOptions(generate1Coordinates()), null)
 
         directions2 = map?.createDirections(DirectionsOptions(apiKey))
         directions2?.carRoute(CarRouteOptions(generate2Coordinates())) {
