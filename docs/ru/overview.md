@@ -10,7 +10,7 @@ This SDK uses [Android WebView](https://developer.android.com/reference/android/
 
 Usage of this SDK requires an `API key` to connect to 2GIS servers and retrieve the geographical data. This `API key` is unique to the SDK and cannot be used with other 2GIS SDKs. To obtain the key, contact us at [mapgl@2gis.com](mailto:mapgl@2gis.com).
 
-Additionally, if you plan to draw routes on the map, you will need a separate key - a [Directions API](/en/api/navigation/directions/overview) key - to calculate and display an optimal route. To get it, fill the form at [partner.api.2gis.ru](https://partner.api.2gis.ru/) or contact us at [content@2gis.ru](mailto:content@2gis.ru).
+Additionally, if you plan to draw routes on the map, you will need a separate key - a [Directions API](/ru/api/navigation/directions/overview) key - to calculate and display an optimal route. To get it, fill the form at [partner.api.2gis.ru](https://partner.api.2gis.ru/) or contact us at [content@2gis.ru](mailto:content@2gis.ru).
 
 ## Installation
 
@@ -34,7 +34,7 @@ dependencies {
 }
 ```
 
-After that, you should be good to go. Check the [Examples](/en/android/webgl/maps/examples) section to see how to display the map in your application. Alternatively, check the [API Reference](/en/android/webgl/maps/reference) to learn more about specific classes and methods.
+After that, you should be good to go. Check the [Examples](/ru/android/webgl/maps/examples) section to see how to display the map in your application. Alternatively, check the [API Reference](/ru/android/webgl/maps/reference) to learn more about specific classes and methods.
 
 ## License
 
