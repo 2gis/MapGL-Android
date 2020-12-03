@@ -95,7 +95,7 @@ pipeline {
                             script:"""
                                 docker run --rm \
                                     -v \$(pwd)/build/mapsdk/dokka:/opt/docsJson \
-                                    docker-hub.2gis.ru/2gis-nativesdk/dokka-converter:prod \
+                                    docker-hub.2gis.ru/2gis-nativesdk/dokka-converter:2.0 \
                                     ./converter.py -b /$it/android/webgl/maps/reference/
                             """
                         )
