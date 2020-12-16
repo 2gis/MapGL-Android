@@ -200,12 +200,16 @@ pipeline {
             }
         }
 
-        stage('Deploy documentation for docs-canary') {
+        stage('Deploy documentation') {
             when {
-                branch 'develop'
+                anyOf {
+                    branch 'develop'; branch 'master'
+                }
             }
             steps {
                 script {
+                    def isStable = env.GIT_BRANCH == 'master'
+
                     ["en", "ru"].each({
                         sh(
                             label: "Deploying $it documentation",
@@ -213,7 +217,7 @@ pipeline {
                             docker run --rm \
                                 -v \$(pwd)/build/mapsdk/dokka:/opt/docsJson \
                                 docker-hub.2gis.ru/2gis-nativesdk/dokka-converter:2.0 \
-                                ./converter.py -u -b /$it/android/webgl/maps/reference/
+                                ./converter.py ${isStable ? '' : '-u'} -b /$it/android/webgl/maps/reference/
                             """
                         )
                     })
@@ -223,7 +227,9 @@ pipeline {
 
         stage('Trigger documentation update') {
             when {
-                branch 'develop'
+                anyOf {
+                    branch 'develop'; branch 'master'
+                }
             }
             steps {
                 withCredentials([
