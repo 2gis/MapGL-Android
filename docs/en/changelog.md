@@ -1,6 +1,6 @@
 # Release notes
 
-## v1.7.0
+## 1.7.0
 
 **Release Date:** 18.11.2020
 
