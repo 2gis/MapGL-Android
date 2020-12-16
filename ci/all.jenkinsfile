@@ -1,42 +1,43 @@
 pipeline {
-
     agent {
         label 'ubuntu-18.04 && x64 && hw'
     }
-
-    environment {
-        GRADLE_OPTS = '-Dorg.gradle.daemon=false'
+    triggers {
+        cron('@midnight')
     }
-
-    parameters {
-        password(
-            name: "BINTRAY_USER",
-            defaultValue: "",
-            description: "bintray user"
-        )
-        password(
-            name: "BINTRAY_KEY",
-            defaultValue: "",
-            description: "bintray API Key"
-        )
-    }
-
-    stages {
+    stages{
         stage("prepare") {
-            steps {
-                checkParams()
+           steps {
+               withCredentials([
+                   string(credentialsId: 'WEBGL_API_KEY', variable: 'API_KEY'),
+                   string(credentialsId: 'WEBGL_DIRECTIONS_API_KEY', variable: 'DIRECTIONS_API_KEY')
+               ]) {
+                   script {
+                       def localProperties = """\
+                           sdk.dir=/opt/android-sdk/
 
-                script {
-                    def localProperties = """\
-                        sdk.dir=/opt/android-sdk/
+                           apiKey=${env.API_KEY}
+                           directionsApiKey=${env.DIRECTIONS_API_KEY}
+                       """.stripIndent()
 
-                        apiKey=${params.API_KEY}
-                        directionsApiKey=${params.DIRECTIONS_API_KEY}
-                    """.stripIndent()
+                       writeFile file: "local.properties", text: localProperties
+                   }
 
-                    writeFile file: "local.properties", text: localProperties
-                }
-            }
+                   script {
+                       def name = env.JOB_NAME.toLowerCase()
+
+                       def buildInfo = """\
+                           buildInfo.build.name=$name
+                           buildInfo.build.number=${env.BUILD_ID}
+                       """.stripIndent()
+
+                       sh (
+                           label: "append build identifiers",
+                           script: "echo \"$buildInfo\" >> gradle.properties"
+                       )
+                   }
+               }
+           }
         }
 
         stage("build") {
@@ -47,8 +48,7 @@ pipeline {
                     string(credentialsId: 'WEBGL_RELEASE_KEY_ALIAS', variable: 'RELEASE_KEY_ALIAS'),
                     string(credentialsId: 'WEBGL_RELEASE_KEY_PASSWORD', variable: 'RELEASE_KEY_PASSWORD'),
                 ]) {
-                    sh './gradlew clean build --info'
-                    sh './gradlew bundle'
+                    sh './gradlew clean build bundle mapsdk:dokka --info'
 
                     // Signing output bundle
                     sh """
@@ -123,6 +123,13 @@ pipeline {
                     try {
                         timeout(10) {
                             sh(
+                                label: "Подготовка logcat",
+                                script: """
+                                    /opt/android-sdk/platform-tools/adb logcat -c
+                                """
+                            )
+
+                            sh(
                                 label: "Тесты",
                                 script: "./gradlew connectedAndroidTest --info"
                             )
@@ -160,7 +167,7 @@ pipeline {
                             label: "Очистка системы",
                             script: """
                                 ps aux | grep emulator | grep -v 'grep' | awk '{print \$2}' | xargs kill
-
+    
                                 /opt/android-sdk/platform-tools/adb kill-server
                             """
                         )
@@ -171,23 +178,82 @@ pipeline {
             }
         }
 
-
-        stage("deploy") {
+        stage("Save apps and bundles") {
             steps {
-                sh './gradlew mapsdk:bintrayUpload --info'
+                archiveArtifacts(artifacts: 'build/app/outputs/apk/debug/app-debug.apk')
+                archiveArtifacts(artifacts: 'build/app/outputs/bundle/debug/app-debug.aab')
                 archiveArtifacts(artifacts: 'build/app/outputs/apk/release/app-release.apk')
                 archiveArtifacts(artifacts: 'build/app/outputs/bundle/release/app-release.aab')
             }
         }
-    }
-}
 
-def checkParams() {
-    if (!hudson.util.Secret.toString(params.BINTRAY_USER)) {
-        error('BINTRAY_USER is not defined')
-    }
+        stage("Deploy to Artifactory") {
+            when {
+                branch 'develop'
+            }
+            steps {
+                withCredentials([
+                    usernamePassword(
+                            credentialsId: 'buildserver-v4core',
+                            usernameVariable: 'ARTIFACTORY_USERNAME',
+                            passwordVariable: 'ARTIFACTORY_PASSWORD'),
+                    string(credentialsId: 'ARTIFACTORY_HOST', variable: 'ARTIFACTORY_HOST')
+                ]) {
+                    sh './gradlew mapsdk:artifactoryPublish --info'
+                }
+            }
+        }
 
-    if (!hudson.util.Secret.toString(params.BINTRAY_KEY)) {
-        error('BINTRAY_KEY is not defined')
+        stage('Deploy documentation') {
+            when {
+                anyOf {
+                    branch 'develop'; branch 'master'
+                }
+            }
+            steps {
+                script {
+                    def isStable = env.GIT_BRANCH == 'master'
+
+                    ["en", "ru"].each({
+                        sh(
+                            label: "Deploying $it documentation",
+                            script:"""
+                            docker run --rm \
+                                -v \$(pwd)/build/mapsdk/dokka:/opt/docsJson \
+                                docker-hub.2gis.ru/2gis-nativesdk/dokka-converter:2.0 \
+                                ./converter.py ${isStable ? '' : '-u'} -b /$it/android/webgl/maps/reference/
+                            """
+                        )
+                    })
+                }
+            }
+        }
+
+        stage('Trigger documentation update') {
+            when {
+                anyOf {
+                    branch 'develop'; branch 'master'
+                }
+            }
+            steps {
+                withCredentials([
+                    string(credentialsId: 'NSDK_GITLAB_PROJECT_TOKEN', variable: 'GITLAB_PROJECT_TOKEN'),
+                    string(credentialsId: 'NSDK_GITLAB_PROJECT_ID', variable: 'GITLAB_PROJECT_ID'),
+                    string(credentialsId: 'GITLAB_URL', variable: 'GITLAB_URL')
+                ]) {
+                    sh(
+                        label: 'Запуск регенерации документации',
+                        script:"""
+                            curl --location \
+                            -X POST \
+                            -F token=$GITLAB_PROJECT_TOKEN \
+                            -F ref=master \
+                            -F "variables[Android_SDK_CI]=true" \
+                            https://${env.GITLAB_URL}/api/v4/projects/${env.GITLAB_PROJECT_ID}/trigger/pipeline
+                        """
+                    )
+                }
+            }
+        }
     }
 }
