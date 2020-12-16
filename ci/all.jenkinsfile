@@ -2,10 +2,6 @@ pipeline {
     agent {
         label 'ubuntu-18.04 && x64 && hw'
     }
-    environment {
-        GRADLE_OPTS = '-Dorg.gradle.daemon=false'
-        ARTIFACTORY_HOST='http://maven.v4core.os-n3.hw:8081/artifactory'
-    }
     triggers {
         cron('@midnight')
     }
@@ -127,6 +123,13 @@ pipeline {
                     try {
                         timeout(10) {
                             sh(
+                                label: "Подготовка logcat",
+                                script: """
+                                    /opt/android-sdk/platform-tools/adb logcat -c
+                                """
+                            )
+
+                            sh(
                                 label: "Тесты",
                                 script: "./gradlew connectedAndroidTest --info"
                             )
@@ -193,7 +196,8 @@ pipeline {
                     usernamePassword(
                             credentialsId: 'buildserver-v4core',
                             usernameVariable: 'ARTIFACTORY_USERNAME',
-                            passwordVariable: 'ARTIFACTORY_PASSWORD')
+                            passwordVariable: 'ARTIFACTORY_PASSWORD'),
+                    string(credentialsId: 'ARTIFACTORY_HOST', variable: 'ARTIFACTORY_HOST')
                 ]) {
                     sh './gradlew mapsdk:artifactoryPublish --info'
                 }
