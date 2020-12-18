@@ -38,7 +38,12 @@ window.initMapGL = (
         controls,
         interactiveCopyright,
         disablePitchByUserInteraction,
-        disableRotationByUserInteraction) => {
+        disableRotationByUserInteraction,
+        autoHideOSMCopyright,
+        style,
+        styleZoom,
+        defaultBackgroundColor,
+        maxBounds) => {
 
     const markers = new Map();
     const clusterers = new Map();
@@ -57,7 +62,7 @@ window.initMapGL = (
 		return value;
 	}
 
-    const map = new mapgl.Map('map', {
+    const options = {
         center: center,
         maxZoom: maxZoom,
         minZoom: minZoom,
@@ -71,8 +76,25 @@ window.initMapGL = (
         zoomControl: controls,
         interactiveCopyright: interactiveCopyright,
         disablePitchByUserInteraction: disablePitchByUserInteraction,
-        disableRotationByUserInteraction: disableRotationByUserInteraction
-    });
+        disableRotationByUserInteraction: disableRotationByUserInteraction,
+        autoHideOSMCopyright: autoHideOSMCopyright
+    };
+    if (style) {
+    	options.style = style;
+    }
+    if (defaultBackgroundColor) {
+    	options.defaultBackgroundColor = defaultBackgroundColor;
+    }
+    if (maxBounds) {
+    	options.maxBounds = maxBounds;
+    }
+
+    const map = new mapgl.Map('map', options);
+
+    if (styleZoom) {
+    	// TODO: использовать опцию создания карты, когда такая появится
+    	map.setStyleZoom(styleZoom, {animate: false});
+    }
 
     const emit = (name, args) => {
         if (bridge && bridge.onEvent) {
@@ -102,7 +124,6 @@ window.initMapGL = (
         const center = map.getCenter();
         return `${center[0]};${center[1]}`;
     });
-    subscribe('zoomend', (ev) => map.getZoom());
     subscribe('pitchend', (ev) => map.getPitch());
     subscribe('rotationend', (ev) => map.getRotation());
     subscribe('moveend', (ev) => {
@@ -112,6 +133,12 @@ window.initMapGL = (
     subscribe('resize', (ev) => {
         const bounds = map.getBounds();
         return `${bounds.northEast[0]};${bounds.northEast[1]} ${bounds.southWest[0]};${bounds.southWest[1]}`;
+    });
+    map.on('zoomend', (ev) => {
+    	emit('zoomChanged', map.getZoom());
+    });
+    map.on('moveend', (ev) => {
+    	emit('styleZoomChanged', map.getStyleZoom());
     });
 
     window.addEventListener('resize', () => map.invalidateSize());
@@ -308,6 +335,10 @@ window.initMapGL = (
 			directionsMap.delete(id);
 		},
 
+		setStyle: (id) => {
+			map.setStyleById(id);
+		},
+
 		call: (callId, name, args) => {
 			const dm = window.dgismap;
 			const action = dm[name];
@@ -347,6 +378,8 @@ window.initMapGL = (
 
     const bounds = map.getBounds();
     emit('initBounds', `${bounds.northEast[0]};${bounds.northEast[1]} ${bounds.southWest[0]};${bounds.southWest[1]}`);
+    emit('zoomChanged', map.getZoom());
+    emit('styleZoomChanged', map.getStyleZoom());
     emit('initialized');
 };
 

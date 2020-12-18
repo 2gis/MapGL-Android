@@ -52,7 +52,9 @@
         <activity
             android:name=".PedestrianRouteActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />
-
+        <activity
+            android:name=".StyleActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
     </application>
 
 </manifest>
