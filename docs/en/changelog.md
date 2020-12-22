@@ -4,7 +4,9 @@
 
 **Release Date:** 22.12.2020
 
-* It's possible to customize a map style now
+* Added **Map**.[`setStyle`](/en/android/webgl/maps/reference/Map#nav-lvl1--setStyle) method that allowed set custom map style ID, that you can get at <https://styles.2gis.com>.
+* Added **Map**.[`styleZoom`](/en/android/webgl/maps/reference/Map#nav-lvl1--styleZoom) properties
+* Added **MapFragment**.[`setup`](/en/android/webgl/maps/reference/MapFragment#nav-lvl1--setup) arguments style, styleZoom, defaultBackgroundColor, maxBounds
 
 ## 1.7.0
 
@@ -39,7 +41,7 @@
 * Added [`ImageFactory`](/en/android/webgl/maps/reference/ImageFactory) for loading icon image from assets, resources, Bitmap or local file
 * Added _onFinish_ callback for **Directions**.[`carRoute`](/en/android/webgl/maps/reference/Directions#nav-lvl2--carRoute) that allow get successful or failed result on function call
 * Added stretched image background [`LabelImage`](/en/android/webgl/maps/reference/LabelImage) that can be used in [`LabelOptions`](en/android/webgl/maps/reference/LabelOptions)
-* Added method for showing user geolocation – [`enableUserLocation`](https://docs-canary.2gis.com/en/android/webgl/maps/reference/Map#nav-lvl2--enableUserLocation) [`disableUserLocation`](/en/android/webgl/maps/reference/Map#nav-lvl2--disableUserLocation)
+* Added method for showing user geolocation – [`enableUserLocation`](/en/android/webgl/maps/reference/Map#nav-lvl2--enableUserLocation) [`disableUserLocation`](/en/android/webgl/maps/reference/Map#nav-lvl2--disableUserLocation)
 
 ## 1.2.1
 
