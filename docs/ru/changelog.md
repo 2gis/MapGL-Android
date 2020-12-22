@@ -4,7 +4,9 @@
 
 **Release Date:** 22.12.2020
 
-* It's possible to customize a map style now
+* Added **Map**.[`setStyle`](/ru/android/webgl/maps/reference/Map#nav-lvl1--setStyle) method that allowed set custom map style ID, that you can get at <https://styles.2gis.com>.
+* Added **Map**.[`styleZoom`](/ru/android/webgl/maps/reference/Map#nav-lvl1--styleZoom) properties
+* Added **MapFragment**.[`setup`](/ru/android/webgl/maps/reference/MapFragment#nav-lvl1--setup) arguments style, styleZoom, defaultBackgroundColor, maxBounds
 
 ## 1.7.0
 
