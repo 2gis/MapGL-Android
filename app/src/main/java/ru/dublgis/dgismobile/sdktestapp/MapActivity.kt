@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -14,13 +13,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.dialog_layout.view.*
 import ru.dublgis.dgismobile.mapsdk.LonLat
+import ru.dublgis.dgismobile.mapsdk.LonLatBounds
 import ru.dublgis.dgismobile.mapsdk.Map
+import ru.dublgis.dgismobile.mapsdk.StyleId
 import ru.dublgis.dgismobile.mapsdk.location.UserLocationOptions
 import kotlin.reflect.KClass
 import ru.dublgis.dgismobile.mapsdk.MapFragment as DGisMapFragment
 
-
-abstract class MapActivity : AppCompatActivity() {
+abstract class MapActivity(val options: Options = Options()) : AppCompatActivity() {
+    data class Options(
+        val center: LonLat? = null,
+        val zoom: Double? = null,
+        val style: StyleId? = null,
+        val styleZoom: Double? = null,
+        val defaultBackgroundColor: Int? = null,
+        val maxBounds: LonLatBounds? = null)
 
     protected var map: Map? = null
 
@@ -43,8 +50,12 @@ abstract class MapActivity : AppCompatActivity() {
         mapFragment.mapReadyCallback = this::onDGisMapReady
         mapFragment.setup(
             apiKey = apiKey,
-            center = LonLat(55.30771, 25.20314),
-            zoom = 12.0
+            center = options.center ?: LonLat(55.30771, 25.20314),
+            zoom = options.zoom ?: 12.0,
+            style = options.style,
+            styleZoom = options.styleZoom,
+            defaultBackgroundColor = options.defaultBackgroundColor,
+            maxBounds = options.maxBounds
         )
 
         mapOf(
@@ -72,7 +83,7 @@ abstract class MapActivity : AppCompatActivity() {
         onDGisMapReady()
     }
 
-    protected abstract fun onDGisMapReady()
+    protected open fun onDGisMapReady() {}
 
     private fun centerMap(@Suppress("UNUSED_PARAMETER") view: View?) {
         map?.run {

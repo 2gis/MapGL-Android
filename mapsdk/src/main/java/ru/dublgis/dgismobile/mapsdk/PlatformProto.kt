@@ -12,20 +12,25 @@ internal interface PlatformSerializable {
 internal class JsArg {
     private val repr: String
 
-    constructor(value: String) {
-        repr = "\"$value\""
+    constructor(value: String?) {
+        repr = if (value != null) "\"$value\"" else "null"
     }
 
     constructor(value: Number) {
         repr = value.toString()
     }
 
-    constructor(value: PlatformSerializable) {
-        repr = with(StringWriter()) {
-            JsonWriter(this).let {
-                value.dump(it)
+    constructor(value: PlatformSerializable?) {
+        if (value != null) {
+            repr = with(StringWriter()) {
+                JsonWriter(this).let {
+                    value.dump(it)
+                }
+                toString()
             }
-            toString()
+        }
+        else {
+            repr = "null"
         }
     }
 

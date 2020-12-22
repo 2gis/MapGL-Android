@@ -71,7 +71,6 @@ class MapFragment : Fragment() {
                     return super.onConsoleMessage(consoleMessage)
                 }
             }
-            setBackgroundColor(Color.parseColor("#f7f3df"))
             addJavascriptInterface(bridge, "bridge")
             loadData(loadIndexHtml(), "text/html", "base64")
         }
@@ -91,6 +90,16 @@ class MapFragment : Fragment() {
      * @param pitch Map pitch in degrees.
      * @param rotation Map rotation in degrees.
      * @param controls Whether a zoom control should be added during the map initialization.
+     * @param disablePitchByUserInteraction Prevent users from pitching a map.
+     * @param disableRotationByUserInteraction Prevent users from rotating a map.
+     * @param autoHideOSMCopyright Enable OSM copyright auto hide after 5 sec.
+     * @param style Set style id.
+     * @param styleZoom Map style zoom.
+     *   Use this option if you want to set the same zoom that is used in the style settings.
+     *   The styleZoom and zoom options set the same map scale but in different projections.
+     *   If both options are set, the styleZoom has a higher priority than the zoom option.
+     * @param defaultBackgroundColor Set default background color, while style is loading.
+     * @param maxBounds The map will be constrained to the given bounds, if set.
      */
     fun setup(
         apiKey: String,
@@ -105,19 +114,30 @@ class MapFragment : Fragment() {
         controls: Boolean = false,
         disablePitchByUserInteraction: Boolean = false,
         disableRotationByUserInteraction: Boolean = false,
-        autoHideOSMCopyright: Boolean = false
+        autoHideOSMCopyright: Boolean = false,
+        style: StyleId? = null,
+        styleZoom: Double? = null,
+        defaultBackgroundColor: Int? = null,
+        maxBounds: LonLatBounds? = null
 
-    ) = bridge.setup(
-        apiKey,
-        center,
-        maxZoom, minZoom, zoom,
-        maxPitch, minPitch, pitch,
-        rotation,
-        controls,
-        disablePitchByUserInteraction,
-        disableRotationByUserInteraction,
-        autoHideOSMCopyright
-    )
+    ) {
+        webView?.setBackgroundColor(defaultBackgroundColor ?: 0xfff7f3df.toInt())
+        bridge.setup(
+            apiKey,
+            center,
+            maxZoom, minZoom, zoom,
+            maxPitch, minPitch, pitch,
+            rotation,
+            controls,
+            disablePitchByUserInteraction,
+            disableRotationByUserInteraction,
+            autoHideOSMCopyright,
+            style,
+            styleZoom,
+            defaultBackgroundColor,
+            maxBounds
+        )
+    }
 
     // ------------------------------------------------------
 

@@ -32,6 +32,7 @@ interface Map {
     var maxZoom: Double
     var minZoom: Double
     var zoom: Double
+    var styleZoom: Double
 
     var maxPitch: Double
     var minPitch: Double
@@ -60,6 +61,8 @@ interface Map {
 
     fun setOnZoomChangedListener(listener: PropertyChangeListener?)
 
+    fun setOnStyleZoomChangedListener(listener: PropertyChangeListener?)
+
     fun setOnRotationChangedListener(listener: PropertyChangeListener?)
 
     fun setSelectedObjects(objects: Collection<MapObject>)
@@ -83,4 +86,10 @@ interface Map {
     fun disableUserLocation()
 
     val userLocation: LiveData<Location>
+
+    /**
+     * Upload styles object by its id and apply it to the map.
+     * @param style uuid of the style
+     */
+    fun setStyle(style: StyleId)
 }

@@ -125,3 +125,14 @@ To disable highlighting, pass an empty list to the [setSelectedObjects()](/ru/an
 ```
 map?.setSelectedObjects(listOf())
 ```
+
+## Changing the map style
+
+You can set the map style using the `style` parameter of the `MapFragment.setup()`.
+```
+mapFragment.setup(
+    ...,
+    style = StyleId("e05ac437-fcc2-4845-ad74-b1de9ce07555") // Dark Style
+)
+```
+To change the style dynamically use the `Map.setStyle(style: StyleId)` method.

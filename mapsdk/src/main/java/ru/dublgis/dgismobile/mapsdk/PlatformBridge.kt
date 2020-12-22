@@ -3,7 +3,6 @@ package ru.dublgis.dgismobile.mapsdk
 import android.location.Location
 import android.os.Handler
 import android.os.Looper
-import android.util.JsonWriter
 import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
@@ -37,7 +36,7 @@ import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
 import ru.dublgis.dgismobile.mapsdk.location.LocationProvider
 import ru.dublgis.dgismobile.mapsdk.location.LocationProviderFactory
 import ru.dublgis.dgismobile.mapsdk.location.UserLocationOptions
-import java.io.StringWriter
+import ru.dublgis.dgismobile.mapsdk.utils.ColorUtils.jsColorFormat
 import java.lang.ref.WeakReference
 import java.util.concurrent.CompletableFuture
 import kotlin.math.abs
@@ -65,6 +64,7 @@ internal class PlatformBridge(
     private var onCenterChanged: PositionChangeListener? = null
     private var onPitchChanged: PropertyChangeListener? = null
     private var onZoomChanged: PropertyChangeListener? = null
+    private var onStyleZoomChanged: PropertyChangeListener? = null
     private var onRotationChanged: PropertyChangeListener? = null
     private val onFinishedMap = mutableMapOf<String, OnFinished<Unit>>()
 
@@ -86,6 +86,7 @@ internal class PlatformBridge(
     private var _zoom: Double = 0.0
     private var _maxZoom: Double = 0.0
     private var _minZoom: Double = 0.0
+    private var _styleZoom: Double = 0.0
 
     private var _pitch: Double = 0.0
     private var _maxPitch: Double = 0.0
@@ -99,6 +100,11 @@ internal class PlatformBridge(
     private var _disablePitchByUserInteraction: Boolean = false
 
     private var _autoHideOSMCopyright: Boolean = false
+
+    private var _style: StyleId? = null
+    private var _defaultBackgroundColor: Int? = null
+
+    private var _maxBounds: LonLatBounds? = null
 
     private var _controls: Boolean = false
     private val interactiveCopyright: Boolean = false
@@ -131,7 +137,7 @@ internal class PlatformBridge(
 
     fun call(methodName: String, args: Iterable<JsArg> = listOf(), onFinished: OnFinished<Unit>? = null) {
         val callId = if (onFinished == null) {
-            JsArg(null)
+            JsArg(null as String?)
         } else {
             val cid = "call-${this.callbackId++}"
             onFinishedMap[cid] = onFinished
@@ -164,6 +170,17 @@ internal class PlatformBridge(
             jsExecutor(
                 """
                 window.dgismap.map.setZoom(${value});
+            """
+            )
+        }
+
+    override var styleZoom: Double
+        get() = _styleZoom
+        set(value) {
+            _styleZoom = value
+            jsExecutor(
+                """
+                window.dgismap.map.setStyleZoom(${value});
             """
             )
         }
@@ -577,6 +594,10 @@ internal class PlatformBridge(
         onZoomChanged = listener
     }
 
+    override fun setOnStyleZoomChangedListener(listener: PropertyChangeListener?) {
+        onStyleZoomChanged = listener
+    }
+
     override fun addMarker(options: MarkerOptions): Marker {
         val marker = MarkerImpl(WeakReference(this), options, "${markerId++}")
 
@@ -640,6 +661,11 @@ internal class PlatformBridge(
         )
     }
 
+    override fun setStyle(style: StyleId) {
+        _style = style
+        call("setStyle", listOf(JsArg(style.value)))
+    }
+
     override fun onPageFinished(view: WebView?, url: String?) {
         super.onPageFinished(view, url)
         jsExecutor(
@@ -655,7 +681,11 @@ internal class PlatformBridge(
                 $interactiveCopyright,
                 $_disablePitchByUserInteraction,
                 $_disableRotationByUserInteraction,
-                $_autoHideOSMCopyright
+                $_autoHideOSMCopyright,
+                ${JsArg(_style?.value)},
+                ${JsArg(_styleZoom)},
+                ${JsArg(_defaultBackgroundColor?.let { jsColorFormat(it) })},
+                ${JsArg(_maxBounds)}
             );
         """
         )
@@ -670,12 +700,16 @@ internal class PlatformBridge(
         controls: Boolean,
         disablePitchByUserInteraction: Boolean,
         disableRotationByUserInteraction: Boolean,
-        autoHideOSMCopyright: Boolean
+        autoHideOSMCopyright: Boolean,
+        style: StyleId?,
+        styleZoom: Double?,
+        defaultBackgroundColor: Int?,
+        maxBounds: LonLatBounds?
     ) {
         _center = center
         _maxZoom = maxZoom
         _minZoom = minZoom
-        _zoom = zoom
+        _zoom = if (styleZoom == null) zoom else 0.0
         _maxPitch = maxPitch
         _minPitch = minPitch
         _pitch = pitch
@@ -685,6 +719,10 @@ internal class PlatformBridge(
         _disablePitchByUserInteraction = disablePitchByUserInteraction
         _disableRotationByUserInteraction = disableRotationByUserInteraction
         _autoHideOSMCopyright = autoHideOSMCopyright
+        _style = style
+        _styleZoom = styleZoom ?: 0.0
+        _defaultBackgroundColor = defaultBackgroundColor
+        _maxBounds = maxBounds
     }
 
 
@@ -759,11 +797,18 @@ internal class PlatformBridge(
                         onCenterChanged?.invoke(center)
                     }
                 }
-                "zoomend" -> {
+                "zoomChanged" -> {
                     val zoom = parseDouble(payload, _zoom)
                     if (isDifferent(_zoom, zoom)) {
                         _zoom = zoom
                         onZoomChanged?.invoke(zoom)
+                    }
+                }
+                "styleZoomChanged" -> {
+                    val styleZoom = parseDouble(payload, _styleZoom)
+                    if (isDifferent(_styleZoom, styleZoom)) {
+                        _styleZoom = styleZoom
+                        onStyleZoomChanged?.invoke(styleZoom)
                     }
                 }
                 "pitched" -> {
