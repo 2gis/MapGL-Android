@@ -1,5 +1,11 @@
 # Release notes
 
+## 1.8.0
+
+**Release Date:** 22.12.2020
+
+* It's possible to customize a map style now
+
 ## 1.7.0
 
 **Release Date:** 18.11.2020
