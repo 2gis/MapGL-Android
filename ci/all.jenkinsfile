@@ -166,15 +166,6 @@ pipeline {
                             )
                         }
 
-                        sh(
-                            label: "Очистка системы",
-                            script: """
-                                ps aux | grep emulator | grep -v 'grep' | awk '{print \$2}' | xargs kill
-    
-                                /opt/android-sdk/platform-tools/adb kill-server
-                            """
-                        )
-
                         archiveArtifacts(artifacts: 'logcat.txt', allowEmptyArchive: true)
                     }
                 }
