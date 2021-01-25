@@ -89,7 +89,7 @@ private fun onDGisMapReady(map: DGisMap?) {
 }
 ```
 
-## Getting information about the tapped object
+## Handling touch events
 
 To receive map tap events, you can add a click listener to the map itself.
 
@@ -110,7 +110,7 @@ fun onDGisMapReady(map: Map?) {
 
 You can highlight map objects, such as buildings, roads, and others.
 
-To do that, call the [setSelectedObjects()](/en/android/webgl/maps/reference/Map#nav-lvl2--setSelectedObjects) method and pass the list of object IDs wrapped in a call of [mapObjectsByIds()](/en/android/webgl/maps/reference/mapObjectsByIds). You can get the IDs by adding a click listener to the map (see the [Getting information about the tapped object section](#nav-lvl1--Getting_information_about_the_tapped_object)).
+To do that, call the [setSelectedObjects()](/en/android/webgl/maps/reference/Map#nav-lvl2--setSelectedObjects) method and pass the list of object IDs wrapped in a call of [mapObjectsByIds()](/en/android/webgl/maps/reference/mapObjectsByIds). You can get the IDs by adding a click listener to the map (see the [Handling touch events section](#nav-lvl1--Handling_touch_events)).
 
 ```
 map?.setSelectedObjects(mapObjectsByIds("48231504731808815", "23520539192555249"))
