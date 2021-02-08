@@ -13,53 +13,37 @@ import ru.dublgis.dgismobile.sdktestapp.R
 
 
 class ExpandableGroupButton(context: Context, attrs: AttributeSet?) :
-    LinearLayout(context, attrs), MenuButton {
+    LinearLayout(context, attrs) {
 
-    private var isSel: Boolean = false
+    private var expanded: Boolean = false
 
     constructor(
         context: Context,
         text: String,
-        itemButtons: Collection<ItemButton>,
-        onClickListener: OnClickListener
+        itemButtons: Collection<ItemButton>
     ) : this(
         context,
         null
     ) {
+        inflate(context, R.layout.layout_exp_group_button, this)
         groupName.text = text
         for (itemButton in itemButtons)
             expButtonsList.addView(itemButton)
 
-        setOnClickListener(onClickListener)
+        setOnClickListener {
+            expanded = !expanded
+            updateView()
+        }
+        updateView()
     }
 
-    init {
-        inflate(context, R.layout.layout_exp_group_button, this)
-        expButtonsList.visibility = GONE
-    }
-
-    override val isSelect: Boolean
-        get() = isSel
-
-    override fun select() {
-        groupName.typeface = Typeface.create(
-            resources.getString(R.string.roboto_medium),
-            Typeface.NORMAL
-        )
-        group.setBackgroundColor(ContextCompat.getColor(context, R.color.white_gray))
-        chevron.setImageDrawable(resources.getDrawable(R.drawable.ic_chevron_active))
-        expButtonsList.visibility = View.VISIBLE
-        isSel = true
-    }
-
-    override fun unselect() {
-        groupName.typeface = Typeface.create(
-            resources.getString(R.string.roboto_regular),
-            Typeface.NORMAL
-        )
-        group.setBackgroundColor(Color.WHITE)
-        chevron.setImageDrawable(resources.getDrawable(R.drawable.ic_chevron))
-        expButtonsList.visibility = View.GONE
-        isSel = false
+    private fun updateView() {
+        groupName.setTypeface(null, if (expanded) Typeface.BOLD else Typeface.NORMAL)
+        group.setBackgroundColor(if (expanded) ContextCompat.getColor(context, R.color.white_gray) else Color.WHITE)
+        chevron.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_chevron_active))
+        chevron.rotation = if (expanded) 0.0f else 180.0f
+        expButtonsList.visibility = if (expanded) View.VISIBLE else View.GONE
+        expDivider.visibility = if (expanded) View.VISIBLE else View.GONE
+        divider.visibility = if (expanded) View.GONE else View.VISIBLE
     }
 }
