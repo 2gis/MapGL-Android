@@ -17,13 +17,10 @@ class ItemButton(context: Context, attrs: AttributeSet?) : RelativeLayout(contex
         context,
         null
     ) {
+        inflate(context, R.layout.layout_item_button, this)
         this.text = text
         this.nextActivityClass = nextActivityClass
         itemName.text = text
-    }
-
-    init {
-        inflate(context, R.layout.layout_item_button, this)
 
         setOnClickListener {
             MapActivity.startActivity(context, text, nextActivityClass)
