@@ -339,6 +339,10 @@ window.initMapGL = (
 			map.setStyleById(id);
 		},
 
+		fitBounds: (bounds, options) => {
+			map.fitBounds(bounds, options);
+		},
+
 		call: (callId, name, args) => {
 			const dm = window.dgismap;
 			const action = dm[name];

@@ -92,4 +92,13 @@ interface Map {
      * @param style uuid of the style
      */
     fun setStyle(style: StyleId)
+
+    /**
+     * Pans and zooms the map to contain its visible area within the specified geographical bounds.
+     * This method also resets the map pitch and rotation to 0. But the map rotation can be saved
+     * by option considerRotation.
+     * @param bounds The geographical bounds to fit in
+     * @param options FitBounds options
+     */
+    fun fitBounds(bounds: LonLatBounds, options: FitBoundsOptions? = null)
 }
