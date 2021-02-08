@@ -666,6 +666,10 @@ internal class PlatformBridge(
         call("setStyle", listOf(JsArg(style.value)))
     }
 
+    override fun fitBounds(bounds: LonLatBounds, options: FitBoundsOptions?) {
+        call("fitBounds", listOf(JsArg(bounds), JsArg(options)))
+    }
+
     override fun onPageFinished(view: WebView?, url: String?) {
         super.onPageFinished(view, url)
         jsExecutor(

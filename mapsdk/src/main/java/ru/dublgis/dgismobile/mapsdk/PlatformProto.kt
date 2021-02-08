@@ -8,6 +8,14 @@ internal interface PlatformSerializable {
     fun dump(writer: JsonWriter)
 }
 
+internal fun JsonWriter.value(serializable: PlatformSerializable?) {
+    if (serializable != null) {
+        serializable.dump(this)
+    }
+    else {
+        nullValue()
+    }
+}
 
 internal class JsArg {
     private val repr: String
