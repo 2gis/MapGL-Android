@@ -11,6 +11,7 @@ import java.io.File
 import java.io.IOException
 import java.lang.IllegalArgumentException
 import java.lang.RuntimeException
+import java.net.URL
 
 /**
  * Factory for creating Images.
@@ -79,5 +80,12 @@ class ImageFactory(private val context: Context) {
             ?: throw IOException("Can't load the image from file ${file.name}")
 
         return fromBitmap(bitmap)
+    }
+
+    /**
+     * Creates an image from URL.
+     */
+    fun fromUrl(url: URL): Image {
+        return ImageImpl(url.toString());
     }
 }

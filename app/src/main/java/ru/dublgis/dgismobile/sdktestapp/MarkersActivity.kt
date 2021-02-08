@@ -9,6 +9,7 @@ import ru.dublgis.dgismobile.mapsdk.image.ImageFactory
 import ru.dublgis.dgismobile.mapsdk.labels.LabelImage
 import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
 import java.lang.ref.WeakReference
+import java.net.URL
 
 
 class MarkersActivity : MapActivity() {
@@ -21,6 +22,7 @@ class MarkersActivity : MapActivity() {
         showMarker()
         showMarkerWithCustomIcon()
         showMarkerWithLabelBackground()
+        showMarkerFromUrl()
     }
 
     private fun showMarkerWithLabelBackground() {
@@ -48,6 +50,15 @@ class MarkersActivity : MapActivity() {
             MarkerOptions(
                 LonLat(55.2762656, 25.2228653),
                 icon = ImageFactory(this).fromAsset("marker.svg")
+            )
+        )
+    }
+
+    private fun showMarkerFromUrl() {
+        map?.addMarker(
+            MarkerOptions(
+                LonLat(lon=55.32288096, lat=25.1720255),
+                icon = ImageFactory(this).fromUrl(URL("https://docs.2gis.com/img/mapgl/marker.svg"))
             )
         )
     }
