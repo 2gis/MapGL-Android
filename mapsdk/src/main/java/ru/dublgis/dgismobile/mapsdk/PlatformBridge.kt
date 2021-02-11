@@ -109,6 +109,8 @@ internal class PlatformBridge(
     private var _controls: Boolean = false
     private val interactiveCopyright: Boolean = false
 
+    private lateinit var support: MapSupport
+
     private var clusterId = 0
     private var polylineId = 0
     private var polygonId = 0
@@ -670,6 +672,19 @@ internal class PlatformBridge(
         call("fitBounds", listOf(JsArg(bounds), JsArg(options)))
     }
 
+    override fun isSupported(options: MapSupportOptions?): Boolean {
+        return notSupportedReason(options) == null
+    }
+
+    override fun notSupportedReason(options: MapSupportOptions?): String? {
+        if (options?.failIfMajorPerformanceCaveat == true) {
+            return support.notSupportedWithGoodPerformanceReason
+        }
+        else {
+            return support.notSupportedReason
+        }
+    }
+
     override fun onPageFinished(view: WebView?, url: String?) {
         super.onPageFinished(view, url)
         jsExecutor(
@@ -857,6 +872,13 @@ internal class PlatformBridge(
                     val northEast = parseLonLat(payload.substringBefore(" "))
                     val southWest = parseLonLat(payload.substringAfter(" "))
                     _bounds = LonLatBounds(northEast, southWest)
+                }
+                "supportChanged" -> {
+                    val values = payload.split(";")
+                    support = MapSupport(
+                        if (values[0] != "undefined") values[0] else null,
+                        if (values[1] != "undefined") values[1] else null
+                    )
                 }
                 else -> {
                     Log.w(TAG, "unexpected event type")

@@ -384,6 +384,11 @@ window.initMapGL = (
     emit('initBounds', `${bounds.northEast[0]};${bounds.northEast[1]} ${bounds.southWest[0]};${bounds.southWest[1]}`);
     emit('zoomChanged', map.getZoom());
     emit('styleZoomChanged', map.getStyleZoom());
+
+    const notSupportedReason = mapgl.notSupportedReason({failIfMajorPerformanceCaveat: false});
+    const notSupportedWithGoodPerformanceReason = mapgl.notSupportedReason({failIfMajorPerformanceCaveat: true});
+    emit('supportChanged', `${notSupportedReason};${notSupportedWithGoodPerformanceReason}`);
+
     emit('initialized');
 };
 

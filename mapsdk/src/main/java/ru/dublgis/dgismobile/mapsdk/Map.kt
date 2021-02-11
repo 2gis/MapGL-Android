@@ -101,4 +101,15 @@ interface Map {
      * @param options FitBounds options
      */
     fun fitBounds(bounds: LonLatBounds, options: FitBoundsOptions? = null)
+
+    /**
+     * Tests whether the current browser supports MapGL.
+     * Use our raster map implementation https://api.2gis.ru/doc/maps/en/quickstart/ if not.
+     */
+    fun isSupported(options: MapSupportOptions? = null): Boolean
+
+    /**
+     * Tests whether the current browser supports MapGL and returns the reason
+     */
+    fun notSupportedReason(options: MapSupportOptions? = null): String?
 }
