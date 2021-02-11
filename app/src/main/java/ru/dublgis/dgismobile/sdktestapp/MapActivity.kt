@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -81,12 +82,14 @@ abstract class MapActivity(val options: Options = Options()) : AppCompatActivity
         return true
     }
 
-    private fun onDGisMapReady(controller: Map?) {
-        map = controller
-        map?.enableUserLocation(UserLocationOptions(isVisible = true))
-        map?.userLocation?.observe(this, Observer {
-        })
+    private fun onDGisMapReady(map: Map) {
+        this.map = map
+        map.enableUserLocation(UserLocationOptions(isVisible = true))
+        map.userLocation.observe(this, Observer {})
 
+        if (!map.isSupported()) {
+            Log.e(TAG, "MapGL SDK is not supported: ${map.notSupportedReason()}")
+        }
         onDGisMapReady()
     }
 
