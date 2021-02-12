@@ -38,6 +38,8 @@ dependencies {
 
 After that, you should be good to go. Check the [Examples](/en/android/webgl/maps/examples) section to see how to display the map in your application. Alternatively, check the [API Reference](/en/android/webgl/maps/reference) to learn more about specific classes and methods.
 
+Also, you could visit [the GitHub repository](https://github.com/2gis/MapGL-Android/) to learn more about the SDK and get familiar with sample project.
+
 ## License
 
 2GIS Android MapGL is licensed under the BSD 2-Clause "Simplified" License. See the [LICENSE](https://github.com/2gis/MapGL-Android/blob/master/LICENSE) file for more information.
