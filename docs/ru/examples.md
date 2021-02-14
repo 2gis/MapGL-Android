@@ -1,8 +1,8 @@
-# Examples
+# Примеры
 
-## Creating a map widget
+## Создание виджета карты
 
-To display a map, first add the following Fragment to your layout:
+Чтобы отобразить карту, для начала добавьте следующий [Fragment](https://developer.android.com/reference/android/app/Fragment) в ваш layout-файл:
 
 ```
 <fragment
@@ -13,9 +13,9 @@ To display a map, first add the following Fragment to your layout:
 />
 ```
 
-Then, initialize the widget by calling the `setup()` method and passing your `API key`. You can also pass the initial coordinates and the required zoom level. See the [API Reference](/ru/android/webgl/maps/reference/MapFragment) for the full list of options.
+Затем инициализируйте виджет, вызвав метод `setup()` и передав свой ключ API. Вы также можете передать начальные координаты и требуемый масштаб. Полный список возможных параметров приведён в [описании API](/en/android/webgl/maps/reference/MapFragment).
 
-For example, the following code will show the map of Moscow centered around the Kremlin with the default level of zoom:
+Например, приведённый ниже фрагмент кода показывает карту Москвы с Кремлём в центре карты и масштабом по умолчанию:
 
 ```
 val mapFragment = supportFragmentManager.findFragmentById(R.id.mapFragment) as MapFragment
@@ -28,15 +28,15 @@ mapFragment.setup(
 
 <img src="/img/android_mapgl_examples_kremlin.png" alt="" /> <br/>
 
-To call a custom function after the map has been initialized, you can specify it as a callback:
+Для вызова какой-либо функции после инициализации карты, укажите её как callback:
 
 ```
 mapFragment.mapReadyCallback = this::onDGisMapReady
 ```
 
-## Adding a marker
+## Добавление маркера
 
-You can add any number of markers to a map. The most common way to do that is in the callback function of the map:
+Вы можете добавить на карту любое количество маркеров. Чаще всего это делается через callback-функцию карты:
 
 ```
 private fun onDGisMapReady(map: DGisMap?) {
@@ -52,9 +52,9 @@ mapFragment.mapReadyCallback = this::onDGisMapReady
 
 <img src="/img/android_mapgl_examples_kremlin_with_marker.png" alt="" /> <br/>
 
-The only required parameter is the coordinates of the marker.
+Из параметров вам нужно задать только координаты маркера.
 
-Additionally, you can change the marker's appearance. You can specify the icon in SVG format, the size of the marker in pixels (width × height), and the anchor - the coordinates of the hotspot of the icon (X × Y, relative to the top-left corner). See the [API Reference](/ru/android/webgl/maps/reference/MarkerOptions) for more information on the MarkerOptions class.
+Кроме того, вы можете изменить внешний вид маркера. Вы можете задать иконку в SVG-формате, размер маркера в пикселях (ширина × высота), и якорь - координаты точки, к которой привязывается маркер (X × Y, относительно левого верхнего угла). Более подробную информацию о классе MarkerOptions смотрите в [описании API](/en/android/webgl/maps/reference/MarkerOptions).
 
 <img src="/img/android_mapgl_examples_anchor.png" alt="" /> <br/>
 
@@ -71,7 +71,7 @@ private fun onDGisMapReady(map: DGisMap?) {
 }
 ```
 
-You can also add a click listener to the marker to receive a click/tap event:
+Также вы можете добавить click listener для маркера, чтобы получать события клика/касания:
 
 ```
 private fun onDGisMapReady(map: DGisMap?) {
@@ -89,11 +89,11 @@ private fun onDGisMapReady(map: DGisMap?) {
 }
 ```
 
-## Getting information about the tapped object
+## Обработка событий нажатия
 
-To receive map tap events, you can add a click listener to the map itself.
+Чтобы получать события нажатия на карту, вы можете добавить click listener для самой карты.
 
-For each object on a map, you can get the coordinates (`event.lngLat`) and internal ID (`event.target.id`). You can then use the ID of an object to highlight that object on the map (see [Highlighting objects](#nav-lvl1--Highlighting_objects)). The same ID can be used, for example, to get full information about the object via the [Places API](/ru/api/search/places/overview), since the IDs are the same for all APIs.
+Для каждого объекта на карте можно получить координаты (`event.lngLat`) и внутренний ID (`event.target.id`). Затем вы сможете использовать ID объекта, чтобы выделить его на карте (подробнее в разделе [Выделение объектов](#nav-lvl1--Выделение_объектов)). Этот же ID можно использовать для получения полной информации об объекте через другие API, например, [Places API](/ru/api/search/places/overview), так как ID объектов одинаковы для всех API.
 
 ```
 fun onDGisMapReady(map: Map?) {
@@ -106,11 +106,11 @@ fun onDGisMapReady(map: Map?) {
 }
 ```
 
-## Highlighting objects
+## Выделение объектов
 
-You can highlight map objects, such as buildings, roads, and others.
+Вы можете выделять на карте объекты: здания, дороги и т. д.
 
-To do that, call the [setSelectedObjects()](/ru/android/webgl/maps/reference/Map#nav-lvl2--setSelectedObjects) method and pass the list of object IDs wrapped in a call of [mapObjectsByIds()](/ru/android/webgl/maps/reference/mapObjectsByIds). You can get the IDs by adding a click listener to the map (see the [Getting information about the tapped object section](#nav-lvl1--Getting_information_about_the_tapped_object)).
+Для этого вызовите метод [mapObjectsByIds()](/en/android/webgl/maps/reference/mapObjectsByIds), передав ему список ID объектов, а затем вызовите метод [setSelectedObjects()](/en/android/webgl/maps/reference/Map#nav-lvl1--setSelectedObjects) по результату mapObjectsByIds(). Вы можете получить нужные ID, добавив для карты click listener (смотрите раздел [Обработка событий нажатия](#nav-lvl1--Обработка_событий_нажатия)).
 
 ```
 map?.setSelectedObjects(mapObjectsByIds("48231504731808815", "23520539192555249"))
@@ -118,21 +118,10 @@ map?.setSelectedObjects(mapObjectsByIds("48231504731808815", "23520539192555249"
 
 <img src="/img/android_mapgl_examples_highlight.gif" alt="" /> <br/>
 
-To change the list of highlighted objects, simply call this method again, passing the list of new IDs.
+Чтобы изменить список выделенных объектов, вызовите этот метод еще раз, передав в него новый список ID.
 
-To disable highlighting, pass an empty list to the [setSelectedObjects()](/ru/android/webgl/maps/reference/Map#nav-lvl2--setSelectedObjects) method.
+Чтобы убрать все выделения с карты, передайте пустой список методу [setSelectedObjects()](/en/android/webgl/maps/reference/Map#nav-lvl2--setSelectedObjects).
 
 ```
 map?.setSelectedObjects(listOf())
 ```
-
-## Changing the map style
-
-You can set the map style using the `style` parameter of the `MapFragment.setup()`.
-```
-mapFragment.setup(
-    ...,
-    style = StyleId("e05ac437-fcc2-4845-ad74-b1de9ce07555") // Dark Style
-)
-```
-To change the style dynamically use the `Map.setStyle(style: StyleId)` method.
