@@ -1,12 +1,11 @@
 package ru.dublgis.dgismobile.mapsdk
 
 import android.location.Location
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.webkit.JavascriptInterface
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -859,5 +858,19 @@ internal class PlatformBridge(
                 }
             }
         }
+    }
+
+    override fun onReceivedError(
+        view: WebView?,
+        request: WebResourceRequest?,
+        error: WebResourceError?
+    ) {
+        super.onReceivedError(view, request, error)
+        val msg = if (Build.VERSION.SDK_INT < 23) {
+            "WebView Error. Url ${request?.url}"
+        } else {
+            "WebView Error[${error?.errorCode}]: ${error?.description} | ${request?.url}"
+        }
+        Log.w(TAG, msg)
     }
 }
