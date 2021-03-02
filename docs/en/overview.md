@@ -23,7 +23,7 @@ To install the SDK:
 ```
 repositories {
     maven {
-     url "https://dl.bintray.com/2gis/maven"
+     url "https://maven.2gis.dev/libs-snapshot"
     }
 }
 ```

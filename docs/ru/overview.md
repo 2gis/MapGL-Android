@@ -23,7 +23,7 @@ Android MapGL SDK от 2GIS позволяет добавить [карту 2GIS
 ```
 repositories {
     maven {
-     url "https://dl.bintray.com/2gis/maven"
+     url "https://maven.2gis.dev/libs-snapshot"
     }
 }
 ```
