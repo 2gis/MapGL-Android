@@ -167,7 +167,11 @@ afterEvaluate {
     }
 
     artifactoryPublish {
-        publications(publishing.publications.aarSnapshot)
+        if (isReleaseBuild) {
+            publications(publishing.publications.aar)
+        } else {
+            publications(publishing.publications.aarSnapshot)
+        }
     }
 }
 
