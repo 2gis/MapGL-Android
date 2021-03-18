@@ -16,6 +16,7 @@ class ButtonsLayout(context: Context, attrs: AttributeSet) : LinearLayout(contex
         addView(GroupButton(context, "Style", StyleActivity::class))
         addView(GroupButton(context, "Object selection", ObjectSelectionActivity::class))
         addView(GroupButton(context, "Clustering", ClusterersActivity::class))
+        addView(GroupButton(context, "Floors", FloorsActivity::class))
 
         addView(
             ExpandableGroupButton(
