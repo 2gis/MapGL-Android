@@ -3,13 +3,13 @@ package ru.dublgis.dgismobile.mapsdk
 import android.util.JsonWriter
 
 /**
- * Padding in pixels from the different sides of the map canvas.
+ * Padding in density independent pixels from the different sides of the map canvas.
  */
 data class Padding(
-    val bottom: Int = 0,
-    val left: Int = 0,
-    val right: Int = 0,
-    val top: Int = 0
+    val bottom: Float = 0.0f,
+    val left: Float = 0.0f,
+    val right: Float = 0.0f,
+    val top: Float = 0.0f
 ) : PlatformSerializable {
     override fun dump(writer: JsonWriter) {
         writer.apply {
@@ -20,5 +20,9 @@ data class Padding(
             name("top").value(top)
             endObject()
         }
+    }
+
+    companion object {
+        val EMPTY = Padding()
     }
 }

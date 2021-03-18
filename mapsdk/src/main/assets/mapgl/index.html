@@ -43,7 +43,8 @@ window.initMapGL = (
         style,
         styleZoom,
         defaultBackgroundColor,
-        maxBounds) => {
+        maxBounds,
+        padding) => {
 
     const markers = new Map();
     const clusterers = new Map();
@@ -87,6 +88,9 @@ window.initMapGL = (
     }
     if (maxBounds) {
     	options.maxBounds = maxBounds;
+    }
+    if (padding) {
+    	options.padding = padding;
     }
 
     const map = new mapgl.Map('map', options);
@@ -351,7 +355,11 @@ window.initMapGL = (
 		},
 
 		setFloorPlanLevel: (floorPlanId, floorLevelIndex) => {
-			map.setFloorPlanLevel(floorPlanId, floorLevelIndex)
+			map.setFloorPlanLevel(floorPlanId, floorLevelIndex);
+		},
+
+		setPadding: (padding) => {
+			map.setPadding(padding);
 		},
 
 		call: (callId, name, args) => {
