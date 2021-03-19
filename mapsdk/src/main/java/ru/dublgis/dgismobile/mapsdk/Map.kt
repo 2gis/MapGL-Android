@@ -51,6 +51,12 @@ interface Map {
      */
     val floorPlan: LiveData<FloorPlan?>
 
+    /**
+     * Padding in density independent pixels from the different sides of the map canvas.
+     * It influences map moving methods such as fitBounds.
+     */
+    var padding: Padding
+
     fun addMarker(options: MarkerOptions): Marker
 
     fun removeMarker(marker: Marker)

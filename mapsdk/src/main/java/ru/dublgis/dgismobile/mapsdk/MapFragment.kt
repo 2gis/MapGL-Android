@@ -118,8 +118,8 @@ class MapFragment : Fragment() {
         style: StyleId? = null,
         styleZoom: Double? = null,
         defaultBackgroundColor: Int? = null,
-        maxBounds: LonLatBounds? = null
-
+        maxBounds: LonLatBounds? = null,
+        padding: Padding? = null
     ) {
         webView?.setBackgroundColor(defaultBackgroundColor ?: 0xfff7f3df.toInt())
         bridge.setup(
@@ -135,7 +135,8 @@ class MapFragment : Fragment() {
             style,
             styleZoom,
             defaultBackgroundColor,
-            maxBounds
+            maxBounds,
+            padding
         )
     }
 

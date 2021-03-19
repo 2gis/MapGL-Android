@@ -14,7 +14,7 @@ import ru.dublgis.dgismobile.mapsdk.floors.FloorPlan
 
 @SuppressLint("ViewConstructor")
 class FloorsControl(
-    val floorPlan: FloorPlan,
+    floorPlan: FloorPlan,
     context: Context
 ) : LinearLayout(context, null, 0) {
     init {

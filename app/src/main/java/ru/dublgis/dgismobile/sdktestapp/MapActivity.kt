@@ -7,15 +7,15 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.dialog_layout.view.*
-import ru.dublgis.dgismobile.mapsdk.LonLat
-import ru.dublgis.dgismobile.mapsdk.LonLatBounds
+import ru.dublgis.dgismobile.mapsdk.*
 import ru.dublgis.dgismobile.mapsdk.Map
-import ru.dublgis.dgismobile.mapsdk.StyleId
 import ru.dublgis.dgismobile.mapsdk.location.UserLocationOptions
 import kotlin.reflect.KClass
 import ru.dublgis.dgismobile.mapsdk.MapFragment as DGisMapFragment
@@ -29,7 +29,9 @@ abstract class MapActivity(val options: Options = Options()) : AppCompatActivity
         val minZoom: Double = 2.0,
         val maxZoom: Double = 18.0,
         val defaultBackgroundColor: Int? = null,
-        val maxBounds: LonLatBounds? = null)
+        val maxBounds: LonLatBounds? = null,
+        val padding: Padding? = null)
+
 
     protected var map: Map? = null
 
@@ -59,7 +61,8 @@ abstract class MapActivity(val options: Options = Options()) : AppCompatActivity
             minZoom = options.minZoom,
             maxZoom = options.maxZoom,
             defaultBackgroundColor = options.defaultBackgroundColor,
-            maxBounds = options.maxBounds
+            maxBounds = options.maxBounds,
+            padding = options.padding
         )
 
         mapOf(
@@ -150,6 +153,18 @@ abstract class MapActivity(val options: Options = Options()) : AppCompatActivity
 
         dialog.setView(customLayout)
         dialog.show()
+    }
+
+    fun addActionButton(action: () -> Unit) {
+        val bottomControl = findViewById<FrameLayout>(R.id.bottom_control)
+        bottomControl.removeAllViews()
+        FloatingActionButton(this).apply {
+            setImageResource(R.drawable.ic_run)
+            setOnClickListener {
+                action()
+            }
+            bottomControl.addView(this)
+        }
     }
 
     companion object {

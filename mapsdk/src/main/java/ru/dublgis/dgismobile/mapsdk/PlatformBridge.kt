@@ -108,6 +108,8 @@ internal class PlatformBridge(
 
     private var _maxBounds: LonLatBounds? = null
 
+    private var _padding: Padding? = null
+
     private var _controls: Boolean = false
     private val interactiveCopyright: Boolean = false
 
@@ -255,6 +257,13 @@ internal class PlatformBridge(
                 window.dgismap.map.setRotation(${value});
             """
             )
+        }
+
+    override var padding: Padding
+        get() = _padding ?: Padding.EMPTY
+        set(value) {
+            _padding = value
+            call("setPadding", listOf(JsArg(value)))
         }
 
     override val disableRotationByUserInteraction: Boolean
@@ -693,7 +702,8 @@ internal class PlatformBridge(
                 ${JsArg(_style?.value)},
                 ${JsArg(_styleZoom)},
                 ${JsArg(_defaultBackgroundColor?.let { jsColorFormat(it) })},
-                ${JsArg(_maxBounds)}
+                ${JsArg(_maxBounds)},
+                ${JsArg(_padding)}
             );
         """
         )
@@ -712,7 +722,8 @@ internal class PlatformBridge(
         style: StyleId?,
         styleZoom: Double?,
         defaultBackgroundColor: Int?,
-        maxBounds: LonLatBounds?
+        maxBounds: LonLatBounds?,
+        padding: Padding?
     ) {
         _center = center
         _maxZoom = maxZoom
@@ -731,6 +742,7 @@ internal class PlatformBridge(
         _styleZoom = styleZoom ?: 0.0
         _defaultBackgroundColor = defaultBackgroundColor
         _maxBounds = maxBounds
+        _padding = padding ?: Padding.EMPTY
     }
 
 
