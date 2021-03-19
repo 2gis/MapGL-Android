@@ -6,6 +6,7 @@ import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
 import ru.dublgis.dgismobile.mapsdk.directions.Directions
 import ru.dublgis.dgismobile.mapsdk.directions.DirectionsOptions
+import ru.dublgis.dgismobile.mapsdk.floors.FloorPlan
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.Circle
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.CircleOptions
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.circlemarker.CircleMarker
@@ -44,6 +45,11 @@ interface Map {
     val disablePitchByUserInteraction: Boolean
 
     val autoHideOSMCopyright: Boolean
+
+    /**
+     * The floor plan currently displayed on the map.
+     */
+    val floorPlan: LiveData<FloorPlan?>
 
     fun addMarker(options: MarkerOptions): Marker
 

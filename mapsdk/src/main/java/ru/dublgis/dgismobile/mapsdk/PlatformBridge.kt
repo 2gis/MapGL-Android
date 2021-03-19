@@ -8,16 +8,18 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.Observer
+import androidx.lifecycle.*
+import org.json.JSONObject
 import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererImpl
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
 import ru.dublgis.dgismobile.mapsdk.clustering.InputMarker
 import ru.dublgis.dgismobile.mapsdk.directions.*
 import ru.dublgis.dgismobile.mapsdk.directions.DirectionsImpl
+import ru.dublgis.dgismobile.mapsdk.floors.FloorPlan
+import ru.dublgis.dgismobile.mapsdk.floors.FloorPlanHideEvent
+import ru.dublgis.dgismobile.mapsdk.floors.FloorPlanImpl
+import ru.dublgis.dgismobile.mapsdk.floors.FloorPlanShowEvent
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.Circle
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.CircleImpl
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.CircleOptions
@@ -118,6 +120,8 @@ internal class PlatformBridge(
     private var markerId = 0
     private var directionsId = 0
     private var callbackId = 0
+
+    override val floorPlan = MutableLiveData<FloorPlan?>()
 
     @RequiresApi(24)
     fun call(methodName: String, vararg args: JsArg): CompletableFuture<Unit> {
@@ -857,6 +861,27 @@ internal class PlatformBridge(
                     val northEast = parseLonLat(payload.substringBefore(" "))
                     val southWest = parseLonLat(payload.substringAfter(" "))
                     _bounds = LonLatBounds(northEast, southWest)
+                }
+                "floorplanshow" -> {
+                    val event = FloorPlanShowEvent.fromJson(JSONObject(payload))
+                    if (!event.isValid) {
+                        Log.e(TAG, "Invalid event $event")
+                        return@post
+                    }
+                    floorPlan.value = FloorPlanImpl(event.id, event.levels, event.currentLevelIndex) {
+                        call("setFloorPlanLevel", listOf(JsArg(event.id), JsArg(it)))
+                    }
+                }
+                "floorplanhide" -> {
+                    val event = FloorPlanHideEvent.fromJson(JSONObject(payload))
+                    if (!event.isValid) {
+                        Log.e(TAG, "Invalid event $event")
+                        return@post
+                    }
+
+                    if (floorPlan.value?.id == event.id) {
+                        floorPlan.value = null
+                    }
                 }
                 else -> {
                     Log.w(TAG, "unexpected event type")

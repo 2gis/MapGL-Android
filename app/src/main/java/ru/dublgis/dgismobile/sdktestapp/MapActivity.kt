@@ -26,6 +26,8 @@ abstract class MapActivity(val options: Options = Options()) : AppCompatActivity
         val zoom: Double? = null,
         val style: StyleId? = null,
         val styleZoom: Double? = null,
+        val minZoom: Double = 2.0,
+        val maxZoom: Double = 18.0,
         val defaultBackgroundColor: Int? = null,
         val maxBounds: LonLatBounds? = null)
 
@@ -54,6 +56,8 @@ abstract class MapActivity(val options: Options = Options()) : AppCompatActivity
             zoom = options.zoom ?: 12.0,
             style = options.style,
             styleZoom = options.styleZoom,
+            minZoom = options.minZoom,
+            maxZoom = options.maxZoom,
             defaultBackgroundColor = options.defaultBackgroundColor,
             maxBounds = options.maxBounds
         )

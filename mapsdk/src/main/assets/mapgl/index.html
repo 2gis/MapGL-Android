@@ -134,6 +134,13 @@ window.initMapGL = (
         const bounds = map.getBounds();
         return `${bounds.northEast[0]};${bounds.northEast[1]} ${bounds.southWest[0]};${bounds.southWest[1]}`;
     });
+    subscribe('floorplanshow', (ev) => {
+        return JSON.stringify(ev);
+    });
+    subscribe('floorplanhide', (ev) => {
+        return JSON.stringify(ev);
+    });
+
     map.on('zoomend', (ev) => {
     	emit('zoomChanged', map.getZoom());
     });
@@ -341,6 +348,10 @@ window.initMapGL = (
 
 		fitBounds: (bounds, options) => {
 			map.fitBounds(bounds, options);
+		},
+
+		setFloorPlanLevel: (floorPlanId, floorLevelIndex) => {
+			map.setFloorPlanLevel(floorPlanId, floorLevelIndex)
 		},
 
 		call: (callId, name, args) => {
