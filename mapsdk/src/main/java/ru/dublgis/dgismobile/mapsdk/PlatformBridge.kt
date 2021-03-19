@@ -679,6 +679,14 @@ internal class PlatformBridge(
         call("setStyle", listOf(JsArg(style.value)))
     }
 
+    override fun setStyleState(styleState: StyleState) {
+        call("setStyleState", listOf(JsArg(styleState.mapValues { JsArg(it.value) })))
+    }
+
+    override fun patchStyleState(styleState: StyleState) {
+        call("patchStyleState", listOf(JsArg(styleState.mapValues { JsArg(it.value) })))
+    }
+
     override fun fitBounds(bounds: LonLatBounds, options: FitBoundsOptions?) {
         call("fitBounds", listOf(JsArg(bounds), JsArg(options)))
     }

@@ -350,6 +350,14 @@ window.initMapGL = (
 			map.setStyleById(id);
 		},
 
+		setStyleState: (styleState) => {
+			map.setStyleState(styleState);
+		},
+
+		patchStyleState: (styleState) => {
+			map.patchStyleState(styleState);
+		},
+
 		fitBounds: (bounds, options) => {
 			map.fitBounds(bounds, options);
 		},
