@@ -2,6 +2,7 @@ package ru.dublgis.dgismobile.mapsdk
 
 import android.util.JsonWriter
 import java.io.StringWriter
+import kotlin.collections.Map
 
 
 internal interface PlatformSerializable {
@@ -53,6 +54,16 @@ internal class JsArg {
             separator = ","
         ) {
             it.toString()
+        }
+    }
+
+    constructor(value: Map<String, JsArg>) {
+        repr = value.entries.joinToString(
+            prefix = "{",
+            postfix = "}",
+            separator = ","
+        ) {
+            "\"${it.key}\": ${it.value}"
         }
     }
 

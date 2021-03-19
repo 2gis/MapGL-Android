@@ -106,6 +106,16 @@ interface Map {
     fun setStyle(style: StyleId)
 
     /**
+     * Sets whole map style global variables at once, any previously set variables will be reset or overriden.
+     */
+    fun setStyleState(styleState: StyleState)
+
+    /**
+     * Patches map style global variables. Use this method if you want to change a particular variable and leave other ones intact.
+     */
+    fun patchStyleState(styleState: StyleState)
+
+    /**
      * Pans and zooms the map to contain its visible area within the specified geographical bounds.
      * This method also resets the map pitch and rotation to 0. But the map rotation can be saved
      * by option considerRotation.
