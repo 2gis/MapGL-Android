@@ -45,7 +45,7 @@ import kotlin.math.abs
 
 
 typealias JsExecutor = (String) -> Unit
-typealias MapReadyCallback = (Map?) -> Unit
+typealias MapReadyCallback = (Map) -> Unit
 typealias OnFinished<T> = (Result<T>) -> Unit
 
 
@@ -112,6 +112,8 @@ internal class PlatformBridge(
 
     private var _controls: Boolean = false
     private val interactiveCopyright: Boolean = false
+
+    private lateinit var support: MapSupport
 
     private var clusterId = 0
     private var polylineId = 0
@@ -691,6 +693,19 @@ internal class PlatformBridge(
         call("fitBounds", listOf(JsArg(bounds), JsArg(options)))
     }
 
+    override fun isSupported(options: MapSupportOptions?): Boolean {
+        return notSupportedReason(options) == null
+    }
+
+    override fun notSupportedReason(options: MapSupportOptions?): String? {
+        if (options?.failIfMajorPerformanceCaveat == true) {
+            return support.notSupportedWithGoodPerformanceReason
+        }
+        else {
+            return support.notSupportedReason
+        }
+    }
+
     override fun onPageFinished(view: WebView?, url: String?) {
         super.onPageFinished(view, url)
         jsExecutor(
@@ -902,6 +917,9 @@ internal class PlatformBridge(
                     if (floorPlan.value?.id == event.id) {
                         floorPlan.value = null
                     }
+                }
+                "supportChanged" -> {
+                    support = MapSupport.fromJson(JSONObject(payload))
                 }
                 else -> {
                     Log.w(TAG, "unexpected event type")

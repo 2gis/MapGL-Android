@@ -142,7 +142,7 @@ class MapFragment : Fragment() {
 
     // ------------------------------------------------------
 
-    private fun onMapReady(map: Map?) {
+    private fun onMapReady(map: Map) {
         mapReadyCallback(map)
     }
 

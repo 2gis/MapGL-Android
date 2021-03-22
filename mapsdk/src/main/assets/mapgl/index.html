@@ -46,6 +46,20 @@ window.initMapGL = (
         maxBounds,
         padding) => {
 
+    const emit = (name, args) => {
+        if (bridge && bridge.onEvent) {
+            const payload = args
+                ? args
+                : ""
+            bridge.onEvent(name, payload);
+
+        } else {
+            console.error('bridge unavailable or onEvent handler does not exist');
+        }
+    };
+
+    try {
+
     const markers = new Map();
     const clusterers = new Map();
     const polylines = new Map();
@@ -99,18 +113,6 @@ window.initMapGL = (
     	// TODO: использовать опцию создания карты, когда такая появится
     	map.setStyleZoom(styleZoom, {animate: false});
     }
-
-    const emit = (name, args) => {
-        if (bridge && bridge.onEvent) {
-            const payload = args 
-                ? args
-                : ""
-            bridge.onEvent(name, payload);
-
-        } else {
-            console.error('bridge unavailable or onEvent handler does not exist');
-        }
-    };
 
     const subscribe = (name, handler) => {
         map.on(name, (ev) => {
@@ -411,6 +413,20 @@ window.initMapGL = (
     emit('initBounds', `${bounds.northEast[0]};${bounds.northEast[1]} ${bounds.southWest[0]};${bounds.southWest[1]}`);
     emit('zoomChanged', map.getZoom());
     emit('styleZoomChanged', map.getStyleZoom());
+
+    const support = {
+        notSupportedReason: mapgl.notSupportedReason({failIfMajorPerformanceCaveat: false}),
+        notSupportedWithGoodPerformanceReason: mapgl.notSupportedReason({failIfMajorPerformanceCaveat: true})
+    }
+    emit('supportChanged', JSON.stringify(support));
+
+    } catch(e) {
+        const support = {
+            notSupportedReason: e.toString(),
+            notSupportedWithGoodPerformanceReason: e.toString()
+        }
+        emit('supportChanged', JSON.stringify(support));
+    }
     emit('initialized');
 };
 
