@@ -120,6 +120,11 @@ window.initMapGL = (
         });
     }
 
+    map.on('copyrightclick', (ev) => {
+    	emit('copyrightclick', `${ev.href}`);
+    	ev.originalEvent.preventDefault();
+    });
+
 	subscribe('click', (ev) => {
 		const id = ev.target && ev.target.id
 			? ev.target.id
