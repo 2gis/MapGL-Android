@@ -23,7 +23,7 @@ To install the SDK:
 ```
 repositories {
     maven {
-     url "https://maven.2gis.dev/libs-snapshot"
+     url "https://artifactory.2gis.dev/sdk-maven-release"
     }
 }
 ```

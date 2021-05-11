@@ -20,7 +20,7 @@ allprojects {
     repositories {
         google()
         jcenter()
-        maven { url "http://maven.2gis.dev/sdk-maven-snapshot" }
+        maven { url "http://artifactory.2gis.dev/sdk-maven-snapshot" }
     }
 
     ext {
