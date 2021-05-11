@@ -45,7 +45,7 @@ import kotlin.math.abs
 
 
 typealias JsExecutor = (String) -> Unit
-typealias UriOpener = (String) -> Unit
+internal typealias UriOpener = (String) -> Unit
 typealias MapReadyCallback = (Map) -> Unit
 typealias OnFinished<T> = (Result<T>) -> Unit
 
@@ -69,7 +69,7 @@ internal class PlatformBridge(
     private var onZoomChanged: PropertyChangeListener? = null
     private var onStyleZoomChanged: PropertyChangeListener? = null
     private var onRotationChanged: PropertyChangeListener? = null
-    private var onOpenURI: UriOpener? = null
+    private lateinit var onOpenURI: UriOpener
     private val onFinishedMap = mutableMapOf<String, OnFinished<Unit>>()
 
     private val markers = mutableMapOf<String, MarkerImpl>()
@@ -749,7 +749,7 @@ internal class PlatformBridge(
         defaultBackgroundColor: Int?,
         maxBounds: LonLatBounds?,
         padding: Padding?,
-        onOpenURI: UriOpener?
+        onOpenURI: UriOpener
     ) {
         _center = center
         _maxZoom = maxZoom
@@ -811,7 +811,7 @@ internal class PlatformBridge(
 
             when (kind) {
                 "copyrightclick" -> {
-                    onOpenURI?.invoke(payload)
+                    onOpenURI.invoke(payload)
                 }
                 "click" -> {
                     onClickCallback?.invoke(parsePointer(payload))
