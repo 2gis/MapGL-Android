@@ -10,7 +10,6 @@ buildscript {
     }
     dependencies {
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
         classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:$dokkaVersion"
     }
 }
@@ -19,7 +18,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
 apply plugin: "org.jetbrains.dokka-android"
 apply plugin: 'maven-publish'
 
@@ -83,33 +81,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
 
-ext {
-    bintrayRepo = 'maven'
-    bintrayName = 'mapgl'
-
-    publishedGroupId = 'ru.dublgis.dgismobile.mapsdk'
-    libraryName = 'MapSDK'
-    artifact = 'mapsdk'
-
-    libraryDescription = '2GIS Maps SDK for Android'
-
-    siteUrl = 'https://docs.2gis.com/en/android/webgl/maps/overview'
-    gitUrl = 'https://github.com/2gis/MapGL-Android.git'
-
-    libraryVersion = '1.9.0'
-
-    developerId = '2gis'
-    developerName = '2gis'
-    developerEmail = 'mapgl@2gis.ru'
-
-    licenseName = 'BSD 2-Clause'
-    licenseUrl = 'https://opensource.org/licenses/BSD-2-Clause'
-    allLicenses = ["BSD 2-Clause"]
-}
-
-
-group = publishedGroupId
-version = libraryVersion
+group = 'ru.dublgis.dgismobile.mapsdk'
+version = '1.9.0'
 
 
 task sourcesJar(type: Jar) {
@@ -122,35 +95,35 @@ artifacts {
 }
 
 def pomConfig = {
-    name = bintrayName
-    description = libraryDescription
-    url = siteUrl
+    name = 'mapgl'
+    description = '2GIS Maps SDK for Android'
+    url = 'https://docs.2gis.com/en/android/webgl/maps/overview'
 
     licenses {
         license {
-            name = licenseName
-            url = licenseUrl
+            name = 'BSD 2-Clause'
+            url = 'https://opensource.org/licenses/BSD-2-Clause'
         }
     }
     developers {
         developer {
-            id = developerId
-            name = developerName
-            email = developerEmail
+            id = '2gis'
+            name = '2gis'
+            email = 'mapgl@2gis.ru'
         }
     }
     scm {
-        connection = gitUrl
-        developerConnection = gitUrl
-        url = siteUrl
+        connection = 'https://github.com/2gis/MapGL-Android.git'
+        developerConnection = 'https://github.com/2gis/MapGL-Android.git'
+        url = 'https://docs.2gis.com/en/android/webgl/maps/overview'
     }
 }
 
 def publicationConfig = { versionName ->
     from components.release
 
-    groupId publishedGroupId
-    artifactId artifact
+    groupId 'ru.dublgis.dgismobile.mapsdk'
+    artifactId 'mapsdk'
     version versionName
 
     pom pomConfig
@@ -161,35 +134,16 @@ def publicationConfig = { versionName ->
 afterEvaluate {
     publishing {
         publications {
-            create('aar', MavenPublication, publicationConfig.curry("$libraryVersion"))
-            create('aarSnapshot', MavenPublication, publicationConfig.curry("$libraryVersion-SNAPSHOT"))
+            create('aar', MavenPublication, publicationConfig.curry("$version"))
+            create('aarSnapshot', MavenPublication, publicationConfig.curry("$version-SNAPSHOT"))
         }
     }
 
     artifactoryPublish {
-        publications(publishing.publications.aarSnapshot)
-    }
-}
-
-bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
-
-    configurations = ['archives']
-
-    pkg {
-        userOrg = '2gis'
-        repo = bintrayRepo
-        name = bintrayName
-        desc = libraryDescription
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        licenses = allLicenses
-        dryRun = false
-        publish = true
-        publicDownloadNumbers = true
-        version {
-            desc = libraryDescription
+        if (isReleaseBuild) {
+            publications(publishing.publications.aar)
+        } else {
+            publications(publishing.publications.aarSnapshot)
         }
     }
 }
