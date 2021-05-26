@@ -6,6 +6,7 @@ import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
 import ru.dublgis.dgismobile.mapsdk.directions.Directions
 import ru.dublgis.dgismobile.mapsdk.directions.DirectionsOptions
+import ru.dublgis.dgismobile.mapsdk.floors.FloorPlan
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.Circle
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.CircleOptions
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.circlemarker.CircleMarker
@@ -44,6 +45,17 @@ interface Map {
     val disablePitchByUserInteraction: Boolean
 
     val autoHideOSMCopyright: Boolean
+
+    /**
+     * The floor plan currently displayed on the map.
+     */
+    val floorPlan: LiveData<FloorPlan?>
+
+    /**
+     * Padding in density independent pixels from the different sides of the map canvas.
+     * It influences map moving methods such as fitBounds.
+     */
+    var padding: Padding
 
     fun addMarker(options: MarkerOptions): Marker
 
@@ -92,4 +104,34 @@ interface Map {
      * @param style uuid of the style
      */
     fun setStyle(style: StyleId)
+
+    /**
+     * Sets whole map style global variables at once, any previously set variables will be reset or overriden.
+     */
+    fun setStyleState(styleState: StyleState)
+
+    /**
+     * Patches map style global variables. Use this method if you want to change a particular variable and leave other ones intact.
+     */
+    fun patchStyleState(styleState: StyleState)
+
+    /**
+     * Pans and zooms the map to contain its visible area within the specified geographical bounds.
+     * This method also resets the map pitch and rotation to 0. But the map rotation can be saved
+     * by option considerRotation.
+     * @param bounds The geographical bounds to fit in
+     * @param options FitBounds options
+     */
+    fun fitBounds(bounds: LonLatBounds, options: FitBoundsOptions? = null)
+
+    /**
+     * Tests whether the current browser supports MapGL.
+     * Use our raster map implementation https://api.2gis.ru/doc/maps/en/quickstart/ if not.
+     */
+    fun isSupported(options: MapSupportOptions? = null): Boolean
+
+    /**
+     * Tests whether the current browser supports MapGL and returns the reason if not
+     */
+    fun notSupportedReason(options: MapSupportOptions? = null): String?
 }

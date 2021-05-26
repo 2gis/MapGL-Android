@@ -1,6 +1,8 @@
 package ru.dublgis.dgismobile.mapsdk
 
+import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
@@ -10,6 +12,7 @@ import android.view.ViewGroup
 import android.webkit.ConsoleMessage
 import android.webkit.WebChromeClient
 import android.webkit.WebView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import ru.dublgis.dgismobile.mapsdk.location.LocationProviderFactory
 
@@ -118,8 +121,8 @@ class MapFragment : Fragment() {
         style: StyleId? = null,
         styleZoom: Double? = null,
         defaultBackgroundColor: Int? = null,
-        maxBounds: LonLatBounds? = null
-
+        maxBounds: LonLatBounds? = null,
+        padding: Padding? = null
     ) {
         webView?.setBackgroundColor(defaultBackgroundColor ?: 0xfff7f3df.toInt())
         bridge.setup(
@@ -135,13 +138,15 @@ class MapFragment : Fragment() {
             style,
             styleZoom,
             defaultBackgroundColor,
-            maxBounds
+            maxBounds,
+            padding,
+            this::openURI
         )
     }
 
     // ------------------------------------------------------
 
-    private fun onMapReady(map: Map?) {
+    private fun onMapReady(map: Map) {
         mapReadyCallback(map)
     }
 
@@ -155,5 +160,10 @@ class MapFragment : Fragment() {
         ctx.assets.open("mapgl/index.html").let {
             return Base64.encodeToString(it.readBytes(), Base64.NO_PADDING or Base64.NO_WRAP)
         }
+    }
+
+    private fun openURI(uri: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+        context?.let { ContextCompat.startActivity(it, intent, null) }
     }
 }

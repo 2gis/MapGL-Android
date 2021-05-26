@@ -91,10 +91,18 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="48dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" >
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        </FrameLayout>
-
+        <FrameLayout
+            android:id="@+id/left_control"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

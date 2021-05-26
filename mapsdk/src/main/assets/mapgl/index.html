@@ -43,7 +43,22 @@ window.initMapGL = (
         style,
         styleZoom,
         defaultBackgroundColor,
-        maxBounds) => {
+        maxBounds,
+        padding) => {
+
+    const emit = (name, args) => {
+        if (bridge && bridge.onEvent) {
+            const payload = args
+                ? args
+                : ""
+            bridge.onEvent(name, payload);
+
+        } else {
+            console.error('bridge unavailable or onEvent handler does not exist');
+        }
+    };
+
+    try {
 
     const markers = new Map();
     const clusterers = new Map();
@@ -88,6 +103,9 @@ window.initMapGL = (
     if (maxBounds) {
     	options.maxBounds = maxBounds;
     }
+    if (padding) {
+    	options.padding = padding;
+    }
 
     const map = new mapgl.Map('map', options);
 
@@ -96,23 +114,16 @@ window.initMapGL = (
     	map.setStyleZoom(styleZoom, {animate: false});
     }
 
-    const emit = (name, args) => {
-        if (bridge && bridge.onEvent) {
-            const payload = args 
-                ? args
-                : ""
-            bridge.onEvent(name, payload);
-
-        } else {
-            console.error('bridge unavailable or onEvent handler does not exist');
-        }
-    };
-
     const subscribe = (name, handler) => {
         map.on(name, (ev) => {
             emit(name, handler(ev));
         });
     }
+
+    map.on('copyrightclick', (ev) => {
+    	emit('copyrightclick', `${ev.href}`);
+    	ev.originalEvent.preventDefault();
+    });
 
 	subscribe('click', (ev) => {
 		const id = ev.target && ev.target.id
@@ -134,6 +145,13 @@ window.initMapGL = (
         const bounds = map.getBounds();
         return `${bounds.northEast[0]};${bounds.northEast[1]} ${bounds.southWest[0]};${bounds.southWest[1]}`;
     });
+    subscribe('floorplanshow', (ev) => {
+        return JSON.stringify(ev);
+    });
+    subscribe('floorplanhide', (ev) => {
+        return JSON.stringify(ev);
+    });
+
     map.on('zoomend', (ev) => {
     	emit('zoomChanged', map.getZoom());
     });
@@ -339,6 +357,26 @@ window.initMapGL = (
 			map.setStyleById(id);
 		},
 
+		setStyleState: (styleState) => {
+			map.setStyleState(styleState);
+		},
+
+		patchStyleState: (styleState) => {
+			map.patchStyleState(styleState);
+		},
+
+		fitBounds: (bounds, options) => {
+			map.fitBounds(bounds, options);
+		},
+
+		setFloorPlanLevel: (floorPlanId, floorLevelIndex) => {
+			map.setFloorPlanLevel(floorPlanId, floorLevelIndex);
+		},
+
+		setPadding: (padding) => {
+			map.setPadding(padding);
+		},
+
 		call: (callId, name, args) => {
 			const dm = window.dgismap;
 			const action = dm[name];
@@ -380,6 +418,20 @@ window.initMapGL = (
     emit('initBounds', `${bounds.northEast[0]};${bounds.northEast[1]} ${bounds.southWest[0]};${bounds.southWest[1]}`);
     emit('zoomChanged', map.getZoom());
     emit('styleZoomChanged', map.getStyleZoom());
+
+    const support = {
+        notSupportedReason: mapgl.notSupportedReason({failIfMajorPerformanceCaveat: false}),
+        notSupportedWithGoodPerformanceReason: mapgl.notSupportedReason({failIfMajorPerformanceCaveat: true})
+    }
+    emit('supportChanged', JSON.stringify(support));
+
+    } catch(e) {
+        const support = {
+            notSupportedReason: e.toString(),
+            notSupportedWithGoodPerformanceReason: e.toString()
+        }
+        emit('supportChanged', JSON.stringify(support));
+    }
     emit('initialized');
 };
 

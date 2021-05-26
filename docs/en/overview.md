@@ -12,7 +12,7 @@ Usage of this SDK requires an `API key` to connect to 2GIS servers and retrieve 
 
 Additionally, if you plan to draw routes on the map, you will need a separate key - a [Directions API](/en/api/navigation/directions/overview) key - to calculate and display an optimal route.
 
-To obtain either of these API keys, fill in the form at [dev.2gis.ae](https://dev.2gis.ae/order).
+To obtain either of these API keys, fill in the form at [dev.2gis.com](https://dev.2gis.com/order).
 
 ## Installation
 
@@ -23,7 +23,7 @@ To install the SDK:
 ```
 repositories {
     maven {
-     url "https://dl.bintray.com/2gis/maven"
+     url "https://artifactory.2gis.dev/sdk-maven-release"
     }
 }
 ```

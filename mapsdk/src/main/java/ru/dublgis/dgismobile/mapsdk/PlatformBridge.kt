@@ -8,16 +8,18 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.Observer
+import androidx.lifecycle.*
+import org.json.JSONObject
 import ru.dublgis.dgismobile.mapsdk.clustering.Clusterer
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererImpl
 import ru.dublgis.dgismobile.mapsdk.clustering.ClustererOptions
 import ru.dublgis.dgismobile.mapsdk.clustering.InputMarker
 import ru.dublgis.dgismobile.mapsdk.directions.*
 import ru.dublgis.dgismobile.mapsdk.directions.DirectionsImpl
+import ru.dublgis.dgismobile.mapsdk.floors.FloorPlan
+import ru.dublgis.dgismobile.mapsdk.floors.FloorPlanHideEvent
+import ru.dublgis.dgismobile.mapsdk.floors.FloorPlanImpl
+import ru.dublgis.dgismobile.mapsdk.floors.FloorPlanShowEvent
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.Circle
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.CircleImpl
 import ru.dublgis.dgismobile.mapsdk.geometries.circle.CircleOptions
@@ -43,7 +45,8 @@ import kotlin.math.abs
 
 
 typealias JsExecutor = (String) -> Unit
-typealias MapReadyCallback = (Map?) -> Unit
+internal typealias UriOpener = (String) -> Unit
+typealias MapReadyCallback = (Map) -> Unit
 typealias OnFinished<T> = (Result<T>) -> Unit
 
 
@@ -66,6 +69,7 @@ internal class PlatformBridge(
     private var onZoomChanged: PropertyChangeListener? = null
     private var onStyleZoomChanged: PropertyChangeListener? = null
     private var onRotationChanged: PropertyChangeListener? = null
+    private lateinit var onOpenURI: UriOpener
     private val onFinishedMap = mutableMapOf<String, OnFinished<Unit>>()
 
     private val markers = mutableMapOf<String, MarkerImpl>()
@@ -106,8 +110,12 @@ internal class PlatformBridge(
 
     private var _maxBounds: LonLatBounds? = null
 
+    private var _padding: Padding? = null
+
     private var _controls: Boolean = false
-    private val interactiveCopyright: Boolean = false
+    private val interactiveCopyright: Boolean = true
+
+    private lateinit var support: MapSupport
 
     private var clusterId = 0
     private var polylineId = 0
@@ -118,6 +126,8 @@ internal class PlatformBridge(
     private var markerId = 0
     private var directionsId = 0
     private var callbackId = 0
+
+    override val floorPlan = MutableLiveData<FloorPlan?>()
 
     @RequiresApi(24)
     fun call(methodName: String, vararg args: JsArg): CompletableFuture<Unit> {
@@ -251,6 +261,13 @@ internal class PlatformBridge(
                 window.dgismap.map.setRotation(${value});
             """
             )
+        }
+
+    override var padding: Padding
+        get() = _padding ?: Padding.EMPTY
+        set(value) {
+            _padding = value
+            call("setPadding", listOf(JsArg(value)))
         }
 
     override val disableRotationByUserInteraction: Boolean
@@ -666,6 +683,31 @@ internal class PlatformBridge(
         call("setStyle", listOf(JsArg(style.value)))
     }
 
+    override fun setStyleState(styleState: StyleState) {
+        call("setStyleState", listOf(JsArg(styleState.mapValues { JsArg(it.value) })))
+    }
+
+    override fun patchStyleState(styleState: StyleState) {
+        call("patchStyleState", listOf(JsArg(styleState.mapValues { JsArg(it.value) })))
+    }
+
+    override fun fitBounds(bounds: LonLatBounds, options: FitBoundsOptions?) {
+        call("fitBounds", listOf(JsArg(bounds), JsArg(options)))
+    }
+
+    override fun isSupported(options: MapSupportOptions?): Boolean {
+        return notSupportedReason(options) == null
+    }
+
+    override fun notSupportedReason(options: MapSupportOptions?): String? {
+        if (options?.failIfMajorPerformanceCaveat == true) {
+            return support.notSupportedWithGoodPerformanceReason
+        }
+        else {
+            return support.notSupportedReason
+        }
+    }
+
     override fun onPageFinished(view: WebView?, url: String?) {
         super.onPageFinished(view, url)
         jsExecutor(
@@ -685,7 +727,8 @@ internal class PlatformBridge(
                 ${JsArg(_style?.value)},
                 ${JsArg(_styleZoom)},
                 ${JsArg(_defaultBackgroundColor?.let { jsColorFormat(it) })},
-                ${JsArg(_maxBounds)}
+                ${JsArg(_maxBounds)},
+                ${JsArg(_padding)}
             );
         """
         )
@@ -704,7 +747,9 @@ internal class PlatformBridge(
         style: StyleId?,
         styleZoom: Double?,
         defaultBackgroundColor: Int?,
-        maxBounds: LonLatBounds?
+        maxBounds: LonLatBounds?,
+        padding: Padding?,
+        onOpenURI: UriOpener
     ) {
         _center = center
         _maxZoom = maxZoom
@@ -723,6 +768,8 @@ internal class PlatformBridge(
         _styleZoom = styleZoom ?: 0.0
         _defaultBackgroundColor = defaultBackgroundColor
         _maxBounds = maxBounds
+        _padding = padding ?: Padding.EMPTY
+        this.onOpenURI = onOpenURI
     }
 
 
@@ -763,6 +810,9 @@ internal class PlatformBridge(
             }
 
             when (kind) {
+                "copyrightclick" -> {
+                    onOpenURI.invoke(payload)
+                }
                 "click" -> {
                     onClickCallback?.invoke(parsePointer(payload))
                 }
@@ -853,6 +903,30 @@ internal class PlatformBridge(
                     val northEast = parseLonLat(payload.substringBefore(" "))
                     val southWest = parseLonLat(payload.substringAfter(" "))
                     _bounds = LonLatBounds(northEast, southWest)
+                }
+                "floorplanshow" -> {
+                    val event = FloorPlanShowEvent.fromJson(JSONObject(payload))
+                    if (!event.isValid) {
+                        Log.e(TAG, "Invalid event $event")
+                        return@post
+                    }
+                    floorPlan.value = FloorPlanImpl(event.id, event.levels, event.currentLevelIndex) {
+                        call("setFloorPlanLevel", listOf(JsArg(event.id), JsArg(it)))
+                    }
+                }
+                "floorplanhide" -> {
+                    val event = FloorPlanHideEvent.fromJson(JSONObject(payload))
+                    if (!event.isValid) {
+                        Log.e(TAG, "Invalid event $event")
+                        return@post
+                    }
+
+                    if (floorPlan.value?.id == event.id) {
+                        floorPlan.value = null
+                    }
+                }
+                "supportChanged" -> {
+                    support = MapSupport.fromJson(JSONObject(payload))
                 }
                 else -> {
                     Log.w(TAG, "unexpected event type")

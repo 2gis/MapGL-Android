@@ -1,7 +1,5 @@
 # 2GIS Android MapGL
 
-![Bintray](https://img.shields.io/bintray/v/2gis/maven/mapgl) ![Bintray](https://img.shields.io/bintray/dt/2gis/maven/mapgl)
-
 2GIS Android MapGL is an SDK that allows you to add a [2GIS map](https://2gis.ae/) to your Android application. It can be used to display the map in your layout, add custom markers to it, and highlight various objects on the map, such as buildings, roads, and others.
 
 This SDK uses [Android WebView](https://developer.android.com/reference/android/webkit/WebView) to render the map. If you need a more native solution (for example, if you don't want to display web content inside your app or if you need to support older versions of Android), take a look at [Android Native SDK](https://docs.2gis.com/en/android/native/maps/overview).
@@ -13,7 +11,7 @@ Usage of this SDK requires an API key to connect to 2GIS servers and retrieve th
 
 Additionally, if you plan to draw routes on the map, you will need a separate key—a [Directions API](https://docs.2gis.com/en/api/navigation/directions/overview) key—to calculate and display an optimal route.
 
-To obtain either of these API keys, fill in the form at [dev.2gis.ae](https://dev.2gis.ae/order).
+To obtain either of these API keys, fill in the form at [dev.2gis.com](https://dev.2gis.com/order).
 
 
 ## Installation
@@ -25,7 +23,7 @@ To install the SDK:
 ```gradle
 repositories {
     maven {
-        url "https://dl.bintray.com/2gis/maven"
+        url "https://artifactory.2gis.dev/sdk-maven-release"
     }
 }
 ```

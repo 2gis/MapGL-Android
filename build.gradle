@@ -20,7 +20,12 @@ allprojects {
     repositories {
         google()
         jcenter()
-        maven { url "http://maven.2gis.dev/libs-snapshot" }
+        maven { url "http://artifactory.2gis.dev/sdk-maven-snapshot" }
+    }
+
+    ext {
+        isReleaseBuild = project.hasProperty("CI_RELEASE") &&
+                Boolean.parseBoolean(project.property("CI_RELEASE"))
     }
 
     apply plugin: 'com.jfrog.artifactory'
@@ -34,7 +39,9 @@ artifactory {
     contextUrl = System.getenv("ARTIFACTORY_HOST") ?: ""
     publish {
         repository {
-            repoKey = "libs-snapshot-local"
+            repoKey = isReleaseBuild
+                    ? "sdk-maven-release"
+                    : "sdk-maven-snapshot"
             username = System.getenv("ARTIFACTORY_USERNAME")
             password = System.getenv("ARTIFACTORY_PASSWORD")
         }
