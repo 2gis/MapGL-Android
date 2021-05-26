@@ -44,7 +44,8 @@ window.initMapGL = (
         styleZoom,
         defaultBackgroundColor,
         maxBounds,
-        padding) => {
+        padding,
+        language) => {
 
     const emit = (name, args) => {
         if (bridge && bridge.onEvent) {
@@ -92,7 +93,8 @@ window.initMapGL = (
         interactiveCopyright: interactiveCopyright,
         disablePitchByUserInteraction: disablePitchByUserInteraction,
         disableRotationByUserInteraction: disableRotationByUserInteraction,
-        autoHideOSMCopyright: autoHideOSMCopyright
+        autoHideOSMCopyright: autoHideOSMCopyright,
+        lang: language
     };
     if (style) {
     	options.style = style;
@@ -375,6 +377,10 @@ window.initMapGL = (
 
 		setPadding: (padding) => {
 			map.setPadding(padding);
+		},
+
+		setLanguage: (language) => {
+			map.setLanguage(language);
 		},
 
 		call: (callId, name, args) => {

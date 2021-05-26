@@ -57,6 +57,11 @@ interface Map {
      */
     var padding: Padding
 
+    /**
+     * The desired map language. Short language code "en", "ru", etc.
+     */
+    var language: String
+
     fun addMarker(options: MarkerOptions): Marker
 
     fun removeMarker(marker: Marker)
