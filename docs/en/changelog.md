@@ -1,5 +1,20 @@
 # Release notes
 
+## 1.9.0
+
+**Release Date:** 27.05.2021
+
+* Added `Map.fitBounds` that moves the map so that the specified area becomes visible.
+* Added `ImageFactory.fromUrl` for creating `Image` from HTTP URL.
+* Added `LonLatBounds.extend` that extend the bounds to include given points.
+* Added `Map.floorPlan` for getting information about the current floor plan.
+* Added `Map.padding` that is taken into account when positioning the map.
+* Added `Map.setStyleState, Map.patchStyleState` for specifying style-specific variables.
+* Added `Map.isSupported, Map.notSupportedReason` to check if the device supports the SDK.
+* Added `Map.language` for specifying the map language.
+* The 2GIS site opens when clicking the copyright.
+* Removed deprecated `MarkerIconDescriptor`. Use `Image` instead.
+
 ## 1.8.0
 
 **Release Date:** 22.12.2020
