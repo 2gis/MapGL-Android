@@ -31,7 +31,8 @@ abstract class MapActivity(val options: Options = Options()) : AppCompatActivity
         val maxZoom: Double = 18.0,
         val defaultBackgroundColor: Int? = null,
         val maxBounds: LonLatBounds? = null,
-        val padding: Padding? = null)
+        val padding: Padding? = null,
+        val language: String = "en")
 
 
     protected var map: Map? = null
@@ -63,7 +64,8 @@ abstract class MapActivity(val options: Options = Options()) : AppCompatActivity
             maxZoom = options.maxZoom,
             defaultBackgroundColor = options.defaultBackgroundColor,
             maxBounds = options.maxBounds,
-            padding = options.padding
+            padding = options.padding,
+            language = options.language
         )
 
         mapOf(
