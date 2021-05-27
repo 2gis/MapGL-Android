@@ -112,6 +112,8 @@ internal class PlatformBridge(
 
     private var _padding: Padding? = null
 
+    private var _language: String = ""
+
     private var _controls: Boolean = false
     private val interactiveCopyright: Boolean = true
 
@@ -268,6 +270,13 @@ internal class PlatformBridge(
         set(value) {
             _padding = value
             call("setPadding", listOf(JsArg(value)))
+        }
+
+    override var language: String
+        get() = _language
+        set(value) {
+            _language = value
+            call("setLanguage", listOf(JsArg(value)))
         }
 
     override val disableRotationByUserInteraction: Boolean
@@ -728,7 +737,8 @@ internal class PlatformBridge(
                 ${JsArg(_styleZoom)},
                 ${JsArg(_defaultBackgroundColor?.let { jsColorFormat(it) })},
                 ${JsArg(_maxBounds)},
-                ${JsArg(_padding)}
+                ${JsArg(_padding)},
+                ${JsArg(_language)}
             );
         """
         )
@@ -749,6 +759,7 @@ internal class PlatformBridge(
         defaultBackgroundColor: Int?,
         maxBounds: LonLatBounds?,
         padding: Padding?,
+        language: String,
         onOpenURI: UriOpener
     ) {
         _center = center
@@ -769,6 +780,7 @@ internal class PlatformBridge(
         _defaultBackgroundColor = defaultBackgroundColor
         _maxBounds = maxBounds
         _padding = padding ?: Padding.EMPTY
+        _language = language
         this.onOpenURI = onOpenURI
     }
 

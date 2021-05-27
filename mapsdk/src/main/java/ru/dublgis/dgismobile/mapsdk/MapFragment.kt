@@ -1,7 +1,6 @@
 package ru.dublgis.dgismobile.mapsdk
 
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Base64
@@ -103,6 +102,7 @@ class MapFragment : Fragment() {
      *   If both options are set, the styleZoom has a higher priority than the zoom option.
      * @param defaultBackgroundColor Set default background color, while style is loading.
      * @param maxBounds The map will be constrained to the given bounds, if set.
+     * @param language The desired map language. Short language code "en", "ru", etc.
      */
     fun setup(
         apiKey: String,
@@ -122,7 +122,8 @@ class MapFragment : Fragment() {
         styleZoom: Double? = null,
         defaultBackgroundColor: Int? = null,
         maxBounds: LonLatBounds? = null,
-        padding: Padding? = null
+        padding: Padding? = null,
+        language: String = "en"
     ) {
         webView?.setBackgroundColor(defaultBackgroundColor ?: 0xfff7f3df.toInt())
         bridge.setup(
@@ -140,6 +141,7 @@ class MapFragment : Fragment() {
             defaultBackgroundColor,
             maxBounds,
             padding,
+            language,
             this::openURI
         )
     }
