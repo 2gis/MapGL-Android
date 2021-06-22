@@ -13,7 +13,7 @@ To display a map, first add the following Fragment to your layout:
 />
 ```
 
-Then, initialize the widget by calling the `setup()` method and passing your `API key`. You can also pass the initial coordinates and the required zoom level. See the [API Reference](/en/android/webgl/maps/reference/MapFragment) for the full list of options.
+Then, initialize the widget by calling the `setup()` method and passing your `API key`. You can also pass the initial coordinates and the required zoom level. See the [API Reference](/en/android/mapgl/maps/reference/MapFragment) for the full list of options.
 
 For example, the following code will show the map of Moscow centered around the Kremlin with the default level of zoom:
 
@@ -54,7 +54,7 @@ mapFragment.mapReadyCallback = this::onDGisMapReady
 
 The only required parameter is the coordinates of the marker.
 
-Additionally, you can change the marker's appearance. You can specify the icon in SVG format, the size of the marker in pixels (width × height), and the anchor - the coordinates of the hotspot of the icon (X × Y, relative to the top-left corner). See the [API Reference](/en/android/webgl/maps/reference/MarkerOptions) for more information on the MarkerOptions class.
+Additionally, you can change the marker's appearance. You can specify the icon in SVG format, the size of the marker in pixels (width × height), and the anchor - the coordinates of the hotspot of the icon (X × Y, relative to the top-left corner). See the [API Reference](/en/android/mapgl/maps/reference/MarkerOptions) for more information on the MarkerOptions class.
 
 <img src="/img/android_mapgl_examples_anchor.png" alt="" /> <br/>
 
@@ -110,7 +110,7 @@ fun onDGisMapReady(map: Map?) {
 
 You can highlight map objects, such as buildings, roads, and others.
 
-To do that, call the [setSelectedObjects()](/en/android/webgl/maps/reference/Map#nav-lvl2--setSelectedObjects) method and pass the list of object IDs wrapped in a call of [mapObjectsByIds()](/en/android/webgl/maps/reference/mapObjectsByIds). You can get the IDs by adding a click listener to the map (see the [Handling touch events section](#nav-lvl1--Handling_touch_events)).
+To do that, call the [setSelectedObjects()](/en/android/mapgl/maps/reference/Map#nav-lvl2--setSelectedObjects) method and pass the list of object IDs wrapped in a call of [mapObjectsByIds()](/en/android/mapgl/maps/reference/mapObjectsByIds). You can get the IDs by adding a click listener to the map (see the [Handling touch events section](#nav-lvl1--Handling_touch_events)).
 
 ```
 map?.setSelectedObjects(mapObjectsByIds("48231504731808815", "23520539192555249"))
@@ -120,7 +120,7 @@ map?.setSelectedObjects(mapObjectsByIds("48231504731808815", "23520539192555249"
 
 To change the list of highlighted objects, simply call this method again, passing the list of new IDs.
 
-To disable highlighting, pass an empty list to the [setSelectedObjects()](/en/android/webgl/maps/reference/Map#nav-lvl2--setSelectedObjects) method.
+To disable highlighting, pass an empty list to the [setSelectedObjects()](/en/android/mapgl/maps/reference/Map#nav-lvl2--setSelectedObjects) method.
 
 ```
 map?.setSelectedObjects(listOf())
