@@ -1,10 +1,10 @@
-# Обзор
+# MapGL Android API
 
 ## Введение
 
-Android MapGL SDK от 2GIS позволяет добавить [карту 2GIS](https://2gis.ru/) в ваше приложение под Android. С его помощью вы можете отображать карту на экране, добавлять на карту пользовательские маркеры, а также выделять на карте различные объекты, такие как здания, дороги и т. д.
+MapGL Android API позволяет добавить [карту 2GIS](https://2gis.ru/) в ваше Android-приложение.
 
-Для рендера карты этот SDK использует [Android WebView](https://developer.android.com/reference/android/webkit/WebView). Если вам нужно более нативное решение, например, если вы не хотите отображать веб-контент внутри вашего приложения или если вам нужно поддерживать старые версии Android, обратите внимание на `Android Native SDK`.
+В отличие от [Android SDK](/ru/android/sdk/overview), MapGL Android API использует [MapGL API](/ru/mapgl/overview) и [WebView](https://developer.android.com/reference/android/webkit/WebView) для отображения карты и более ограничен в возможностях.
 
 ## Получение ключа доступа
 
@@ -36,10 +36,10 @@ dependencies {
 }
 ```
 
-После этого всё должно быть готово к работе. В разделе [Примеры](/ru/android/webgl/maps/examples) вы можете посмотреть, как добавить карту к вашему приложению. Или загляните в [описание API](/en/android/webgl/maps/reference), чтобы узнать больше о конкретных классах и методах.
+После этого всё должно быть готово к работе. В разделе [Примеры](/ru/android/mapgl/maps/examples) вы можете посмотреть, как добавить карту к вашему приложению. Или загляните в [описание API](/en/android/mapgl/maps/reference), чтобы узнать больше о конкретных классах и методах.
 
 Также доступен [GitHub-репозиторий](https://github.com/2gis/MapGL-Android/), в котором можно познакомиться с SDK и демонстрационным проектом.
 
 ## Лицензия
 
-2GIS Android MapGL распространяется под упрощённой лицензией BSD 2-Clause. Дополнительную информацию можно найти в файле [LICENSE](https://github.com/2gis/MapGL-Android/blob/master/LICENSE).
+MapGL Android API распространяется под упрощённой лицензией BSD 2-Clause. Дополнительную информацию можно найти в файле [LICENSE](https://github.com/2gis/MapGL-Android/blob/master/LICENSE).

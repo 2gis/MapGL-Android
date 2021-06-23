@@ -1,10 +1,10 @@
-# Overview
+# MapGL Android API
 
 ## Introduction
 
-2GIS Android MapGL is an SDK that allows you to add a [2GIS](https://2gis.ae) map to your Android application. It can be used to display the map in your layout, add custom markers to it, and highlight various objects on the map, such as buildings, roads, and others.
+MapGL Android API is a wrapper around [MapGL API](/en/mapgl/overview) that allows you to add a [2GIS map](https://2gis.ae/) to your Android application.
 
-This SDK uses [Android WebView](https://developer.android.com/reference/android/webkit/WebView) to render the map. If you need a more native solution (for example, if you don't want to display web content inside your app or if you need to support older versions of Android), take a look at `Android Native SDK`.
+Like the regular [Android SDK](/en/android/sdk/overview), it can be used to display the map in your interface and add various objects to it, but unlike Android SDK, MapGL Android API uses [WebView](https://developer.android.com/reference/android/webkit/WebView) to render the map and is more limited in capabilities.
 
 ## Getting an access key
 
@@ -36,10 +36,10 @@ dependencies {
 }
 ```
 
-After that, you should be good to go. Check the [Examples](/en/android/webgl/maps/examples) section to see how to display the map in your application. Alternatively, check the [API Reference](/en/android/webgl/maps/reference) to learn more about specific classes and methods.
+After that, you should be good to go. Check the [Examples](/en/android/mapgl/maps/examples) section to see how to display the map in your application. Alternatively, check the [API Reference](/en/android/mapgl/maps/reference) to learn more about specific classes and methods.
 
 Also, you could visit [the GitHub repository](https://github.com/2gis/MapGL-Android/) to learn more about the SDK and get familiar with sample project.
 
 ## License
 
-2GIS Android MapGL is licensed under the BSD 2-Clause "Simplified" License. See the [LICENSE](https://github.com/2gis/MapGL-Android/blob/master/LICENSE) file for more information.
+MapGL Android API is licensed under the BSD 2-Clause "Simplified" License. See the [LICENSE](https://github.com/2gis/MapGL-Android/blob/master/LICENSE) file for more information.

@@ -13,7 +13,7 @@
 />
 ```
 
-Затем инициализируйте виджет, вызвав метод `setup()` и передав свой ключ API. Вы также можете передать начальные координаты и требуемый масштаб. Полный список возможных параметров приведён в [описании API](/en/android/webgl/maps/reference/MapFragment).
+Затем инициализируйте виджет, вызвав метод `setup()` и передав свой ключ API. Вы также можете передать начальные координаты и требуемый масштаб. Полный список возможных параметров приведён в [описании API](/en/android/mapgl/maps/reference/MapFragment).
 
 Например, приведённый ниже фрагмент кода показывает карту Москвы с Кремлём в центре карты и масштабом по умолчанию:
 
@@ -54,7 +54,7 @@ mapFragment.mapReadyCallback = this::onDGisMapReady
 
 Из параметров вам нужно задать только координаты маркера.
 
-Кроме того, вы можете изменить внешний вид маркера. Вы можете задать иконку в SVG-формате, размер маркера в пикселях (ширина × высота), и якорь - координаты точки, к которой привязывается маркер (X × Y, относительно левого верхнего угла). Более подробную информацию о классе MarkerOptions смотрите в [описании API](/en/android/webgl/maps/reference/MarkerOptions).
+Кроме того, вы можете изменить внешний вид маркера. Вы можете задать иконку в SVG-формате, размер маркера в пикселях (ширина × высота), и якорь - координаты точки, к которой привязывается маркер (X × Y, относительно левого верхнего угла). Более подробную информацию о классе MarkerOptions смотрите в [описании API](/en/android/mapgl/maps/reference/MarkerOptions).
 
 <img src="/img/android_mapgl_examples_anchor.png" alt="" /> <br/>
 
@@ -110,7 +110,7 @@ fun onDGisMapReady(map: Map?) {
 
 Вы можете выделять на карте объекты: здания, дороги и т. д.
 
-Для этого вызовите метод [mapObjectsByIds()](/en/android/webgl/maps/reference/mapObjectsByIds), передав ему список ID объектов, а затем вызовите метод [setSelectedObjects()](/en/android/webgl/maps/reference/Map#nav-lvl1--setSelectedObjects) по результату mapObjectsByIds(). Вы можете получить нужные ID, добавив для карты click listener (смотрите раздел [Обработка событий нажатия](#nav-lvl1--Обработка_событий_нажатия)).
+Для этого вызовите метод [mapObjectsByIds()](/en/android/mapgl/maps/reference/mapObjectsByIds), передав ему список ID объектов, а затем вызовите метод [setSelectedObjects()](/en/android/mapgl/maps/reference/Map#nav-lvl1--setSelectedObjects) по результату mapObjectsByIds(). Вы можете получить нужные ID, добавив для карты click listener (смотрите раздел [Обработка событий нажатия](#nav-lvl1--Обработка_событий_нажатия)).
 
 ```
 map?.setSelectedObjects(mapObjectsByIds("48231504731808815", "23520539192555249"))
@@ -120,7 +120,7 @@ map?.setSelectedObjects(mapObjectsByIds("48231504731808815", "23520539192555249"
 
 Чтобы изменить список выделенных объектов, вызовите этот метод еще раз, передав в него новый список ID.
 
-Чтобы убрать все выделения с карты, передайте пустой список методу [setSelectedObjects()](/en/android/webgl/maps/reference/Map#nav-lvl2--setSelectedObjects).
+Чтобы убрать все выделения с карты, передайте пустой список методу [setSelectedObjects()](/en/android/mapgl/maps/reference/Map#nav-lvl2--setSelectedObjects).
 
 ```
 map?.setSelectedObjects(listOf())
