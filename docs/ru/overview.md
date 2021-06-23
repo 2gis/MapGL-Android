@@ -1,10 +1,10 @@
-# 2GIS MapGL Android API
+# MapGL Android API
 
 ## Введение
 
-2GIS MapGL Android API позволяет добавить [карту 2GIS](https://2gis.ru/) в ваше Android-приложение.
+MapGL Android API позволяет добавить [карту 2GIS](https://2gis.ru/) в ваше Android-приложение.
 
-В отличие от [Android SDK](/ru/android/sdk/overview), MapGL Android использует [MapGL API](/ru/mapgl/overview) и [WebView](https://developer.android.com/reference/android/webkit/WebView) для отображения карты и более ограничен в возможностях.
+В отличие от [Android SDK](/ru/android/sdk/overview), MapGL Android API использует [MapGL API](/ru/mapgl/overview) и [WebView](https://developer.android.com/reference/android/webkit/WebView) для отображения карты и более ограничен в возможностях.
 
 ## Получение ключа доступа
 
@@ -42,4 +42,4 @@ dependencies {
 
 ## Лицензия
 
-2GIS MapGL Android API распространяется под упрощённой лицензией BSD 2-Clause. Дополнительную информацию можно найти в файле [LICENSE](https://github.com/2gis/MapGL-Android/blob/master/LICENSE).
+MapGL Android API распространяется под упрощённой лицензией BSD 2-Clause. Дополнительную информацию можно найти в файле [LICENSE](https://github.com/2gis/MapGL-Android/blob/master/LICENSE).

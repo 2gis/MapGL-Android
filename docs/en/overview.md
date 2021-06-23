@@ -1,10 +1,10 @@
-# 2GIS MapGL Android API
+# MapGL Android API
 
 ## Introduction
 
-2GIS MapGL Android API is a wrapper around [MapGL API](/en/mapgl/overview) that allows you to add a [2GIS map](https://2gis.ae/) to your Android application.
+MapGL Android API is a wrapper around [MapGL API](/en/mapgl/overview) that allows you to add a [2GIS map](https://2gis.ae/) to your Android application.
 
-Like the regular [Android SDK](/en/android/sdk/overview), it can be used to display the map in your interface and add various objects to it, but unlike Android SDK, MapGL Android uses [WebView](https://developer.android.com/reference/android/webkit/WebView) to render the map and is more limited in capabilities.
+Like the regular [Android SDK](/en/android/sdk/overview), it can be used to display the map in your interface and add various objects to it, but unlike Android SDK, MapGL Android API uses [WebView](https://developer.android.com/reference/android/webkit/WebView) to render the map and is more limited in capabilities.
 
 ## Getting an access key
 
@@ -42,4 +42,4 @@ Also, you could visit [the GitHub repository](https://github.com/2gis/MapGL-Andr
 
 ## License
 
-2GIS MapGL Android API is licensed under the BSD 2-Clause "Simplified" License. See the [LICENSE](https://github.com/2gis/MapGL-Android/blob/master/LICENSE) file for more information.
+MapGL Android API is licensed under the BSD 2-Clause "Simplified" License. See the [LICENSE](https://github.com/2gis/MapGL-Android/blob/master/LICENSE) file for more information.
