@@ -34,9 +34,9 @@ dependencies {
 }
 ```
 
-## Running example app
+## Running the demo app
 
-To run the example app, clone this Git repository and add your API key to the [local.properties](https://developer.android.com/studio/build#properties-files) file in your project:
+To run the demo app, clone this Git repository and add your API key to the [local.properties](https://developer.android.com/studio/build#properties-files) file in your project:
 
 ```
 apiKey=YOUR_API_KEY
@@ -48,4 +48,4 @@ Full documentation, including [usage examples](https://docs.2gis.com/en/android/
 
 ## License
 
-2GIS MapGL Android API is licensed under the BSD 2-Clause "Simplified" License. See the [LICENSE](https://github.com/2gis/MapGL-Android/blob/master/LICENSE) file for more information.
+The demo application is licensed under the BSD 2-Clause "Simplified" License. See the [LICENSE](https://github.com/2gis/MapGL-Android/blob/master/LICENSE) file for more information.
