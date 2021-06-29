@@ -34,9 +34,9 @@ dependencies {
 }
 ```
 
-## Running example app
+## Running the demo app
 
-To run the example app, clone this Git repository and add your API key to the [local.properties](https://developer.android.com/studio/build#properties-files) file in your project:
+To run the demo app, clone this Git repository and add your API key to the [local.properties](https://developer.android.com/studio/build#properties-files) file in your project:
 
 ```
 apiKey=YOUR_API_KEY
