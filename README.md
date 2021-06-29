@@ -48,4 +48,4 @@ Full documentation, including [usage examples](https://docs.2gis.com/en/android/
 
 ## License
 
-The demo application is licensed under the BSD 2-Clause "Simplified" License. See the [LICENSE](https://github.com/2gis/MapGL-Android/blob/master/LICENSE) file for more information.
+2GIS MapGL Android API is licensed under the BSD 2-Clause "Simplified" License. See the [LICENSE](https://github.com/2gis/MapGL-Android/blob/master/LICENSE) file for more information.

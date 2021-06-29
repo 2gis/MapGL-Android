@@ -39,3 +39,7 @@ dependencies {
 После этого всё должно быть готово к работе. В разделе [Примеры](/ru/android/mapgl/maps/examples) вы можете посмотреть, как добавить карту к вашему приложению. Или загляните в [описание API](/en/android/mapgl/maps/reference), чтобы узнать больше о конкретных классах и методах.
 
 Также доступен [GitHub-репозиторий](https://github.com/2gis/MapGL-Android/), в котором можно познакомиться с SDK и демонстрационным проектом.
+
+## Лицензия
+
+MapGL Android API распространяется под упрощённой лицензией BSD 2-Clause. Дополнительную информацию можно найти в файле [LICENSE](https://github.com/2gis/MapGL-Android/blob/master/LICENSE).

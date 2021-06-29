@@ -39,3 +39,7 @@ dependencies {
 After that, you should be good to go. Check the [Examples](/en/android/mapgl/maps/examples) section to see how to display the map in your application. Alternatively, check the [API Reference](/en/android/mapgl/maps/reference) to learn more about specific classes and methods.
 
 Also, you could visit [the GitHub repository](https://github.com/2gis/MapGL-Android/) to learn more about the SDK and get familiar with sample project.
+
+## License
+
+MapGL Android API is licensed under the BSD 2-Clause "Simplified" License. See the [LICENSE](https://github.com/2gis/MapGL-Android/blob/master/LICENSE) file for more information.
