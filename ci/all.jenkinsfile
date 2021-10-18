@@ -8,6 +8,9 @@ pipeline {
     environment {
         JAVA_HOME = '/usr/lib/jvm/java-8-openjdk-amd64/'
     }
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '30'))
+    }
     stages{
         stage("prepare") {
            steps {
