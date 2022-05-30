@@ -40,13 +40,13 @@
 **Release Date:** 13.10.2020
 
 * Added [`disableRotationByUserInteraction`](/ru/android/mapgl/maps/reference/Map#nav-lvl2--disableRotationByUserInteraction), [`disablePitchByUserInteraction`](/ru/android/mapgl/maps/reference/Map#nav-lvl2--disablePitchByUserInteraction) [`Map`](/ru/android/mapgl/maps/reference/Map) properties
-* Added [`zIndex`](en/android/mapgl/maps/reference/MarkerOptions#nav-lvl2--zIndex)  for [`MarkerOptions`](/ru/android/mapgl/maps/reference/MarkerOptions)
+* Added [`zIndex`](/ru/android/mapgl/maps/reference/MarkerOptions#nav-lvl2--zIndex)  for [`MarkerOptions`](/ru/android/mapgl/maps/reference/MarkerOptions)
 
 ## 1.4.0
 
 **Release Date:** 01.10.2020
 
-* Added parameters [`offset`](/ru/android/mapgl/maps/reference/LabelOptions#nav-lvl2--offset) and [`relativeAnchor`](/ru/android/mapgl/maps/reference/LabelOptions#nav-lvl2--relativeAnchor) in [`LabelOptions`](en/android/mapgl/maps/reference/LabelOptions) for positioning marker's label
+* Added parameters [`offset`](/ru/android/mapgl/maps/reference/LabelOptions#nav-lvl2--offset) and [`relativeAnchor`](/ru/android/mapgl/maps/reference/LabelOptions#nav-lvl2--relativeAnchor) in [`LabelOptions`](/ru/android/mapgl/maps/reference/LabelOptions) for positioning marker's label
 
 ## 1.3.0
 
@@ -55,7 +55,7 @@
 * Added **Map**.[`bounds`](/ru/android/mapgl/maps/reference/Map#nav-lvl2--bounds) that returns geographical bounds visible in the current map view.
 * Added [`ImageFactory`](/ru/android/mapgl/maps/reference/ImageFactory) for loading icon image from assets, resources, Bitmap or local file
 * Added _onFinish_ callback for **Directions**.[`carRoute`](/ru/android/mapgl/maps/reference/Directions#nav-lvl2--carRoute) that allow get successful or failed result on function call
-* Added stretched image background [`LabelImage`](/ru/android/mapgl/maps/reference/LabelImage) that can be used in [`LabelOptions`](en/android/mapgl/maps/reference/LabelOptions)
+* Added stretched image background [`LabelImage`](/ru/android/mapgl/maps/reference/LabelImage) that can be used in [`LabelOptions`](/ru/android/mapgl/maps/reference/LabelOptions)
 * Added method for showing user geolocation – [`enableUserLocation`](https://docs-canary.2gis.com/ru/android/mapgl/maps/reference/Map#nav-lvl2--enableUserLocation) [`disableUserLocation`](/ru/android/mapgl/maps/reference/Map#nav-lvl2--disableUserLocation)
 
 ## 1.2.1
